@@ -1,0 +1,57 @@
+{
+  "name": "reperio-backups-client-2",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "axios": "^0.17.1",
+    "core-js": "^2.5.3",
+    "enzyme": "^3.3.0",
+    "enzyme-adapter-react-16": "^1.1.1",
+    "history": "^4.7.2",
+    "node-fetch": "^1.7.3",
+    "prop-types": "^15.6.0",
+    "react": "^16.2.0",
+    "react-dom": "^16.2.0",
+    "react-redux": "^5.0.6",
+    "react-router-dom": "^4.2.2",
+    "react-router-redux": "^5.0.0-alpha.9",
+    "redux": "^3.7.2",
+    "redux-thunk": "^2.2.0"
+  },
+  "devDependencies": {
+    "@types/html-webpack-plugin": "^2.30.1",
+    "@types/node-fetch": "^1.6.7",
+    "@types/prop-types": "^15.5.2",
+    "@types/react": "^16.0.34",
+    "@types/react-dom": "^16.0.3",
+    "@types/react-redux": "^5.0.14",
+    "@types/react-router-dom": "^4.2.3",
+    "@types/react-router-redux": "^5.0.11",
+    "@types/webpack": "^3.8.3",
+    "concurrently": "^3.5.1",
+    "copy-webpack-plugin": "^4.4.1",
+    "html-webpack-plugin": "^2.30.1",
+    "http-server": "^0.11.1",
+    "ts-loader": "^3.2.0",
+    "ts-node": "^4.1.0",
+    "typescript": "^2.6.2",
+    "typescript-eslint-parser": "^11.0.0",
+    "webpack": "^3.10.0",
+    "webpack-dev-server": "^2.11.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "http-server -p 8080 ./dist",
+    "webpack-watch": "webpack -wd",
+    "webpack": "webpack",
+    "dev": "concurrently -k -r -s first \"npm run start\" \"npm run webpack-watch\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@bitbucket.org/sevenhillstechnology/prospectstream-client.git"
+  },
+  "author": "Seven Hills Technology",
+  "license": "ISC",
+  "homepage": "https://bitbucket.org/sevenhillstechnology/prospectstream-client#readme"
+}

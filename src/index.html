@@ -1,0 +1,86 @@
+
+<html>
+	<head>
+		<title>Reper.io</title>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		  <meta charset="utf-8"/>
+		  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+        <script
+  src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+  integrity="sha256-k2WSCIexGzOj3Euiig+TlR8gA0EmPjuc79OEeY5L45g="
+  crossorigin="anonymous"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" crossorigin="anonymous"></script>
+        <script src="https://unpkg.com/axios/dist/axios.min.js" crossorigin="anonymous"></script>
+        <style type="text/css">
+            .group { 
+                position:relative; 
+                margin-bottom: 35px; 
+                margin-left: 40px;
+            }
+
+            .inputMaterial	{
+                font-size:18px;
+                padding:10px 10px 10px 5px;
+                display:block;
+                width:300px;
+                border:none;
+                border-bottom:1px solid #757575;
+            }
+
+            .inputMaterial:focus 		{ 
+				outline:none;
+				border-bottom: none;
+			}
+
+                /* LABEL ======================================= */
+
+            label {
+                color:#999; 
+                font-size:14px;
+                font-weight:normal;
+                position:absolute;
+                pointer-events:none;
+                left:5px;
+                top:10px;
+                transition:0.2s ease all; 
+                -moz-transition:0.2s ease all; 
+                -webkit-transition:0.2s ease all;
+            }
+
+            /* active state */
+            .inputMaterial:focus ~ label, .inputMaterial:valid ~ label {
+                top:-20px;
+                font-size:14px;
+                color: #009688;
+            }
+
+			.bar 	{ position:relative; display:block; width:315px; }
+			.bar:before, .bar:after 	{
+				content:'';
+				height:2px; 
+				width:0;
+				bottom:1px; 
+				position:absolute;
+				background: #009688; 
+				transition:0.2s ease all; 
+				-moz-transition:0.2s ease all; 
+				-webkit-transition:0.2s ease all;
+			}
+			.bar:before {
+				left:50%;
+			}
+			.bar:after {
+				right:50%; 
+			}
+
+			/* active state */
+			.inputMaterial:focus ~ .bar:before, .inputMaterial:focus ~ .bar:after {
+				width:50%;
+			}
+        </style>
+	</head>
+	<body>
+		<div id="root" />
+		<script crossorigin type="text/javascript" src="bundle.js"></script>
+	</body>
+</html>
