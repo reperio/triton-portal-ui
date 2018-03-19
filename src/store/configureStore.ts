@@ -1,12 +1,12 @@
 import {createStore, compose, applyMiddleware} from 'redux';
 import thunk from 'redux-thunk';
 import { routerMiddleware } from 'react-router-redux';
-import createHistory from 'history/createBrowserHistory';
-import rootReducer from '../reducers';
+import { rootReducer } from '../reducers';
+import { history } from "./history";
 
-export const history = createHistory();
 
-function configureStore(initialState?:object) {
+
+export function configureStore(initialState?: object) {
     const reactRouterMiddleware = routerMiddleware(history);
     const middleware = [
         thunk,
@@ -17,5 +17,3 @@ function configureStore(initialState?:object) {
         applyMiddleware(...middleware)
     ), );
 }
-
-export default configureStore;
