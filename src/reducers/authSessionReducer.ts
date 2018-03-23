@@ -9,7 +9,8 @@ export function authSessionReducer(state = initialState.authSession, action: {ty
                 isAuthenticated: false,
                 isError: false,
                 errorMessage: null,
-                user: null
+                user: null,
+                isLoading: true
             };
         }
         case authActionTypes.AUTH_LOGIN_SUCCESSFUL: {
@@ -18,7 +19,8 @@ export function authSessionReducer(state = initialState.authSession, action: {ty
                 isAuthenticated: true,
                 isError: false,
                 errorMessage: null,
-                user: action.payload.user
+                user: action.payload.user,
+                isLoading: false
             };
         }
         case authActionTypes.AUTH_LOGIN_ERROR: {
@@ -27,7 +29,8 @@ export function authSessionReducer(state = initialState.authSession, action: {ty
                 isAuthenticated: false,
                 isError: true,
                 errorMessage: action.payload.message,
-                user: null
+                user: null,
+                isLoading: false
             };
         }
         case authActionTypes.AUTH_SET_TOKEN: {
@@ -37,7 +40,8 @@ export function authSessionReducer(state = initialState.authSession, action: {ty
                     isAuthenticated: true,
                     isError: false,
                     errorMessage: null,
-                    user: Object.assign({}, action.payload.user)
+                    user: Object.assign({}, action.payload.user),
+                    isLoading: false
                 };
             } else {
                 return {
@@ -45,7 +49,8 @@ export function authSessionReducer(state = initialState.authSession, action: {ty
                     isAuthenticated: false,
                     isError: false,
                     errorMessage: null,
-                    user: null
+                    user: null,
+                    isLoading: false
                 };
             }
         }
@@ -55,7 +60,8 @@ export function authSessionReducer(state = initialState.authSession, action: {ty
                 isAuthenticated: false,
                 isError: false,
                 errorMessage: null,
-                user: null
+                user: null,
+                isLoading: false
             };
         }
         default: {

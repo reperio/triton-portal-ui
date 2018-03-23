@@ -3,6 +3,7 @@ import {connect} from "react-redux";
 import {submitAuth} from "../actions/authActions";
 import {bindActionCreators} from "redux";
 import LoginForm from "../components/loginForm";
+import LoadingSpinner from '../components/loadingSpinner';
 
 class LoginFormValues {
     email: string;
@@ -18,7 +19,10 @@ class LoginFormContainer extends React.Component {
 
     render() {
         return (
-            <LoginForm onSubmit={this.onSubmit.bind(this)} authSession={this.props.authSession} />
+            <div>
+                {this.props.authSession.isLoading ? <LoadingSpinner/> : null}
+                <LoginForm onSubmit={this.onSubmit.bind(this)} authSession={this.props.authSession} />
+            </div>
         );
     }
 }
