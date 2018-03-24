@@ -25,20 +25,7 @@ const NavMenu = (props: any) => (
         <div className="r-menu-item">
             {props.authSession.isAuthenticated ? <NavMenuLogOutLinkContainer/> : <NavMenuLoginLink/>}
         </div>
-    </div>
-    /*<Navbar className="navContainer">
-        <Nav>
-            {props.authSession.isAuthenticated ? <LinkContainer to="/home"><NavItem>Home</NavItem></LinkContainer> : null}
-            {props.authSession.isAuthenticated ? <LinkContainer to="/virtual-machines"><NavItem>Virtual Machines</NavItem></LinkContainer> : null}
-            {props.authSession.isAuthenticated ? <NavMenuLogOutLinkContainer/> : <NavMenuLoginLink/>}
-        </Nav>
-    </Navbar> 
-    
-    
-    ${activeRoute === 'home' ? 'r-menu-item-active' : ''}
-
-    */
-    
+    </div>    
 );
 
 export default NavMenu;

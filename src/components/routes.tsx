@@ -7,6 +7,7 @@ import PrivateRouteContainer from "../containers/privateRouteContainer";
 import PublicRouteContainer from "../containers/publicRouteContainer";
 import MainDashboardContainer from "../containers/mainDashboardContainer";
 import VirtualMachinesContainer from "../containers/virtualMachinesContainer";
+import CreateAccountFormContainer from '../containers/createAccountFormContainer';
 
 const Routes = (props: any) => (
     <div className="contentContainer" style={{backgroundColor: "white", padding: "15px"}}>
@@ -14,6 +15,7 @@ const Routes = (props: any) => (
             <PrivateRouteContainer exact path="/home" component={MainDashboardContainer} />
             <PrivateRouteContainer exact path="/virtual-machines" component={VirtualMachinesContainer} />
             <PublicRouteContainer exact path="/login" component={LoginFormContainer} />
+            <PublicRouteContainer exact path="/create-account" component={CreateAccountFormContainer} />
             <Route>
                 <Redirect to="/home"/>
             </Route>

@@ -3,7 +3,7 @@ import {Dispatch} from "react-redux";
 import { virtualMachineService } from "../services/virtualMachineService";
 import { userService } from "../services/userService";
 
-export const authActionTypes = {
+export const virtualMachineActionTypes = {
     VIRTUAL_MACHINES_GET_ALL_START: "VIRTUAL_MACHINES_GET_ALL_START",
     VIRTUAL_MACHINES_GET_ALL_END: "VIRTUAL_MACHINES_GET_ALL_END",
     VIRTUAL_MACHINES_GET_ALL_ERROR: "VIRTUAL_MACHINES_GET_ALL_ERROR"
@@ -17,7 +17,7 @@ function getErrorMessageFromStatusCode(statusCode: number) {
 
 export const getAllVms = () => async (dispatch: Dispatch<any>) => {
     dispatch({
-        type: authActionTypes.VIRTUAL_MACHINES_GET_ALL_START,
+        type: virtualMachineActionTypes.VIRTUAL_MACHINES_GET_ALL_START,
         payload: {
             vms: [],
             isLoading: true
@@ -27,7 +27,7 @@ export const getAllVms = () => async (dispatch: Dispatch<any>) => {
         const vms = await virtualMachineService.getAll();
 
         dispatch({
-            type: authActionTypes.VIRTUAL_MACHINES_GET_ALL_END,
+            type: virtualMachineActionTypes.VIRTUAL_MACHINES_GET_ALL_END,
             payload: {
                 vms: vms.data.data,
                 isLoading: false
@@ -35,7 +35,7 @@ export const getAllVms = () => async (dispatch: Dispatch<any>) => {
         });
     } catch (e) {
         dispatch({
-            type: authActionTypes.VIRTUAL_MACHINES_GET_ALL_ERROR,
+            type: virtualMachineActionTypes.VIRTUAL_MACHINES_GET_ALL_ERROR,
             payload: {
                 message: getErrorMessageFromStatusCode(e.response != null ? e.response.status : null)
             }

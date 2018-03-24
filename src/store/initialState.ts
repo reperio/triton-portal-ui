@@ -1,6 +1,7 @@
 export class State {
     authSession: StateAuthSession;
     virtualMachines: StateVirtualMachines;
+    createAccount: StateCreateAccount
 }
 
 export class StateAuthSession {
@@ -17,6 +18,10 @@ export class StateVirtualMachines {
     isLoading: boolean;
 }
 
+export class StateCreateAccount {
+    isLoading: boolean;
+}
+
 export const initialState: State = {
     authSession: {
         isPending: false,
@@ -28,6 +33,9 @@ export const initialState: State = {
     },
     virtualMachines: {
         vms: [], 
+        isLoading: false
+    },
+    createAccount: {
         isLoading: false
     }
 };
