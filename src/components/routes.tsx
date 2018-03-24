@@ -9,7 +9,7 @@ import MainDashboardContainer from "../containers/mainDashboardContainer";
 import VirtualMachinesContainer from "../containers/virtualMachinesContainer";
 
 const Routes = (props: any) => (
-    <div style={{backgroundColor: "white", padding: "15px"}}>
+    <div className="contentContainer" style={{backgroundColor: "white", padding: "15px"}}>
         <Switch>
             <PrivateRouteContainer exact path="/home" component={MainDashboardContainer} />
             <PrivateRouteContainer exact path="/virtual-machines" component={VirtualMachinesContainer} />

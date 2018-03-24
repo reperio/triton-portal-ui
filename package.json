@@ -8,6 +8,7 @@
     "core-js": "^2.5.3",
     "enzyme": "^3.3.0",
     "enzyme-adapter-react-16": "^1.1.1",
+    "file-loader": "^1.1.11",
     "history": "^4.7.2",
     "node-fetch": "^1.7.3",
     "prop-types": "^15.6.0",
@@ -23,6 +24,7 @@
     "redux": "^3.7.2",
     "redux-form": "^7.3.0",
     "redux-thunk": "^2.2.0",
+    "url-loader": "^1.0.1",
     "yarn": "^1.5.1"
   },
   "devDependencies": {

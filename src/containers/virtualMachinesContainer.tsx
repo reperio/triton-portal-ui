@@ -25,9 +25,9 @@ class VirtualMachinesContainer extends React.Component {
             <div>
                 {this.props.virtualMachines.isLoading ? <LoadingSpinner/> : null}
                 <ReactTable 
-                data={this.props.virtualMachines.vms} 
-                columns={this.columns}
-                className="-striped -highlight"/>
+                    data={this.props.virtualMachines.vms} 
+                    columns={this.columns}
+                    className="-striped -highlight"/>
             </div>
         );
     }
