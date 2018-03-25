@@ -6,13 +6,25 @@ export function virtualMachinesReducer(state = initialState.virtualMachines, act
         case virtualMachineActionTypes.VIRTUAL_MACHINES_GET_ALL_START: {
             return {
                 vms: [],
-                isLoading: true
+                isLoading: true,
+                errorMessages: [],
+                isError: false
             };
         }
         case virtualMachineActionTypes.VIRTUAL_MACHINES_GET_ALL_END: {
             return {
                 vms: action.payload.vms,
-                isLoading: false
+                isLoading: false,
+                isError: false,
+                errorMessages: []
+            };
+        }
+        case virtualMachineActionTypes.VIRTUAL_MACHINES_GET_ALL_ERROR: {
+            return {
+                vms: [],
+                isLoading: false,
+                isError: true,
+                errorMessages: [action.payload.message]
             };
         }
         default: {

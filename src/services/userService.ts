@@ -6,7 +6,16 @@ class UserService {
     }
 
     async createUser(username: string, password: string, firstName: string, lastName: string, email: string) {
-        return await axios.post(`/users`, {username, password, firstName, lastName, email});
+        const payload = {
+            user: {
+                username, 
+                password, 
+                firstName, 
+                lastName, 
+                email
+            }
+        };
+        return await axios.post(`/users`, payload);
     }
 }
 

@@ -24,6 +24,7 @@ class VirtualMachinesContainer extends React.Component {
         return (
             <div>
                 {this.props.virtualMachines.isLoading ? <LoadingSpinner/> : null}
+                {this.props.virtualMachines.isError ? <p className="alert alert-danger">{this.props.virtualMachines.errorMessage}</p> : ""}
                 <ReactTable 
                     data={this.props.virtualMachines.vms} 
                     columns={this.columns}

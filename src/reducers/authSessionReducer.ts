@@ -8,7 +8,7 @@ export function authSessionReducer(state = initialState.authSession, action: {ty
                 isPending: true,
                 isAuthenticated: false,
                 isError: false,
-                errorMessage: null,
+                errorMessages: [],
                 user: null,
                 isLoading: true
             };
@@ -18,7 +18,7 @@ export function authSessionReducer(state = initialState.authSession, action: {ty
                 isPending: false,
                 isAuthenticated: true,
                 isError: false,
-                errorMessage: null,
+                errorMessages: [],
                 user: action.payload.user,
                 isLoading: false
             };
@@ -28,7 +28,7 @@ export function authSessionReducer(state = initialState.authSession, action: {ty
                 isPending: false,
                 isAuthenticated: false,
                 isError: true,
-                errorMessage: action.payload.message,
+                errorMessages: [action.payload.message],
                 user: null,
                 isLoading: false
             };
@@ -39,7 +39,7 @@ export function authSessionReducer(state = initialState.authSession, action: {ty
                     isPending: false,
                     isAuthenticated: true,
                     isError: false,
-                    errorMessage: null,
+                    errorMessages: [],
                     user: Object.assign({}, action.payload.user),
                     isLoading: false
                 };
@@ -48,7 +48,7 @@ export function authSessionReducer(state = initialState.authSession, action: {ty
                     isPending: false,
                     isAuthenticated: false,
                     isError: false,
-                    errorMessage: null,
+                    errorMessages: [],
                     user: null,
                     isLoading: false
                 };
@@ -59,7 +59,17 @@ export function authSessionReducer(state = initialState.authSession, action: {ty
                 isPending: false,
                 isAuthenticated: false,
                 isError: false,
-                errorMessage: null,
+                errorMessages: [],
+                user: null,
+                isLoading: false
+            };
+        }
+        case authActionTypes.INPUT_VALIDATE: {
+            return {
+                isPending: false,
+                isAuthenticated: false,
+                isError: false,
+                errorMessages: action.payload.validationErrors,
                 user: null,
                 isLoading: false
             };

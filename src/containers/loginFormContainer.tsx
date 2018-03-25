@@ -8,6 +8,7 @@ import PublicRouteContainer from "./publicRouteContainer";
 import CreateAccountFormContainer from './createAccountFormContainer';
 import LinkContainer from "react-router-bootstrap/lib/LinkContainer";
 import {MenuItem, Nav, Navbar, NavDropdown, NavItem} from "react-bootstrap";
+import Error from "../components/error";
 
 class LoginFormValues {
     email: string;
@@ -25,9 +26,10 @@ class LoginFormContainer extends React.Component {
         return (
             <div>
                 {this.props.authSession.isLoading ? <LoadingSpinner/> : null}
+                {this.props.authSession.errorMessages.length > 0 ? <Error errors={this.props.authSession.errorMessages}/> : null}
                 <LoginForm onSubmit={this.onSubmit.bind(this)} authSession={this.props.authSession} />
                 <div>
-                    Already have an account?
+                    Don't have an account?
                     <LinkContainer to="/create-account"><NavItem>Create Account</NavItem></LinkContainer>
                 </div>
             </div>

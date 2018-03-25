@@ -37,7 +37,8 @@ export const getAllVms = () => async (dispatch: Dispatch<any>) => {
         dispatch({
             type: virtualMachineActionTypes.VIRTUAL_MACHINES_GET_ALL_ERROR,
             payload: {
-                message: getErrorMessageFromStatusCode(e.response != null ? e.response.status : null)
+                message: getErrorMessageFromStatusCode(e.response != null ? e.response.status : null),
+                isLoading: false
             }
         });
     }

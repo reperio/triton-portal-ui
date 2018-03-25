@@ -2,13 +2,15 @@ import {Dispatch} from "react-redux";
 
 import { authService } from "../services/authService";
 import { userService } from "../services/userService";
+import { inputValidationService } from "../services/inputValidationService";
 
 export const authActionTypes = {
     AUTH_LOGIN_PENDING: "AUTH_LOGIN_PENDING",
     AUTH_LOGIN_SUCCESSFUL: "AUTH_LOGIN_SUCCESSFUL",
     AUTH_LOGIN_ERROR: "AUTH_LOGIN_ERROR",
     AUTH_SET_TOKEN: "AUTH_SET_TOKEN",
-    AUTH_CLEAR_TOKEN: "AUTH_CLEAR_TOKEN"
+    AUTH_CLEAR_TOKEN: "AUTH_CLEAR_TOKEN",
+    INPUT_VALIDATE: "INPUT_VALIDATE"
 };
 
 function getErrorMessageFromStatusCode(statusCode: number) {
@@ -64,19 +66,34 @@ export const setAuth = (user: any) => async (dispatch: Dispatch<any>) => {
 };
 
 export const submitAuth = (email: string, password: string) => async (dispatch: Dispatch<any>) => {
-    dispatch({
-        type: authActionTypes.AUTH_LOGIN_PENDING,
-        payload: {}
-    });
 
-    try {
-        await authService.login(email, password);
-    } catch (e) {
+    let errors = inputValidationService.validate([
+        {type: "Password", value: password},
+        {type: "Email", value: email}
+    ]);
+
+    if (errors.length > 0) {
         dispatch({
-            type: authActionTypes.AUTH_LOGIN_ERROR,
+            type: authActionTypes.INPUT_VALIDATE,
             payload: {
-                message: getErrorMessageFromStatusCode(e.response != null ? e.response.status : null)
+                validationErrors: errors
             }
         });
+    } else {
+        dispatch({
+            type: authActionTypes.AUTH_LOGIN_PENDING,
+            payload: {}
+        });
+    
+        try {
+            await authService.login(email, password);
+        } catch (e) {
+            dispatch({
+                type: authActionTypes.AUTH_LOGIN_ERROR,
+                payload: {
+                    message: getErrorMessageFromStatusCode(e.response != null ? e.response.status : null)
+                }
+            });
+        }
     }
 };

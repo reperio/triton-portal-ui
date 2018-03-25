@@ -1,14 +1,14 @@
 export class State {
     authSession: StateAuthSession;
     virtualMachines: StateVirtualMachines;
-    createAccount: StateCreateAccount
+    account: StateAccount;
 }
 
 export class StateAuthSession {
     isPending: boolean;
     isAuthenticated: boolean;
     isError: boolean;
-    errorMessage: string;
+    errorMessages: string[];
     user: any;
     isLoading: boolean;
 }
@@ -16,10 +16,14 @@ export class StateAuthSession {
 export class StateVirtualMachines {
     vms: any[];
     isLoading: boolean;
+    isError: boolean;
+    errorMessages: string[];
 }
 
-export class StateCreateAccount {
+export class StateAccount {
     isLoading: boolean;
+    isError: boolean;
+    errorMessages: string[];
 }
 
 export const initialState: State = {
@@ -27,15 +31,19 @@ export const initialState: State = {
         isPending: false,
         isAuthenticated: false,
         isError: false,
-        errorMessage: null,
+        errorMessages: [],
         user: null,
         isLoading: false
     },
     virtualMachines: {
         vms: [], 
-        isLoading: false
+        isLoading: false,
+        isError: false,
+        errorMessages: [],
     },
-    createAccount: {
-        isLoading: false
+    account: {
+        isLoading: false,
+        isError: false,
+        errorMessages: []
     }
 };
