@@ -4,10 +4,8 @@ import {submitAuth} from "../actions/authActions";
 import {bindActionCreators} from "redux";
 import LoginForm from "../components/loginForm";
 import LoadingSpinner from '../components/loadingSpinner';
-import PublicRouteContainer from "./publicRouteContainer";
-import CreateAccountFormContainer from './createAccountFormContainer';
 import LinkContainer from "react-router-bootstrap/lib/LinkContainer";
-import {MenuItem, Nav, Navbar, NavDropdown, NavItem} from "react-bootstrap";
+import {NavItem} from "react-bootstrap";
 import Error from "../components/error";
 
 class LoginFormValues {
@@ -27,7 +25,7 @@ class LoginFormContainer extends React.Component {
             <div>
                 {this.props.authSession.isLoading ? <LoadingSpinner/> : null}
                 {this.props.authSession.errorMessages.length > 0 ? <Error errors={this.props.authSession.errorMessages}/> : null}
-                <LoginForm onSubmit={this.onSubmit.bind(this)} authSession={this.props.authSession} />
+                <LoginForm onSubmit={this.onSubmit.bind(this)}/>
                 <div>
                     Don't have an account?
                     <LinkContainer to="/create-account"><NavItem>Create Account</NavItem></LinkContainer>

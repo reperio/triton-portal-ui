@@ -6,29 +6,25 @@ export function accountReducer(state = initialState.account, action: {type: stri
         case accountActionTypes.USER_CREATE_START: {
             return {
                 isLoading: true,
-                errorMessages: [],
-                isError: false
+                errorMessages: []
             };
         }
         case accountActionTypes.USER_CREATE_END: {
             return {
                 isLoading: false,
-                errorMessages: [],
-                isError: false
+                errorMessages: []
             };
         }
         case accountActionTypes.USER_CREATE_ERROR: {
             return {
                 isLoading: false,
-                errorMessages: [action.payload.message],
-                isError: true
+                errorMessages: [action.payload.message]
             };
         }
         case accountActionTypes.INPUT_VALIDATE: {
             return {
                 isLoading: false,
-                errorMessages: action.payload.validationErrors,
-                isError: false
+                errorMessages: action.payload.validationErrors
             };
         }
         default: {

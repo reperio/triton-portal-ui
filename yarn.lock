@@ -85,6 +85,12 @@
   dependencies:
     "@types/react" "*"
 
+"@types/react-widgets@^4.1.2":
+  version "4.1.2"
+  resolved "https://registry.yarnpkg.com/@types/react-widgets/-/react-widgets-4.1.2.tgz#82cf164d6688bb421313554ab42343950830dc91"
+  dependencies:
+    "@types/react" "*"
+
 "@types/react@*", "@types/react@^16.0.38":
   version "16.0.40"
   resolved "https://registry.yarnpkg.com/@types/react/-/react-16.0.40.tgz#caabc2296886f40b67f6fc80f0f3464476461df9"
@@ -1451,7 +1457,7 @@ class-utils@^0.3.5:
     isobject "^3.0.0"
     static-extend "^0.1.1"
 
-classnames@^2.2.5:
+classnames@^2.1.2, classnames@^2.2.5:
   version "2.2.5"
   resolved "https://registry.yarnpkg.com/classnames/-/classnames-2.2.5.tgz#fb3801d453467649ef3603c7d61a02bd129bde6d"
 
@@ -1974,6 +1980,10 @@ dashdash@^1.12.0:
   dependencies:
     assert-plus "^1.0.0"
 
+date-arithmetic@^3.1.0:
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/date-arithmetic/-/date-arithmetic-3.1.0.tgz#1fcd03dbd504b9dbee2b9078c85a5f1c7d3cc2d3"
+
 date-fns@^1.23.0, date-fns@^1.27.2:
   version "1.29.0"
   resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-1.29.0.tgz#12e609cdcb935127311d04d33334e2960a2a54e6"
@@ -2152,7 +2162,7 @@ dom-converter@~0.1:
   dependencies:
     utila "~0.3"
 
-dom-helpers@^3.2.0, dom-helpers@^3.2.1:
+dom-helpers@^3.2.0, dom-helpers@^3.2.1, dom-helpers@^3.3.1:
   version "3.3.1"
   resolved "https://registry.yarnpkg.com/dom-helpers/-/dom-helpers-3.3.1.tgz#fc1a4e15ffdf60ddde03a480a9c0fece821dd4a6"
 
@@ -5684,6 +5694,13 @@ react-bootstrap@^0.32.1:
     uncontrollable "^4.1.0"
     warning "^3.0.0"
 
+react-component-managers@^3.1.0:
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/react-component-managers/-/react-component-managers-3.1.0.tgz#4fd4b76f4cef3e597d020f612b8fe92e7f87ecbc"
+  dependencies:
+    prop-types "^15.6.1"
+    spy-on-component "^1.0.2"
+
 react-dom@^16.2.0:
   version "16.2.0"
   resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-16.2.0.tgz#69003178601c0ca19b709b33a83369fe6124c044"
@@ -5798,7 +5815,7 @@ react-test-renderer@^16.0.0-0:
     object-assign "^4.1.1"
     prop-types "^15.6.0"
 
-react-transition-group@^2.0.0, react-transition-group@^2.2.0:
+react-transition-group@^2.0.0, react-transition-group@^2.2.0, react-transition-group@^2.2.1:
   version "2.2.1"
   resolved "https://registry.yarnpkg.com/react-transition-group/-/react-transition-group-2.2.1.tgz#e9fb677b79e6455fd391b03823afe84849df4a10"
   dependencies:
@@ -5807,6 +5824,20 @@ react-transition-group@^2.0.0, react-transition-group@^2.2.0:
     dom-helpers "^3.2.0"
     loose-envify "^1.3.1"
     prop-types "^15.5.8"
+    warning "^3.0.0"
+
+react-widgets@^4.2.6:
+  version "4.2.6"
+  resolved "https://registry.yarnpkg.com/react-widgets/-/react-widgets-4.2.6.tgz#ed277ab9c6d9890debd2261b95cc36c2fb2f94ec"
+  dependencies:
+    classnames "^2.1.2"
+    date-arithmetic "^3.1.0"
+    dom-helpers "^3.3.1"
+    invariant "^2.2.3"
+    prop-types-extra "^1.0.1"
+    react-component-managers "^3.1.0"
+    react-transition-group "^2.2.1"
+    uncontrollable "^5.0.0"
     warning "^3.0.0"
 
 react@^16.2.0:
@@ -6657,6 +6688,10 @@ sprintf-js@~1.0.2:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/sprintf-js/-/sprintf-js-1.0.3.tgz#04e6926f662895354f3dd015203633b857297e2c"
 
+spy-on-component@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/spy-on-component/-/spy-on-component-1.0.2.tgz#be02b9118f0d7d60d33a2de50fc9634cb057aa3f"
+
 sshpk@^1.7.0:
   version "1.14.1"
   resolved "https://registry.yarnpkg.com/sshpk/-/sshpk-1.14.1.tgz#130f5975eddad963f1d56f92b9ac6c51fa9f83eb"
@@ -7134,6 +7169,12 @@ uid-number@^0.0.6:
 uncontrollable@^4.1.0:
   version "4.1.0"
   resolved "https://registry.yarnpkg.com/uncontrollable/-/uncontrollable-4.1.0.tgz#e0358291252e1865222d90939b19f2f49f81c1a9"
+  dependencies:
+    invariant "^2.1.0"
+
+uncontrollable@^5.0.0:
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/uncontrollable/-/uncontrollable-5.0.0.tgz#ab713baa04df3fcb6ac65bc18f1792fee1729119"
   dependencies:
     invariant "^2.1.0"
 

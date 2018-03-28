@@ -7,15 +7,13 @@ export function virtualMachinesReducer(state = initialState.virtualMachines, act
             return {
                 vms: [],
                 isLoading: true,
-                errorMessages: [],
-                isError: false
+                errorMessages: []
             };
         }
         case virtualMachineActionTypes.VIRTUAL_MACHINES_GET_ALL_END: {
             return {
                 vms: action.payload.vms,
                 isLoading: false,
-                isError: false,
                 errorMessages: []
             };
         }
@@ -23,7 +21,6 @@ export function virtualMachinesReducer(state = initialState.virtualMachines, act
             return {
                 vms: [],
                 isLoading: false,
-                isError: true,
                 errorMessages: [action.payload.message]
             };
         }

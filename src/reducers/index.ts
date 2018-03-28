@@ -3,10 +3,12 @@ import { reducer as formReducer } from 'redux-form'
 import { authSessionReducer } from "./authSessionReducer"
 import {virtualMachinesReducer} from "./virtualMachinesReducer";
 import {accountReducer} from "./accountReducer";
+import { packagesReducer } from "./packagesReducer";
 
 export const rootReducer = combineReducers({
     form: formReducer,
     authSession: authSessionReducer,
     virtualMachines: virtualMachinesReducer,
-    account: accountReducer
+    account: accountReducer,
+    packages: packagesReducer
 });

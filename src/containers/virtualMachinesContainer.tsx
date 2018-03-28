@@ -6,6 +6,9 @@ import {getAllVms} from "../actions/virtualMachineActions";
 import ReactTable from 'react-table';
 import 'react-table/react-table.css';
 import LoadingSpinner from '../components/loadingSpinner';
+import {FormGroup} from "react-bootstrap";
+import {LinkContainer} from "react-router-bootstrap";
+import {NavItem} from "react-bootstrap";
 
 class VirtualMachinesContainer extends React.Component {
     props: any;
@@ -24,7 +27,10 @@ class VirtualMachinesContainer extends React.Component {
         return (
             <div>
                 {this.props.virtualMachines.isLoading ? <LoadingSpinner/> : null}
-                {this.props.virtualMachines.isError ? <p className="alert alert-danger">{this.props.virtualMachines.errorMessage}</p> : ""}
+                {this.props.virtualMachines.errorMessages.length > 0 ? <p className="alert alert-danger">{this.props.virtualMachines.errorMessage}</p> : ""}
+                <FormGroup>
+                    <LinkContainer to="/create-virtual-machine"><NavItem>Create a virtual machine</NavItem></LinkContainer>
+                </FormGroup>
                 <ReactTable 
                     data={this.props.virtualMachines.vms} 
                     columns={this.columns}

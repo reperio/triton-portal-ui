@@ -28,8 +28,6 @@ html, body {
   height:55px;
 }
 
-
-
 .r-nav-menu {
   background-color: $nav-menu-background;
   height: 100%;
@@ -73,4 +71,8 @@ html, body {
       background-color: #fff;
     }
   }
+}
+
+.-pagination {
+  height: 40px;
 }

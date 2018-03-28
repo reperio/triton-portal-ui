@@ -26,7 +26,7 @@ export const createAccount = (username: string, password: string, confirmPasswor
     ]);
 
     if (password !== confirmPassword) {
-        errors.push("Passwords do not match.");
+        errors.push("Passwords do not match");
     }
 
     if (errors.length > 0) {

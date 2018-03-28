@@ -7,7 +7,6 @@ export function authSessionReducer(state = initialState.authSession, action: {ty
             return {
                 isPending: true,
                 isAuthenticated: false,
-                isError: false,
                 errorMessages: [],
                 user: null,
                 isLoading: true
@@ -17,7 +16,6 @@ export function authSessionReducer(state = initialState.authSession, action: {ty
             return {
                 isPending: false,
                 isAuthenticated: true,
-                isError: false,
                 errorMessages: [],
                 user: action.payload.user,
                 isLoading: false
@@ -27,7 +25,6 @@ export function authSessionReducer(state = initialState.authSession, action: {ty
             return {
                 isPending: false,
                 isAuthenticated: false,
-                isError: true,
                 errorMessages: [action.payload.message],
                 user: null,
                 isLoading: false
@@ -38,7 +35,6 @@ export function authSessionReducer(state = initialState.authSession, action: {ty
                 return {
                     isPending: false,
                     isAuthenticated: true,
-                    isError: false,
                     errorMessages: [],
                     user: Object.assign({}, action.payload.user),
                     isLoading: false
@@ -47,7 +43,6 @@ export function authSessionReducer(state = initialState.authSession, action: {ty
                 return {
                     isPending: false,
                     isAuthenticated: false,
-                    isError: false,
                     errorMessages: [],
                     user: null,
                     isLoading: false
@@ -58,7 +53,6 @@ export function authSessionReducer(state = initialState.authSession, action: {ty
             return {
                 isPending: false,
                 isAuthenticated: false,
-                isError: false,
                 errorMessages: [],
                 user: null,
                 isLoading: false
@@ -68,7 +62,6 @@ export function authSessionReducer(state = initialState.authSession, action: {ty
             return {
                 isPending: false,
                 isAuthenticated: false,
-                isError: false,
                 errorMessages: action.payload.validationErrors,
                 user: null,
                 isLoading: false
