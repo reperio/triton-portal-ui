@@ -81,12 +81,11 @@ export const getVmsByOwner = (owner_uuid: string) => async (dispatch: Dispatch<a
     }
 };
 
-export const createVm = (owner_uuid: string, alias: string, networks: string[], brand: string, billing_id: string, image_uuid: string) => async (dispatch: Dispatch<any>) => {
+export const createVm = (owner_uuid: string, alias: string, networks: any[], brand: string, billing_id: string, image_uuid: string) => async (dispatch: Dispatch<any>) => {
 
     let errors = inputValidationService.validate([
         {type: "OwnerId", value: owner_uuid},
         {type: "Alias", value: alias},
-        {type: "Networks", value: networks},
         {type: "Brand", value: brand},
         {type: "BillingId", value: billing_id},
         {type: "ImageUuid", value: image_uuid}
@@ -107,7 +106,7 @@ export const createVm = (owner_uuid: string, alias: string, networks: string[], 
             }
         });
         try {
-            //const vms = await virtualMachineService.createVm(owner_uuid, alias, networks, brand, billing_id, image_uuid);
+            const vm = await virtualMachineService.createVm(owner_uuid, alias, networks, brand, billing_id, image_uuid);
     
             dispatch({
                 type: virtualMachineActionTypes.VIRTUAL_MACHINE_CREATE_END,

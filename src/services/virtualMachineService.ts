@@ -13,7 +13,7 @@ class VirtualMachineService {
         return await axios.get(`/triton/vms/owner/${owner_uuid}`);
     }
     
-    async createVm(owner_uuid: string, alias: string, networks: string[], brand: string, billing_id: string, image_uuid: string) {
+    async createVm(owner_uuid: string, alias: string, networks: any[], brand: string, billing_id: string, image_uuid: string) {
         const payload = {
             user: {
                 owner_uuid,

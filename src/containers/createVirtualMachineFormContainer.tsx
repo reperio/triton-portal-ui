@@ -9,15 +9,15 @@ import Error from "../components/error";
 
 class CreateVirtualMachineFormValues {
     alias: string;
-    package: string;
     image: string;
+    brand: string;
 }
 
 class CreateVirtualMachineFormContainer extends React.Component {
     props: any;
 
     async onSubmit(values: CreateVirtualMachineFormValues) {
-        //await this.props.actions.createVm(this.props.authSession.owner_uuid, values.alias, [], values.package, '7b5981c4-1889-11e7-b4c5-3f3bdfc9b88b', 'lx', '');
+        await this.props.actions.createVm(this.props.authSession.user.data.ownerUuid, values.alias, [], values.brand, this.props.packages.selectedPackage.uuid, values.image);
     };
 
     async componentDidMount() {

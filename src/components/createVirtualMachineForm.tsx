@@ -13,7 +13,7 @@ const CreateVirtualMachineForm = (props: any) => (
             name="alias" 
             component="input" 
             className="form-control" 
-            ype="text" 
+            type="text" 
             placeholder="Virtual Machine Name" />
         </FormGroup>
         <FormGroup style={{maxWidth: "280px"}}>
@@ -22,7 +22,8 @@ const CreateVirtualMachineForm = (props: any) => (
                 valueField="uuid" 
                 textField="name" 
                 data={props.packages.packages}
-                onSelect={props.showPackageInformation} />
+                onSelect={props.showPackageInformation}
+                placeholder="Select A Package" />
         </FormGroup>
         {props.packages.showInformation
         ? <PackageInformation
@@ -54,4 +55,4 @@ const CreateVirtualMachineForm = (props: any) => (
 
 
 // casted to <any> because reduxForm doesn't play nicely with other things
-export default reduxForm({ form: 'createVirtualMachineForm' })(CreateVirtualMachineForm) as any;
+export default reduxForm({ form: 'createVirtualMachineForm', initialValues: {image: '7b5981c4-1889-11e7-b4c5-3f3bdfc9b88b', brand: 'lx'} })(CreateVirtualMachineForm) as any;
