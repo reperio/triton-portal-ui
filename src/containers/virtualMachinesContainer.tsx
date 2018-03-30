@@ -2,7 +2,7 @@ import React from 'react'
 import {connect} from "react-redux";
 
 import {bindActionCreators} from "redux";
-import {getVmsByOwner, getAllVms, startVm} from "../actions/virtualMachineActions";
+import {getVmsByOwner, getAllVms, startVm, stopVm, rebootVm, deleteVm} from "../actions/virtualMachineActions";
 import ReactTable from 'react-table';
 import 'react-table/react-table.css';
 import LoadingSpinner from '../components/loadingSpinner';
@@ -17,7 +17,8 @@ class VirtualMachinesContainer extends React.Component {
 
     columns: any[] = [
         { Header: 'Name', accessor: 'alias' },
-        { Header: 'Ram', accessor: 'ram' }
+        { Header: 'Ram', accessor: 'ram' },
+        { Header: 'State', accessor: 'state'}
     ];
 
     async componentDidMount() {
@@ -25,19 +26,23 @@ class VirtualMachinesContainer extends React.Component {
     }
 
     async startVirtualMachine(row:any) {
-        await this.props.actions.startVm(this.props.authSession.user.data.ownerUuid, row.uuid);
+        await this.props.actions.startVm(this.props.authSession.user.data.ownerUuid, row.original.uuid);
+        await this.componentDidMount();
     }
 
     async endVirtualMachine(row:any) {
-        await this.props.actions.endVm(this.props.authSession.user.data.ownerUuid, row.uuid);
+        await this.props.actions.stopVm(this.props.authSession.user.data.ownerUuid, row.original.uuid);
+        await this.componentDidMount();
     }
 
     async restartVirtualMachine(row:any) {
-        await this.props.actions.rebootVm(this.props.authSession.user.data.ownerUuid, row.uuid);
+        await this.props.actions.rebootVm(this.props.authSession.user.data.ownerUuid, row.original.uuid);
+        await this.componentDidMount();
     }
 
     async deleteVirtualMachine(row:any) {
-        await this.props.actions.deleteVm(this.props.authSession.user.data.ownerUuid, row.uuid);
+        await this.props.actions.deleteVm(this.props.authSession.user.data.ownerUuid, row.original.uuid);
+        await this.componentDidMount();
     }
 
     render() {
@@ -55,10 +60,10 @@ class VirtualMachinesContainer extends React.Component {
                     SubComponent={row => {
                         return(
                             <div>
-                                <button onClick={this.startVirtualMachine.bind(this, row.original)} className="btn btn-success vm-actions"><span className="glyphicon glyphicon-play" aria-hidden="true"></span></button>
-                                <button onClick={this.endVirtualMachine.bind(this, row.original)} className="btn btn-warning vm-actions"><span className="glyphicon glyphicon-stop" aria-hidden="true"></span></button>
-                                <button onClick={this.restartVirtualMachine.bind(this, row.original)} className="btn btn-info vm-actions"><span className="glyphicon glyphicon-refresh" aria-hidden="true"></span></button>
-                                <button onClick={this.deleteVirtualMachine.bind(this, row.original)} className="btn btn-danger vm-actions"><span className="glyphicon glyphicon-trash" aria-hidden="true"></span></button>
+                                <button onClick={this.startVirtualMachine.bind(this, row)} className="btn btn-success vm-actions"><span className="glyphicon glyphicon-play" aria-hidden="true"></span></button>
+                                <button onClick={this.endVirtualMachine.bind(this, row)} className="btn btn-warning vm-actions"><span className="glyphicon glyphicon-stop" aria-hidden="true"></span></button>
+                                <button onClick={this.restartVirtualMachine.bind(this, row)} className="btn btn-info vm-actions"><span className="glyphicon glyphicon-refresh" aria-hidden="true"></span></button>
+                                <button onClick={this.deleteVirtualMachine.bind(this, row)} className="btn btn-danger vm-actions"><span className="glyphicon glyphicon-trash" aria-hidden="true"></span></button>
                             </div>
                         );
                     }}/>
@@ -77,7 +82,7 @@ function mapStateToProps(state: any) {
 
 function mapActionToProps(dispatch: any) {
     return {
-        actions: bindActionCreators({getVmsByOwner, getAllVms, startVm}, dispatch)
+        actions: bindActionCreators({getVmsByOwner, getAllVms, startVm, stopVm, deleteVm, rebootVm}, dispatch)
     };
 }
 

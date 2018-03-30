@@ -17,7 +17,7 @@ class CreateVirtualMachineFormContainer extends React.Component {
     props: any;
 
     async onSubmit(values: CreateVirtualMachineFormValues) {
-        await this.props.actions.createVm(this.props.authSession.user.data.ownerUuid, values.alias, [], values.brand, this.props.packages.selectedPackage.uuid, values.image);
+        await this.props.actions.createVm(this.props.authSession.user.data.ownerUuid, values.alias, ["f55fa625-6105-4d99-9ea8-6476bd2eea1d"], values.brand, this.props.packages.selectedPackage.uuid, values.image);
     };
 
     async componentDidMount() {

@@ -15,7 +15,7 @@ class VirtualMachineService {
     
     async createVm(owner_uuid: string, alias: string, networks: any[], brand: string, billing_id: string, image_uuid: string) {
         const payload = {
-            user: {
+            virtualMachine: {
                 owner_uuid,
                 alias,
                 networks, 
