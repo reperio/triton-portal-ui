@@ -31,8 +31,8 @@ class CreateVirtualMachineFormContainer extends React.Component {
     render() {
         return (
             <div>
-                {this.props.virtualMachines.isLoading ? <LoadingSpinner/> : null}
-                {this.props.virtualMachines.errorMessages.length > 0 ? <Error errors={this.props.virtualMachines.errorMessages}/> : null}
+                {this.props.createVirtualMachine.isLoading ? <LoadingSpinner/> : null}
+                {this.props.createVirtualMachine.errorMessages.length > 0 ? <Error errors={this.props.createVirtualMachine.errorMessages}/> : null}
                 <CreateVirtualMachineForm packages={this.props.packages} showPackageInformation={this.showPackageInformation.bind(this)} onSubmit={this.onSubmit.bind(this)} />
             </div>
         );
@@ -42,7 +42,7 @@ class CreateVirtualMachineFormContainer extends React.Component {
 function mapStateToProps(state: any) {
     return {
         authSession: state.authSession,
-        virtualMachines: state.virtualMachines,
+        createVirtualMachine: state.createVirtualMachine,
         packages: state.packages
     };
 }

@@ -26,6 +26,22 @@ class VirtualMachineService {
         };
         return await axios.post(`/triton/vms`, payload);
     }
+
+    async startVm(owner_uuid: string, id: string) {
+        return await axios.put(`triton/vms/${id}/start?owner_id=${owner_uuid}`);
+    }
+
+    async stopVm(owner_uuid: string, id: string) {
+        return await axios.put(`triton/vms/${id}/stop?owner_id=${owner_uuid}`);
+    }
+
+    async rebootVm(owner_uuid: string, id: string) {
+        return await axios.put(`triton/vms/${id}/reboot?owner_id=${owner_uuid}`);
+    }
+
+    async deleteVm(owner_uuid: string, id: string) {
+        return await axios.delete(`triton/vms/${id}?owner_id=${owner_uuid}`);
+    }
 }
 
 export const virtualMachineService = new VirtualMachineService();

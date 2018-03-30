@@ -1,14 +1,18 @@
 import { combineReducers } from "redux";
 import { reducer as formReducer } from 'redux-form'
 import { authSessionReducer } from "./authSessionReducer"
-import {virtualMachinesReducer} from "./virtualMachinesReducer";
-import {accountReducer} from "./accountReducer";
+import { virtualMachinesActionsReducer } from "./virtualMachinesActionsReducer";
+import { virtualMachinesTableReducer } from "./virtualMachinesTableReducer";
+import { createVirtualMachineReducer } from './createVirtualMachineReducer';
+import { accountReducer } from "./accountReducer";
 import { packagesReducer } from "./packagesReducer";
 
 export const rootReducer = combineReducers({
     form: formReducer,
     authSession: authSessionReducer,
-    virtualMachines: virtualMachinesReducer,
+    virtualMachinesActions: virtualMachinesActionsReducer,
+    virtualMachines: virtualMachinesTableReducer,
+    createVirtualMachine: createVirtualMachineReducer,
     account: accountReducer,
     packages: packagesReducer
 });

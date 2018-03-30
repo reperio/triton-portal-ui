@@ -2,13 +2,14 @@ import React from 'react'
 import {connect} from "react-redux";
 
 import {bindActionCreators} from "redux";
-import {getVmsByOwner, getAllVms} from "../actions/virtualMachineActions";
+import {getVmsByOwner, getAllVms, startVm} from "../actions/virtualMachineActions";
 import ReactTable from 'react-table';
 import 'react-table/react-table.css';
 import LoadingSpinner from '../components/loadingSpinner';
 import {FormGroup} from "react-bootstrap";
 import {LinkContainer} from "react-router-bootstrap";
 import {NavItem} from "react-bootstrap";
+import Error from '../components/error';
 
 class VirtualMachinesContainer extends React.Component {
     props: any;
@@ -20,18 +21,30 @@ class VirtualMachinesContainer extends React.Component {
     ];
 
     async componentDidMount() {
-        await this.props.actions.getAllVms(this.props.authSession.user.data.ownerUuid);
+        await this.props.actions.getVmsByOwner(this.props.authSession.user.data.ownerUuid);
     }
 
-    handleButtonClick(e:any) {
-        
+    async startVirtualMachine(row:any) {
+        await this.props.actions.startVm(this.props.authSession.user.data.ownerUuid, row.uuid);
+    }
+
+    async endVirtualMachine(row:any) {
+        await this.props.actions.endVm(this.props.authSession.user.data.ownerUuid, row.uuid);
+    }
+
+    async restartVirtualMachine(row:any) {
+        await this.props.actions.rebootVm(this.props.authSession.user.data.ownerUuid, row.uuid);
+    }
+
+    async deleteVirtualMachine(row:any) {
+        await this.props.actions.deleteVm(this.props.authSession.user.data.ownerUuid, row.uuid);
     }
 
     render() {
         return (
             <div>
-                {this.props.virtualMachines.isLoading ? <LoadingSpinner/> : null}
-                {this.props.virtualMachines.errorMessages.length > 0 ? <p className="alert alert-danger">{this.props.virtualMachines.errorMessage}</p> : ""}
+                {this.props.virtualMachines.isLoading || this.props.virtualMachinesActions.isLoading ? <LoadingSpinner/> : null}
+                {this.props.virtualMachines.errorMessages.length || this.props.virtualMachinesActions.errorMessages.length > 0 ? <Error errors={this.props.virtualMachines.errorMessages.concat(this.props.virtualMachinesActions.errorMessages)}/> : null}
                 <FormGroup>
                     <LinkContainer to="/create-virtual-machine"><NavItem>Create a virtual machine</NavItem></LinkContainer>
                 </FormGroup>
@@ -42,10 +55,10 @@ class VirtualMachinesContainer extends React.Component {
                     SubComponent={row => {
                         return(
                             <div>
-                                <button onClick={this.handleButtonClick.bind(row.original)} className="btn btn-success vm-actions"><span className="glyphicon glyphicon-play" aria-hidden="true"></span></button>
-                                <button className="btn btn-warning vm-actions"><span className="glyphicon glyphicon-stop" aria-hidden="true"></span></button>
-                                <button className="btn btn-info vm-actions"><span className="glyphicon glyphicon-refresh" aria-hidden="true"></span></button>
-                                <button className="btn btn-danger vm-actions"><span className="glyphicon glyphicon-trash" aria-hidden="true"></span></button>
+                                <button onClick={this.startVirtualMachine.bind(this, row.original)} className="btn btn-success vm-actions"><span className="glyphicon glyphicon-play" aria-hidden="true"></span></button>
+                                <button onClick={this.endVirtualMachine.bind(this, row.original)} className="btn btn-warning vm-actions"><span className="glyphicon glyphicon-stop" aria-hidden="true"></span></button>
+                                <button onClick={this.restartVirtualMachine.bind(this, row.original)} className="btn btn-info vm-actions"><span className="glyphicon glyphicon-refresh" aria-hidden="true"></span></button>
+                                <button onClick={this.deleteVirtualMachine.bind(this, row.original)} className="btn btn-danger vm-actions"><span className="glyphicon glyphicon-trash" aria-hidden="true"></span></button>
                             </div>
                         );
                     }}/>
@@ -57,13 +70,14 @@ class VirtualMachinesContainer extends React.Component {
 function mapStateToProps(state: any) {
     return {
         authSession: state.authSession,
-        virtualMachines: state.virtualMachines
+        virtualMachines: state.virtualMachines,
+        virtualMachinesActions: state.virtualMachinesActions
     };
 }
 
 function mapActionToProps(dispatch: any) {
     return {
-        actions: bindActionCreators({getVmsByOwner, getAllVms}, dispatch)
+        actions: bindActionCreators({getVmsByOwner, getAllVms, startVm}, dispatch)
     };
 }
 

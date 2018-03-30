@@ -1,6 +1,8 @@
 export class State {
     authSession: StateAuthSession;
     virtualMachines: StateVirtualMachines;
+    virtualMachinesActions: StateVirtualMachinesActions;
+    createVirtualMachine: StateCreateVirtualMachine;
     account: StateAccount;
     packages: StatePackages;
 }
@@ -15,6 +17,16 @@ export class StateAuthSession {
 
 export class StateVirtualMachines {
     vms: any[];
+    isLoading: boolean;
+    errorMessages: string[];
+}
+
+export class StateVirtualMachinesActions {
+    isLoading: boolean;
+    errorMessages: string[];
+}
+
+export class StateCreateVirtualMachine {
     isLoading: boolean;
     errorMessages: string[];
 }
@@ -42,7 +54,15 @@ export const initialState: State = {
     virtualMachines: {
         vms: [], 
         isLoading: false,
-        errorMessages: [],
+        errorMessages: []
+    },
+    virtualMachinesActions: {
+        isLoading: false,
+        errorMessages: []
+    },
+    createVirtualMachine: {
+        isLoading: false,
+        errorMessages: []
     },
     account: {
         isLoading: false,
