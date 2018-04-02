@@ -3,6 +3,7 @@ import {Dispatch} from "react-redux";
 import { authService } from "../services/authService";
 import { userService } from "../services/userService";
 import { inputValidationService } from "../services/inputValidationService";
+import {history} from '../store/history';
 
 export const authActionTypes = {
     AUTH_LOGIN_PENDING: "AUTH_LOGIN_PENDING",
@@ -87,6 +88,7 @@ export const submitAuth = (email: string, password: string) => async (dispatch: 
     
         try {
             await authService.login(email, password);
+            history.push('/');
         } catch (e) {
             dispatch({
                 type: authActionTypes.AUTH_LOGIN_ERROR,

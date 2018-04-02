@@ -8,7 +8,7 @@ class AppContainer extends React.Component {
 
     render() {
         return (
-            <div className="flexContainer">
+            <div className="page-container">
                 <NavMenuContainer/>
                 <Routes/>
             </div>

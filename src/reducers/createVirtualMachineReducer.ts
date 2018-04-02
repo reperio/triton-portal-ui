@@ -6,13 +6,13 @@ export function createVirtualMachineReducer(state = initialState.virtualMachines
         case virtualMachineActionTypes.VIRTUAL_MACHINE_CREATE_START: {
             return {
                 isLoading: true,
-                errorMessages: [action.payload.message]
+                errorMessages: []
             };
         }
         case virtualMachineActionTypes.VIRTUAL_MACHINE_CREATE_END: {
             return {
                 isLoading: false,
-                errorMessages: [action.payload.message]
+                errorMessages: []
             };
         }
         case virtualMachineActionTypes.VIRTUAL_MACHINE_CREATE_ERROR: {

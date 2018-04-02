@@ -3,6 +3,7 @@ import {Dispatch} from "react-redux";
 import { virtualMachineService } from "../services/virtualMachineService";
 import { userService } from "../services/userService";
 import { inputValidationService } from '../services/inputValidationService';
+import {history} from '../store/history';
 
 export const virtualMachineActionTypes = {
     VIRTUAL_MACHINES_GET_ALL_START: "VIRTUAL_MACHINES_GET_ALL_START",
@@ -126,6 +127,8 @@ export const createVm = (owner_uuid: string, alias: string, networks: any[], bra
                     isLoading: false
                 }
             });
+
+            history.push('/virtual-machines');
         } catch (e) {
             dispatch({
                 type: virtualMachineActionTypes.VIRTUAL_MACHINE_CREATE_ERROR,

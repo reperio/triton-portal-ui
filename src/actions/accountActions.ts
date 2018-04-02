@@ -1,6 +1,7 @@
 import {Dispatch} from "react-redux";
 import { userService } from "../services/userService";
 import { inputValidationService } from "../services/inputValidationService";
+import {history} from '../store/history';
 
 export const accountActionTypes = {
     USER_CREATE_START: "USER_CREATE_START",
@@ -45,13 +46,13 @@ export const createAccount = (username: string, password: string, confirmPasswor
         });
         try {
             const vms = await userService.createUser(username, password, firstName, lastName, email);
-    
             dispatch({
                 type: accountActionTypes.USER_CREATE_END,
                 payload: {
                     isLoading: false
                 }
             });
+            history.push('/login');
         } catch (e) {
             dispatch({
                 type: accountActionTypes.USER_CREATE_ERROR,

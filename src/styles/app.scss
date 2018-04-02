@@ -8,15 +8,8 @@ html, body {
 .flexContainer {
   height: 100%;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: center;
-  flex: 1 1 0px;
-}
-
-.navContainer {
-  height: 100%;
-  width: 200px;
-  background-color: #f0f0f0;
 }
 
 .contentContainer {
@@ -28,9 +21,18 @@ html, body {
   height:55px;
 }
 
+.reperio-bar-container {
+  display: flex;
+  flex: 0 0 55px;
+}
+
+.page-container {
+  display: flex;
+  flex: 1 0 0px;
+}
+
 .r-nav-menu {
   background-color: $nav-menu-background;
-  height: 100%;
   width: 200px;
   float: left;
   z-index: 5;
