@@ -6,13 +6,13 @@ export function virtualMachinesActionsReducer(state = initialState.virtualMachin
         case virtualMachineActionTypes.VIRTUAL_MACHINE_START_START: {
             return {
                 isLoading: true,
-                errorMessages: [action.payload.message]
+                errorMessages: []
             };
         }
         case virtualMachineActionTypes.VIRTUAL_MACHINE_START_END: {
             return {
                 isLoading: false,
-                errorMessages: [action.payload.message]
+                errorMessages: []
             };
         }
         case virtualMachineActionTypes.VIRTUAL_MACHINE_START_ERROR: {
@@ -24,13 +24,13 @@ export function virtualMachinesActionsReducer(state = initialState.virtualMachin
         case virtualMachineActionTypes.VIRTUAL_MACHINE_STOP_START: {
             return {
                 isLoading: true,
-                errorMessages: [action.payload.message]
+                errorMessages: []
             };
         }
         case virtualMachineActionTypes.VIRTUAL_MACHINE_STOP_END: {
             return {
                 isLoading: false,
-                errorMessages: [action.payload.message]
+                errorMessages: []
             };
         }
         case virtualMachineActionTypes.VIRTUAL_MACHINE_STOP_ERROR: {
@@ -42,13 +42,13 @@ export function virtualMachinesActionsReducer(state = initialState.virtualMachin
         case virtualMachineActionTypes.VIRTUAL_MACHINE_START_START: {
             return {
                 isLoading: true,
-                errorMessages: [action.payload.message]
+                errorMessages: []
             };
         }
         case virtualMachineActionTypes.VIRTUAL_MACHINE_REBOOT_END: {
             return {
                 isLoading: false,
-                errorMessages: [action.payload.message]
+                errorMessages: []
             };
         }
         case virtualMachineActionTypes.VIRTUAL_MACHINE_REBOOT_ERROR: {
@@ -60,13 +60,13 @@ export function virtualMachinesActionsReducer(state = initialState.virtualMachin
         case virtualMachineActionTypes.VIRTUAL_MACHINE_DELETE_START: {
             return {
                 isLoading: true,
-                errorMessages: [action.payload.message]
+                errorMessages: []
             };
         }
         case virtualMachineActionTypes.VIRTUAL_MACHINE_DELETE_END: {
             return {
                 isLoading: false,
-                errorMessages: [action.payload.message]
+                errorMessages: []
             };
         }
         case virtualMachineActionTypes.VIRTUAL_MACHINE_DELETE_ERROR: {

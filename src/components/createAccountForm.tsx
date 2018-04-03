@@ -1,5 +1,5 @@
 import React from 'react'
-import { Field, reduxForm } from 'redux-form'
+import { Field, reduxForm, FieldArray } from 'redux-form'
 import {FormGroup} from "react-bootstrap";
 
 const CreateAccountForm = (props: any) => (

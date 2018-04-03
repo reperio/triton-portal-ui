@@ -4,14 +4,14 @@ import LinkContainer from "react-router-bootstrap/lib/LinkContainer";
 
 import NavMenuLoginLink from "./navMenuLoginLink";
 import NavMenuLogOutLinkContainer from "../../containers/navMenuLogOutLinkContainer";
-const reperio = require('../../assets/reperio-rAsset-31.png');
+const reperio = require('../../assets/S.png');
 
 const NavMenu = (props: any) => (
     <div className="r-nav-menu">
         <div className="r-menu-header">
             <img className="r-menu-header-icon" src={reperio}/>
             <div className="r-menu-header-text">
-                <span>Reper.io Backups</span>
+                <span>Project Skyline</span>
             </div>
         </div>
         {props.authSession.isAuthenticated ? 

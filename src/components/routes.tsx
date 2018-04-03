@@ -9,6 +9,7 @@ import MainDashboardContainer from "../containers/mainDashboardContainer";
 import VirtualMachinesContainer from "../containers/virtualMachinesContainer";
 import CreateAccountFormContainer from '../containers/createAccountFormContainer';
 import CreateVirtualMachineFormContainer from '../containers/createVirtualMachineFormContainer';
+import EditAccountFormContainer from '../containers/editAccountFormContainer';
 
 const Routes = (props: any) => (
     <div className="contentContainer" style={{backgroundColor: "white", padding: "15px"}}>
@@ -16,6 +17,7 @@ const Routes = (props: any) => (
             <PrivateRouteContainer exact path="/home" component={MainDashboardContainer} />
             <PrivateRouteContainer exact path="/virtual-machines" component={VirtualMachinesContainer} />
             <PrivateRouteContainer exact path="/create-virtual-machine" component={CreateVirtualMachineFormContainer} />
+            <PrivateRouteContainer exact path="/edit-account" component={EditAccountFormContainer} />
             <PublicRouteContainer exact path="/login" component={LoginFormContainer} />
             <PublicRouteContainer exact path="/create-account" component={CreateAccountFormContainer} />
             <Route>
