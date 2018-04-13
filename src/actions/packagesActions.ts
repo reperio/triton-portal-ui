@@ -1,5 +1,5 @@
 import {Dispatch} from "react-redux";
-import { packagesService } from "../services/packagesService";
+import { packageService } from "../services/packageService";
 
 export const packagesActionTypes = {
     PACKAGES_GET_START: "PACKAGES_GET_START",
@@ -23,7 +23,7 @@ export const getAllPackages = () => async (dispatch: Dispatch<any>) => {
     });
     
     try {
-        const packages = await packagesService.getPackages();
+        const packages = await packageService.getPackages();
         dispatch({
             type: packagesActionTypes.PACKAGES_GET_END,
             payload: {

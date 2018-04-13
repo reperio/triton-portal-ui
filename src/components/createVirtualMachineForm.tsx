@@ -1,7 +1,7 @@
 import React from 'react'
 import { Field, reduxForm, formValueSelector } from 'redux-form'
 import {FormGroup} from "react-bootstrap";
-import {DropdownList} from 'react-widgets'
+import {DropdownList, Multiselect} from 'react-widgets'
 import PackageInformation from './packageInformation';
 import 'react-widgets/dist/css/react-widgets.css';
 
@@ -31,12 +31,20 @@ const CreateVirtualMachineForm = (props: any) => (
             style={{maxWidth: "280px", marginBottom: "15px"}} />
         : null}
         <FormGroup style={{maxWidth: "280px"}}>
-            <Field 
+            <Field
                 name="image" 
                 component="input" 
                 className="form-control" 
                 type="text" 
                 placeholder="Image" />
+        </FormGroup>
+        <FormGroup style={{maxWidth: "280px"}}>
+            <Multiselect
+                valueField="uuid"
+                textField="name"
+                data={props.networks.networks}
+                onSelect={props.selectNetworks}
+                placeholder="Networks" />
         </FormGroup>
         <FormGroup style={{maxWidth: "280px"}}>
             <Field 

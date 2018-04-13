@@ -7,7 +7,7 @@ const fieldArrayComponent = (props: any) => (
         <button 
             type="button" 
             onClick={() => props.fields.push({})}
-            className="btn btn-default">Add SSH Key
+            className="btn btn-default">Add ssh key
         </button>
         {props.fields.map((member:string, index:number) =>
             <div key={index} style={{paddingTop: "10px"}}>
@@ -47,7 +47,7 @@ const EditAccountForm = (props: any) => (
         <h2>Edit account</h2>
         <FormGroup>
             <label>Old Password</label>
-            <Field name="oldPassword" component="input" className="form-control" type="password" placeholder="Old Password"
+            <Field name="currentPassword" component="input" className="form-control" type="password" placeholder="Current password"
                    style={{maxWidth: "280px"}}/>
         </FormGroup>
         <FormGroup>
@@ -56,22 +56,22 @@ const EditAccountForm = (props: any) => (
         </FormGroup>
         <FormGroup>
             <label>New Password</label>
-            <Field name="newPassword" component="input" className="form-control" type="password" placeholder="New Password"
+            <Field name="newPassword" component="input" className="form-control" type="password" placeholder="New password"
                    style={{maxWidth: "280px"}}/>
         </FormGroup>
         <FormGroup>
             <label>Confirm New Password</label>
-            <Field name="confirmNewPassword" component="input" className="form-control" type="password" placeholder="Confirm New Password"
+            <Field name="confirmNewPassword" component="input" className="form-control" type="password" placeholder="Confirm new password"
                    style={{maxWidth: "280px"}}/>
         </FormGroup>
         <FormGroup>
             <label>First Name</label>
-            <Field name="firstName" component="input" className="form-control" type="text" placeholder="First Name"
+            <Field name="firstName" component="input" className="form-control" type="text" placeholder="First name"
                    style={{maxWidth: "280px"}}/>
         </FormGroup>        
         <FormGroup>
             <label>Last Name</label>
-            <Field name="lastName" component="input" className="form-control" type="text" placeholder="Last Name"
+            <Field name="lastName" component="input" className="form-control" type="text" placeholder="Last name"
                    style={{maxWidth: "280px"}}/>
         </FormGroup>
         <FormGroup>

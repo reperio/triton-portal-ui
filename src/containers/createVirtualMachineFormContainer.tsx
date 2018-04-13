@@ -1,8 +1,9 @@
 import React from 'react'
-import {connect} from "react-redux";
-import {createVm} from "../actions/virtualMachineActions";
-import {getAllPackages, showPackageInformation} from "../actions/packagesActions";
-import {bindActionCreators} from "redux";
+import { connect } from "react-redux";
+import { createVm } from "../actions/virtualMachineActions";
+import { getAllPackages, showPackageInformation} from "../actions/packagesActions";
+import { getAllNetworksByOwnerId, selectNetworks } from "../actions/networkActions";
+import { bindActionCreators } from "redux";
 import CreateVirtualMachineForm from "../components/createVirtualMachineForm";
 import LoadingSpinner from '../components/loadingSpinner';
 import Error from "../components/error";
@@ -22,10 +23,15 @@ class CreateVirtualMachineFormContainer extends React.Component {
 
     async componentDidMount() {
         await this.props.actions.getAllPackages();
+        await this.props.actions.getAllNetworksByOwnerId(this.props.authSession.user.data.ownerUuid);
     }
 
     async showPackageInformation(selectedPackage: any) {
         await this.props.actions.showPackageInformation(this.props.packages.packages, selectedPackage);
+    }
+
+    async selectNetworks(selectedNetworks: any[]) {
+        await this.props.actions.selectNetworks(this.props.networks.networks, selectedNetworks);
     }
 
     render() {
@@ -33,7 +39,7 @@ class CreateVirtualMachineFormContainer extends React.Component {
             <div>
                 {this.props.createVirtualMachine.isLoading ? <LoadingSpinner/> : null}
                 {this.props.createVirtualMachine.errorMessages.length > 0 ? <Error errors={this.props.createVirtualMachine.errorMessages}/> : null}
-                <CreateVirtualMachineForm packages={this.props.packages} showPackageInformation={this.showPackageInformation.bind(this)} onSubmit={this.onSubmit.bind(this)} />
+                <CreateVirtualMachineForm networks={this.props.networks} packages={this.props.packages} showPackageInformation={this.showPackageInformation.bind(this)} selectNetworks={this.selectNetworks.bind(this)} onSubmit={this.onSubmit.bind(this)} />
             </div>
         );
     }
@@ -43,13 +49,14 @@ function mapStateToProps(state: any) {
     return {
         authSession: state.authSession,
         createVirtualMachine: state.createVirtualMachine,
-        packages: state.packages
+        packages: state.packages,
+        networks: state.networks
     };
 }
 
 function mapActionToProps(dispatch: any) {
     return {
-        actions: bindActionCreators({createVm, getAllPackages, showPackageInformation}, dispatch)
+        actions: bindActionCreators({createVm, getAllPackages, showPackageInformation, getAllNetworksByOwnerId, selectNetworks}, dispatch)
     };
 }
 

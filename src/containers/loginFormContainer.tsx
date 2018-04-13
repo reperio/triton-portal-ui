@@ -7,16 +7,12 @@ import LoadingSpinner from '../components/loadingSpinner';
 import LinkContainer from "react-router-bootstrap/lib/LinkContainer";
 import {NavItem} from "react-bootstrap";
 import Error from "../components/error";
-
-class LoginFormValues {
-    email: string;
-    password: string;
-}
+import LoginModel from '../models/loginModel';
 
 class LoginFormContainer extends React.Component {
     props: any;
 
-    async onSubmit(values: LoginFormValues) {
+    async onSubmit(values: LoginModel) {
         await this.props.actions.submitAuth(values.email, values.password);
     };
 
