@@ -12,7 +12,7 @@ const fieldArrayComponent = (props: any) => (
         {props.fields.map((member:string, index:number) =>
             <div key={index} style={{paddingTop: "10px"}}>
                 <div className="row" style={{maxWidth: "280px"}}>
-                    <div className="ssh-key-label col-md-10">SSH Key #{index + 1}</div>
+                    <div className="field-array-component-item-label col-md-10">SSH Key #{index + 1}</div>
                     <div className="col-md-1">
                         <button
                             className="btn btn-danger"
@@ -42,7 +42,7 @@ const fieldArrayComponent = (props: any) => (
     </div>
 );
 
-const EditAccountForm = (props: any) => (
+const AccountEditForm = (props: any) => (
     <form onSubmit={props.handleSubmit(props.onSubmit)}>
         <h2>Edit account</h2>
         <FormGroup>
@@ -87,4 +87,4 @@ const EditAccountForm = (props: any) => (
 );
 
 // casted to <any> because reduxForm doesn't play nicely with other things
-export default reduxForm({ form: 'editAccount'})(EditAccountForm) as any;
+export default reduxForm({ form: 'accountEditForm'})(AccountEditForm) as any;

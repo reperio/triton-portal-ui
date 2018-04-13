@@ -22,6 +22,10 @@ const NavMenu = (props: any) => (
             <div className="r-menu-item">
                 <LinkContainer to="/virtual-machines"><NavItem>Virtual Machines</NavItem></LinkContainer> 
             </div> : null}
+        {props.authSession.isAuthenticated ? 
+            <div className="r-menu-item">
+                <LinkContainer to="/networks"><NavItem>Networks</NavItem></LinkContainer> 
+            </div> : null}
             {props.authSession.isAuthenticated ? 
             <div className="r-menu-item">
                 <LinkContainer to="/edit-account"><NavItem>Account</NavItem></LinkContainer> 

@@ -1,7 +1,7 @@
-import {initialState, StateVirtualMachinesActions} from "../store/initialState";
+import {initialState, StateVirtualMachineActions} from "../store/initialState";
 import { virtualMachineActionTypes } from "../actions/virtualMachineActions";
 
-export function virtualMachinesActionsReducer(state = initialState.virtualMachines, action: {type: string, payload: any}): StateVirtualMachinesActions {
+export function virtualMachineActionsReducer(state = initialState.virtualMachineActions, action: {type: string, payload: any}): StateVirtualMachineActions {
     switch (action.type) {
         case virtualMachineActionTypes.VIRTUAL_MACHINE_START_START: {
             return {

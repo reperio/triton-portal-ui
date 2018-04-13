@@ -4,7 +4,7 @@ import { createVm } from "../actions/virtualMachineActions";
 import { getAllPackages, showPackageInformation} from "../actions/packagesActions";
 import { getAllNetworksByOwnerId, selectNetworks } from "../actions/networkActions";
 import { bindActionCreators } from "redux";
-import CreateVirtualMachineForm from "../components/createVirtualMachineForm";
+import VirtualMachineCreateForm from "../components/virtualMachineCreateForm";
 import LoadingSpinner from '../components/loadingSpinner';
 import Error from "../components/error";
 
@@ -14,7 +14,7 @@ class CreateVirtualMachineFormValues {
     brand: string;
 }
 
-class CreateVirtualMachineFormContainer extends React.Component {
+class VirtualMachineCreateFormContainer extends React.Component {
     props: any;
 
     async onSubmit(values: CreateVirtualMachineFormValues) {
@@ -39,7 +39,7 @@ class CreateVirtualMachineFormContainer extends React.Component {
             <div>
                 {this.props.createVirtualMachine.isLoading ? <LoadingSpinner/> : null}
                 {this.props.createVirtualMachine.errorMessages.length > 0 ? <Error errors={this.props.createVirtualMachine.errorMessages}/> : null}
-                <CreateVirtualMachineForm networks={this.props.networks} packages={this.props.packages} showPackageInformation={this.showPackageInformation.bind(this)} selectNetworks={this.selectNetworks.bind(this)} onSubmit={this.onSubmit.bind(this)} />
+                <VirtualMachineCreateForm networks={this.props.networks} packages={this.props.packages} showPackageInformation={this.showPackageInformation.bind(this)} selectNetworks={this.selectNetworks.bind(this)} onSubmit={this.onSubmit.bind(this)} />
             </div>
         );
     }
@@ -60,4 +60,4 @@ function mapActionToProps(dispatch: any) {
     };
 }
 
-export default connect(mapStateToProps, mapActionToProps)(CreateVirtualMachineFormContainer);
+export default connect(mapStateToProps, mapActionToProps)(VirtualMachineCreateFormContainer);

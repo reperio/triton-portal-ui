@@ -5,7 +5,7 @@ import {DropdownList, Multiselect} from 'react-widgets'
 import PackageInformation from './packageInformation';
 import 'react-widgets/dist/css/react-widgets.css';
 
-const CreateVirtualMachineForm = (props: any) => (
+const VirtualMachineCreateForm = (props: any) => (
     <form onSubmit={props.handleSubmit(props.onSubmit)}>
         <h2>Create a virtual machine</h2>
         <FormGroup style={{maxWidth: "280px"}}>
@@ -63,4 +63,4 @@ const CreateVirtualMachineForm = (props: any) => (
 
 
 // casted to <any> because reduxForm doesn't play nicely with other things
-export default reduxForm({ form: 'createVirtualMachineForm', initialValues: {image: '7b5981c4-1889-11e7-b4c5-3f3bdfc9b88b', brand: 'lx'} })(CreateVirtualMachineForm) as any;
+export default reduxForm({ form: 'virtualMachineCreateForm', initialValues: {image: '7b5981c4-1889-11e7-b4c5-3f3bdfc9b88b', brand: 'lx'} })(VirtualMachineCreateForm) as any;

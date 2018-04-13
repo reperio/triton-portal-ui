@@ -48,8 +48,8 @@ class VirtualMachinesContainer extends React.Component {
     render() {
         return (
             <div>
-                {this.props.virtualMachines.isLoading || this.props.virtualMachinesActions.isLoading ? <LoadingSpinner/> : null}
-                {this.props.virtualMachines.errorMessages.length || this.props.virtualMachinesActions.errorMessages.length > 0 ? <Error errors={this.props.virtualMachines.errorMessages.concat(this.props.virtualMachinesActions.errorMessages)}/> : null}
+                {this.props.virtualMachines.isLoading || this.props.virtualMachineActions.isLoading ? <LoadingSpinner/> : null}
+                {this.props.virtualMachines.errorMessages.length || this.props.virtualMachineActions.errorMessages.length > 0 ? <Error errors={this.props.virtualMachines.errorMessages.concat(this.props.virtualMachineActions.errorMessages)}/> : null}
                 <FormGroup>
                     <LinkContainer to="/create-virtual-machine"><NavItem>Create a virtual machine</NavItem></LinkContainer>
                 </FormGroup>
@@ -76,7 +76,7 @@ function mapStateToProps(state: any) {
     return {
         authSession: state.authSession,
         virtualMachines: state.virtualMachines,
-        virtualMachinesActions: state.virtualMachinesActions
+        virtualMachineActions: state.virtualMachineActions
     };
 }
 

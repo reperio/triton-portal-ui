@@ -2,7 +2,7 @@ import React from 'react'
 import { Field, reduxForm, FieldArray } from 'redux-form'
 import {FormGroup} from "react-bootstrap";
 
-const CreateAccountForm = (props: any) => (
+const AccountCreateForm = (props: any) => (
     <form onSubmit={props.handleSubmit(props.onSubmit)}>
         <h2>Create an account</h2>
         <FormGroup>
@@ -36,4 +36,4 @@ const CreateAccountForm = (props: any) => (
 );
 
 // casted to <any> because reduxForm doesn't play nicely with other things
-export default reduxForm({ form: 'createAccount' })(CreateAccountForm) as any;
+export default reduxForm({ form: 'accountCreate' })(AccountCreateForm) as any;

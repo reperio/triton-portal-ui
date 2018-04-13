@@ -2,12 +2,12 @@ import React from 'react'
 import {connect} from "react-redux";
 import {editAccount, loadAccount} from "../actions/accountEditActions";
 import {bindActionCreators} from "redux";
-import EditAccountForm from "../components/editAccountForm";
+import AccountEditForm from "../components/accountEditForm";
 import LoadingSpinner from '../components/loadingSpinner';
 import Error from '../components/error'
 import EditAccountModel from '../models/editAccountModel';
 
-class EditAccountFormContainer extends React.Component {
+class AccountEditFormContainer extends React.Component {
     props: any;
 
     async onSubmit(values: EditAccountModel) {
@@ -24,7 +24,7 @@ class EditAccountFormContainer extends React.Component {
                 {this.props.accountEdit.isLoading || !this.props.accountLoad.hasLoaded ? <LoadingSpinner/> : null}
                 {this.props.accountEdit.errorMessages.length > 0 ? <Error errors={this.props.accountEdit.errorMessages}/> : null}
                 {!this.props.accountLoad.hasLoaded ? null : 
-                <EditAccountForm initialValues={this.props.accountLoad.user} onSubmit={this.onSubmit.bind(this)} />}
+                <AccountEditForm initialValues={this.props.accountLoad.user} onSubmit={this.onSubmit.bind(this)} />}
             </div>
         );
     }
@@ -44,4 +44,4 @@ function mapActionToProps(dispatch: any) {
     };
 }
 
-export default connect(mapStateToProps, mapActionToProps)(EditAccountFormContainer);
+export default connect(mapStateToProps, mapActionToProps)(AccountEditFormContainer);

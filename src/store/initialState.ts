@@ -1,14 +1,16 @@
 export class State {
     authSession: StateAuthSession;
     virtualMachines: StateVirtualMachines;
-    virtualMachinesActions: StateVirtualMachinesActions;
-    createVirtualMachine: StateCreateVirtualMachine;
+    virtualMachineActions: StateVirtualMachineActions;
+    virtualMachineCreate: StateVirtualMachineCreate;
     accountCreate: StateAccountCreate;
     accountEdit: StateAccountEdit;
     accountLoad: StateAccountLoad;
     packages: StatePackages;
     sshKeys: StateSshKeys;
     networks: StateNetworks;
+    networkCreate: StateNetworkCreate;
+    networkActions: StateNetworkActions;
 }
 
 export class StateAuthSession {
@@ -25,12 +27,12 @@ export class StateVirtualMachines {
     errorMessages: string[];
 }
 
-export class StateVirtualMachinesActions {
+export class StateVirtualMachineActions {
     isLoading: boolean;
     errorMessages: string[];
 }
 
-export class StateCreateVirtualMachine {
+export class StateVirtualMachineCreate {
     isLoading: boolean;
     errorMessages: string[];
 }
@@ -71,6 +73,16 @@ export class StateNetworks {
     selectedNetworks: any[];
 }
 
+export class StateNetworkCreate {
+    isLoading: boolean;
+    errorMessages: string[];
+}
+
+export class StateNetworkActions {
+    isLoading: boolean;
+    errorMessages: string[];
+}
+
 export const initialState: State = {
     authSession: {
         isPending: false,
@@ -84,11 +96,11 @@ export const initialState: State = {
         isLoading: false,
         errorMessages: []
     },
-    virtualMachinesActions: {
+    virtualMachineActions: {
         isLoading: false,
         errorMessages: []
     },
-    createVirtualMachine: {
+    virtualMachineCreate: {
         isLoading: false,
         errorMessages: []
     },
@@ -121,5 +133,13 @@ export const initialState: State = {
         errorMessages: [],
         isLoading: false,
         selectedNetworks: []
+    },
+    networkCreate: {
+        errorMessages: [],
+        isLoading: false
+    },
+    networkActions: {
+        errorMessages: [],
+        isLoading: false
     }
 };

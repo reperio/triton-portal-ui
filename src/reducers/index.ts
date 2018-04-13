@@ -1,26 +1,30 @@
 import { combineReducers } from "redux";
 import { reducer as formReducer } from 'redux-form'
 import { authSessionReducer } from "./authSessionReducer"
-import { virtualMachinesActionsReducer } from "./virtualMachinesActionsReducer";
+import { virtualMachineActionsReducer } from "./virtualMachineActionsReducer";
 import { virtualMachinesTableReducer } from "./virtualMachinesTableReducer";
-import { createVirtualMachineReducer } from './createVirtualMachineReducer';
+import { virtualMachineCreateReducer } from './virtualMachineCreateReducer';
 import { accountCreateReducer } from "./accountCreateReducer";
 import { accountEditReducer } from "./accountEditReducer";
 import { accountLoadReducer } from "./accountLoadReducer";
 import { packagesReducer } from "./packagesReducer";
 import { sshKeysReducer } from './sshKeysReducer';
 import { networksReducer } from "./networkReducer";
+import { networkCreateReducer } from "./networkCreateReducer";
+import { networkActionsReducer } from "./networkActionsReducer";
 
 export const rootReducer = combineReducers({
     form: formReducer,
     authSession: authSessionReducer,
-    virtualMachinesActions: virtualMachinesActionsReducer,
+    virtualMachineActions: virtualMachineActionsReducer,
     virtualMachines: virtualMachinesTableReducer,
-    createVirtualMachine: createVirtualMachineReducer,
+    virtualMachineCreate: virtualMachineCreateReducer,
     accountCreate: accountCreateReducer,
     accountEdit: accountEditReducer,
     accountLoad: accountLoadReducer,
     packages: packagesReducer,
     sshKeys: sshKeysReducer,
-    networks: networksReducer
+    networks: networksReducer,
+    networkCreate: networkCreateReducer,
+    networkActions: networkActionsReducer
 });

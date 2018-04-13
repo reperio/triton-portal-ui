@@ -2,12 +2,12 @@ import React from 'react'
 import {connect} from "react-redux";
 import {createAccount} from "../actions/accountCreateActions";
 import {bindActionCreators} from "redux";
-import CreateAccountForm from "../components/createAccountForm";
+import AccountCreateForm from "../components/accountCreateForm";
 import LoadingSpinner from '../components/loadingSpinner';
 import Error from '../components/error'
 import CreateAccountModel from '../models/createAccountModel';
 
-class CreateAccountFormContainer extends React.Component {
+class AccountCreateFormContainer extends React.Component {
     props: any;
 
     async onSubmit(values: CreateAccountModel) {
@@ -19,7 +19,7 @@ class CreateAccountFormContainer extends React.Component {
             <div>
                 {this.props.accountCreate.isLoading ? <LoadingSpinner/> : null}
                 {this.props.accountCreate.errorMessages.length > 0 ? <Error errors={this.props.accountCreate.errorMessages}/> : null}
-                <CreateAccountForm onSubmit={this.onSubmit.bind(this)} />
+                <AccountCreateForm onSubmit={this.onSubmit.bind(this)} />
             </div>
         );
     }
@@ -37,4 +37,4 @@ function mapActionToProps(dispatch: any) {
     };
 }
 
-export default connect(mapStateToProps, mapActionToProps)(CreateAccountFormContainer);
+export default connect(mapStateToProps, mapActionToProps)(AccountCreateFormContainer);
