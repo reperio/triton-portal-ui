@@ -88,7 +88,7 @@ export const submitAuth = (email: string, password: string) => async (dispatch: 
     
         try {
             await authService.login(email, password);
-            history.push('/');
+            history.push('/home');
         } catch (e) {
             dispatch({
                 type: authActionTypes.AUTH_LOGIN_ERROR,

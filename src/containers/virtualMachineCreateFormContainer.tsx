@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from "react-redux";
-import { createVm } from "../actions/virtualMachineActions";
+import { createVm } from "../actions/virtualMachineCreateActions";
 import { getAllPackages, showPackageInformation} from "../actions/packagesActions";
 import { getAllNetworksByOwnerId, selectNetworks } from "../actions/networkActions";
 import { bindActionCreators } from "redux";
@@ -37,8 +37,8 @@ class VirtualMachineCreateFormContainer extends React.Component {
     render() {
         return (
             <div>
-                {this.props.createVirtualMachine.isLoading ? <LoadingSpinner/> : null}
-                {this.props.createVirtualMachine.errorMessages.length > 0 ? <Error errors={this.props.createVirtualMachine.errorMessages}/> : null}
+                {this.props.virtualMachineCreate.isLoading ? <LoadingSpinner/> : null}
+                {this.props.virtualMachineCreate.errorMessages.length > 0 ? <Error errors={this.props.virtualMachineCreate.errorMessages}/> : null}
                 <VirtualMachineCreateForm networks={this.props.networks} packages={this.props.packages} showPackageInformation={this.showPackageInformation.bind(this)} selectNetworks={this.selectNetworks.bind(this)} onSubmit={this.onSubmit.bind(this)} />
             </div>
         );
@@ -48,7 +48,7 @@ class VirtualMachineCreateFormContainer extends React.Component {
 function mapStateToProps(state: any) {
     return {
         authSession: state.authSession,
-        createVirtualMachine: state.createVirtualMachine,
+        virtualMachineCreate: state.virtualMachineCreate,
         packages: state.packages,
         networks: state.networks
     };

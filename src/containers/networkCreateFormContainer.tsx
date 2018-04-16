@@ -6,12 +6,13 @@ import NetworkCreateForm from "../components/networkCreateForm";
 import LoadingSpinner from '../components/loadingSpinner';
 import Error from '../components/error'
 import CreateAccountModel from '../models/createAccountModel';
+import CreateNetworkModel from '../models/createNetworkModel';
 
 class NetworkCreateFormContainer extends React.Component {
     props: any;
 
-    async onSubmit(values: any) {
-        //await this.props.actions.createAccount(values.username, values.password, values.confirmPassword, values.firstname, values.lastname, values.email);
+    async onSubmit(network: CreateNetworkModel) {
+        await this.props.actions.createNetwork(network, this.props.authSession.user.data.ownerUuid);
     };
 
     render() {
@@ -27,7 +28,8 @@ class NetworkCreateFormContainer extends React.Component {
 
 function mapStateToProps(state: any) {
     return {
-        networkCreate: state.networkCreate
+        networkCreate: state.networkCreate,
+        authSession: state.authSession
     };
 }
 

@@ -13,9 +13,6 @@ export const virtualMachineActionTypes = {
     VIRTUAL_MACHINES_GET_BY_OWNER_END: "VIRTUAL_MACHINES_GET_BY_OWNER_END",
     VIRTUAL_MACHINES_GET_BY_OWNER_ERROR: "VIRTUAL_MACHINES_GET_BY_OWNER_ERROR",
     INPUT_VALIDATE: "INPUT_VALIDATE",
-    VIRTUAL_MACHINE_CREATE_START: "VIRTUAL_MACHINE_CREATE_START",
-    VIRTUAL_MACHINE_CREATE_END: "VIRTUAL_MACHINE_CREATE_END",
-    VIRTUAL_MACHINE_CREATE_ERROR: "VIRTUAL_MACHINE_CREATE_ERROR",
     VIRTUAL_MACHINE_START_START: "VIRTUAL_MACHINE_START_START",
     VIRTUAL_MACHINE_START_END: "VIRTUAL_MACHINE_START_END",
     VIRTUAL_MACHINE_START_ERROR: "VIRTUAL_MACHINE_START_ERROR",
@@ -91,53 +88,6 @@ export const getVmsByOwner = (owner_uuid: string) => async (dispatch: Dispatch<a
                 isLoading: false
             }
         });
-    }
-};
-
-export const createVm = (owner_uuid: string, alias: string, networks: any[], brand: string, billing_id: string, image_uuid: string) => async (dispatch: Dispatch<any>) => {
-
-    let errors = inputValidationService.validate([
-        {type: "OwnerId", value: owner_uuid},
-        {type: "Alias", value: alias},
-        {type: "Brand", value: brand},
-        {type: "BillingId", value: billing_id},
-        {type: "ImageUuid", value: image_uuid}
-    ]);
-
-    if (errors.length > 0) {
-        dispatch({
-            type: virtualMachineActionTypes.INPUT_VALIDATE,
-            payload: {
-                validationErrors: errors
-            }
-        });
-    } else {
-        dispatch({
-            type: virtualMachineActionTypes.VIRTUAL_MACHINE_CREATE_START,
-            payload: {
-                isLoading: true
-            }
-        });
-        try {
-            const vm = await virtualMachineService.createVm(owner_uuid, alias, networks, brand, billing_id, image_uuid);
-    
-            dispatch({
-                type: virtualMachineActionTypes.VIRTUAL_MACHINE_CREATE_END,
-                payload: {
-                    isLoading: false
-                }
-            });
-
-            history.push('/virtual-machines');
-        } catch (e) {
-            dispatch({
-                type: virtualMachineActionTypes.VIRTUAL_MACHINE_CREATE_ERROR,
-                payload: {
-                    isLoading: false,
-                    message: getErrorMessageFromStatusCode(e.response != null ? e.response.status : null)
-                }
-            });
-        }
     }
 };
 

@@ -1,5 +1,6 @@
 import {Dispatch} from "react-redux";
 import { networkService } from "../services/networkService";
+import CreateNetworkModel from '../models/createNetworkModel';
 
 export const networkActionTypes = {
     NETWORKS_GET_START: "NETWORKS_GET_START",
@@ -56,7 +57,7 @@ export const selectNetworks = (networks: any[], selectedNetworks: any[]) => asyn
     });
 }
 
-export const createNetwork = (stuff: any) => async (dispatch: Dispatch<any>) => {
+export const createNetwork = (network: CreateNetworkModel, ownerUuid: string) => async (dispatch: Dispatch<any>) => {
     dispatch({
         type: networkActionTypes.NETWORK_CREATE_START,
         payload: {
