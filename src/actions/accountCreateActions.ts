@@ -1,7 +1,7 @@
 import {Dispatch} from "react-redux";
 import { userService } from "../services/userService";
 import { inputValidationService } from "../services/inputValidationService";
-import {history} from '../store/history';
+import { history } from '../store/history';
 import { authService } from "../services/authService";
 
 export const accountCreateActionTypes = {
@@ -17,14 +17,15 @@ function getErrorMessageFromStatusCode(statusCode: number) {
             return "An error occurred, please contact your system administrator"}
 }
 
-export const createAccount = (username: string, password: string, confirmPassword: string, firstName: string, lastName: string, email: string) => async (dispatch: Dispatch<any>) => {
+export const createAccount = (username: string, password: string, confirmPassword: string, firstName: string, lastName: string, email: string, ownerId: string) => async (dispatch: Dispatch<any>) => {
 
     let errors = inputValidationService.validate([
-        {type: "Username", value: username},
-        {type: "Password", value: password},
-        {type: "First name", value: firstName},
-        {type: "Last name", value: lastName},
-        {type: "Email", value: email}
+        {name: "Username", value: username, type: "string", required: true},
+        {name: "Password", value: password, type: "string", required: true},
+        {name: "First name", value: firstName, type: "string", required: true},
+        {name: "Last name", value: lastName, type: "string", required: true},
+        {name: "Email", value: email, type: "email", required: true},
+        {name: "Owner uuid", value: ownerId, type: "string", required: true}
     ]);
 
     if (password !== confirmPassword) {
@@ -46,7 +47,7 @@ export const createAccount = (username: string, password: string, confirmPasswor
             }
         });
         try {
-            const vms = await userService.createUser(username, password, firstName, lastName, email);
+            const vms = await userService.createUser(username, password, firstName, lastName, email, ownerId);
             dispatch({
                 type: accountCreateActionTypes.USER_CREATE_END,
                 payload: {

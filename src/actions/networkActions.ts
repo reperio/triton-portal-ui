@@ -1,6 +1,8 @@
-import {Dispatch} from "react-redux";
+import { Dispatch } from "react-redux";
 import { networkService } from "../services/networkService";
 import CreateNetworkModel from '../models/createNetworkModel';
+import { inputValidationService } from "../services/inputValidationService";
+import { history } from '../store/history';
 
 export const networkActionTypes = {
     NETWORKS_GET_START: "NETWORKS_GET_START",
@@ -12,7 +14,8 @@ export const networkActionTypes = {
     NETWORK_CREATE_ERROR: "NETWORK_CREATE_ERROR",
     NETWORK_DELETE_START: "NETWORK_DELETE_START",
     NETWORK_DELETE_END: "NETWORK_DELETE_END",
-    NETWORK_DELETE_ERROR: "NETWORK_DELETE_ERROR"
+    NETWORK_DELETE_ERROR: "NETWORK_DELETE_ERROR",
+    NETWORK_CREATE_VALIDATE: "NETWORK_CREATE_VALIDATE"
 };
 
 function getErrorMessageFromStatusCode(statusCode: number) {
@@ -21,7 +24,7 @@ function getErrorMessageFromStatusCode(statusCode: number) {
             return "An error occurred, please contact your system administrator"}
 }
 
-export const getAllNetworksByOwnerId = (ownerId: string) => async (dispatch: Dispatch<any>) => {
+export const getAllFabricNetworksByOwnerId = (ownerId: string) => async (dispatch: Dispatch<any>) => {
     dispatch({
         type: networkActionTypes.NETWORKS_GET_START,
         payload: {
@@ -30,11 +33,16 @@ export const getAllNetworksByOwnerId = (ownerId: string) => async (dispatch: Dis
     });
     
     try {
-        const networks = await networkService.getNetworksByOwner(ownerId);
+        const fabricVlans = (await networkService.getFabricLansByOwnerId(ownerId)).data.data;
+        const networks: any[] = await Promise.all(fabricVlans.map(async (vlan:any): Promise<any> => {
+            let network = (await networkService.getFabricNetworksByOwnerAndVLanId(ownerId, vlan.vlan_id)).data.data[0];
+            return network;
+        }));
+
         dispatch({
             type: networkActionTypes.NETWORKS_GET_END,
             payload: {
-                networks: networks.data.data
+                networks: networks.filter(function(n){ return n !== undefined }) 
             }
         });
     } catch (e) {
@@ -57,33 +65,55 @@ export const selectNetworks = (networks: any[], selectedNetworks: any[]) => asyn
     });
 }
 
-export const createNetwork = (network: CreateNetworkModel, ownerUuid: string) => async (dispatch: Dispatch<any>) => {
-    dispatch({
-        type: networkActionTypes.NETWORK_CREATE_START,
-        payload: {
-            packages:[]
-        }
-    });
+export const createFabricNetwork = (network: CreateNetworkModel, ownerUuid: string) => async (dispatch: Dispatch<any>) => {
     
-    try {
-        //const networks = await networkService.createNetwork(stuff);
+    let errors = inputValidationService.validate([
+        {name: "Name", value: network.name, type: "string", required: true},
+        {name: "Subnet", value: network.subnet, type: "string", required: true},
+        {name: "Provision start ip", value: network.provisionStartIp, type: "string", required: true},
+        {name: "Provision end ip", value: network.provisionEndIp, type: "string", required: true},
+        {name: "Gateway", value: network.gateway, type: "string", required: false},
+        {name: "Internet nat", value: network.internetNat, type: "boolean", required: false},
+        {name: "Resolvers", value: network.resolvers, type: "array", required: false}
+    ]);
+
+    if (errors.length > 0) {
         dispatch({
-            type: networkActionTypes.NETWORK_CREATE_END,
+            type: networkActionTypes.NETWORK_CREATE_VALIDATE,
             payload: {
-                isLoading: false
+                validationErrors: errors
             }
         });
-    } catch (e) {
+    } else {
         dispatch({
-            type: networkActionTypes.NETWORK_CREATE_ERROR,
+            type: networkActionTypes.NETWORK_CREATE_START,
             payload: {
-                message: getErrorMessageFromStatusCode(e.response != null ? e.response.status : null)
+                packages:[]
             }
         });
+        
+        try {
+            const fabricVlan = await networkService.createFabricVlan(network.name, ownerUuid, network.description);
+            const networks = await networkService.createFabricNetwork(network, ownerUuid, fabricVlan.data.data.vlan_id);
+            dispatch({
+                type: networkActionTypes.NETWORK_CREATE_END,
+                payload: {
+                    isLoading: false
+                }
+            });
+            history.push('/networks');
+        } catch (e) {
+            dispatch({
+                type: networkActionTypes.NETWORK_CREATE_ERROR,
+                payload: {
+                    message: getErrorMessageFromStatusCode(e.response != null ? e.response.status : null)
+                }
+            });
+        }
     }
 };
 
-export const deleteNetwork = (owner_uuid: string, uuid: string) => async (dispatch: Dispatch<any>) => {
+export const deleteFabricNetwork = (owner_uuid: string, vlanId:number, uuid: string) => async (dispatch: Dispatch<any>) => {
     dispatch({
         type: networkActionTypes.NETWORK_DELETE_START,
         payload: {
@@ -91,7 +121,7 @@ export const deleteNetwork = (owner_uuid: string, uuid: string) => async (dispat
         }
     });
     try {
-        //const vm = await virtualMachineService.deleteVm(owner_uuid, uuid);
+        const vm = await networkService.deleteFabricNetwork(owner_uuid, vlanId, uuid);
 
         dispatch({
             type: networkActionTypes.NETWORK_DELETE_END,
@@ -109,5 +139,3 @@ export const deleteNetwork = (owner_uuid: string, uuid: string) => async (dispat
         });
     }
 };
-
-//

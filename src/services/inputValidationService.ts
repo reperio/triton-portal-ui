@@ -2,11 +2,25 @@ class InputValidationService {
     validate(inputs: any[]) {
         let errors: string[] = [];
         inputs.forEach(input => {
-            if (input.value === undefined) {
-                errors.push(input.type + " is required");
-            }
-            else if (input.type === "Email" && !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(input.value)) {
-                errors.push("Invalid email address");
+            const lowerCaseName = input.name.toLowerCase();
+            if (input.required) {
+                if (input.value == null) {
+                    errors.push(input.name + " is required");
+                } else {
+                    if (input.type === "email" && !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(input.value)) {
+                        errors.push("Invalid " + lowerCaseName);
+                    }
+                    else if (input.type === "integer" && !/^\d+$/.test(input.value)) {
+                        errors.push("Invalid " + lowerCaseName);
+                    }
+                    else if (input.type === "decimal" && !isNaN(input.value)) {
+                        errors.push("Invalid " + lowerCaseName);
+                    }
+                    else if (input.type === "array") {
+                        let nestedErrors = this.validate(input.value);
+                        errors.concat(nestedErrors);
+                    }
+                }
             }
         });
         return errors;

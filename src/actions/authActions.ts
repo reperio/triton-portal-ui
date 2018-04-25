@@ -30,6 +30,7 @@ export const logout = () => async (dispatch: Dispatch<any>) => {
         type: authActionTypes.AUTH_CLEAR_TOKEN,
         payload: null
     });
+    history.push('./login');
 };
 
 export const getAuthToken = () => {
@@ -55,6 +56,7 @@ export const setAuthToken = (authToken: string, forceActionDispatch = false) => 
                 type: authActionTypes.AUTH_CLEAR_TOKEN,
                 payload: null
             });
+            history.push('login');
         }
     }
 };
@@ -67,10 +69,9 @@ export const setAuth = (user: any) => async (dispatch: Dispatch<any>) => {
 };
 
 export const submitAuth = (email: string, password: string) => async (dispatch: Dispatch<any>) => {
-
     let errors = inputValidationService.validate([
-        {type: "Password", value: password},
-        {type: "Email", value: email}
+        {name: "Password", value: password, type: "string", required: true},
+        {name: "Email", value: email, type: "string", required: true}
     ]);
 
     if (errors.length > 0) {

@@ -3,7 +3,7 @@ import {MenuItem, Nav, Navbar, NavDropdown, NavItem} from "react-bootstrap";
 import LinkContainer from "react-router-bootstrap/lib/LinkContainer";
 
 import NavMenuLoginLink from "./navMenuLoginLink";
-import NavMenuLogOutLinkContainer from "../../containers/navMenuLogOutLinkContainer";
+import NavMenuLogOutLinkContainer from "../../containers/navMenu/navMenuLogOutLinkContainer";
 const reperio = require('../../assets/reperio-rAsset-31.png');
 
 const NavMenu = (props: any) => (

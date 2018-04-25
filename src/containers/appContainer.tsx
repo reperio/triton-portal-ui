@@ -1,7 +1,7 @@
 import React from 'react'
 import {connect} from "react-redux";
-import NavMenuContainer from "../containers/navMenuContainer";
-import Routes from "../components/routes";
+import NavMenuContainer from "../containers/navMenu/navMenuContainer";
+import Routes from "../components/route/routes";
 
 class AppContainer extends React.Component {
     props: any;

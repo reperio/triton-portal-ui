@@ -18,14 +18,14 @@ function getErrorMessageFromStatusCode(statusCode: number) {
             return "An error occurred, please contact your system administrator"}
 }
 
-export const createVm = (owner_uuid: string, alias: string, networks: any[], brand: string, billing_id: string, image_uuid: string) => async (dispatch: Dispatch<any>) => {
+export const createVm = (owner_uuid: string, alias: string, networks: any[], brand: string, selectedPackage: any, image_uuid: string) => async (dispatch: Dispatch<any>) => {
 
     let errors = inputValidationService.validate([
-        {type: "OwnerId", value: owner_uuid},
-        {type: "Alias", value: alias},
-        {type: "Brand", value: brand},
-        {type: "BillingId", value: billing_id},
-        {type: "ImageUuid", value: image_uuid}
+        {name: "Alias", value: alias, type: "string", required: true},
+        {name: "Brand", value: brand, type: "string", required: true},
+        {name: "Package", value: selectedPackage, type: "object", required: true},
+        {name: "Networks", value: networks, type: "array", required: false},
+        {name: "Image uuid", value: image_uuid, type: "string", required: false}
     ]);
 
     if (errors.length > 0) {
@@ -43,7 +43,7 @@ export const createVm = (owner_uuid: string, alias: string, networks: any[], bra
             }
         });
         try {
-            const vm = await virtualMachineService.createVm(owner_uuid, alias, networks, brand, billing_id, image_uuid);
+            const vm = await virtualMachineService.createVm(owner_uuid, alias, networks.map(x => x.uuid), brand, selectedPackage.uuid, image_uuid);
     
             dispatch({
                 type: virtualMachineCreateActionTypes.VIRTUAL_MACHINE_CREATE_END,

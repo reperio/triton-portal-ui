@@ -1,17 +1,17 @@
 import { combineReducers } from "redux";
 import { reducer as formReducer } from 'redux-form'
 import { authSessionReducer } from "./authSessionReducer"
-import { virtualMachineActionsReducer } from "./virtualMachineActionsReducer";
-import { virtualMachinesTableReducer } from "./virtualMachinesTableReducer";
-import { virtualMachineCreateReducer } from './virtualMachineCreateReducer';
-import { accountCreateReducer } from "./accountCreateReducer";
-import { accountEditReducer } from "./accountEditReducer";
-import { accountLoadReducer } from "./accountLoadReducer";
-import { packagesReducer } from "./packagesReducer";
-import { sshKeysReducer } from './sshKeysReducer';
-import { networksReducer } from "./networkReducer";
-import { networkCreateReducer } from "./networkCreateReducer";
-import { networkActionsReducer } from "./networkActionsReducer";
+import { virtualMachineActionsReducer } from "./virtualMachine/virtualMachineActionsReducer";
+import { virtualMachinesTableReducer } from "./virtualMachine/virtualMachinesTableReducer";
+import { virtualMachineCreateReducer } from './virtualMachine/virtualMachineCreateReducer';
+import { accountCreateReducer } from "./account/accountCreateReducer";
+import { accountEditReducer } from "./account/accountEditReducer";
+import { accountLoadReducer } from "./account/accountLoadReducer";
+import { packagesReducer } from "./virtualMachine/packagesReducer";
+import { sshKeysReducer } from './account/sshKeysReducer';
+import { networksReducer } from "./network/networkReducer";
+import { networkCreateReducer } from "./network/networkCreateReducer";
+import { networkActionsReducer } from "./network/networkActionsReducer";
 
 export const rootReducer = combineReducers({
     form: formReducer,

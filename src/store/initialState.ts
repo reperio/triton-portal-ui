@@ -54,6 +54,7 @@ export class StateAccountLoad {
 }
 
 export class StatePackages {
+    hasLoaded: boolean;
     packages: any[];
     errorMessages: string[];
     showInformation: boolean;
@@ -67,6 +68,7 @@ export class StateSshKeys {
 }
 
 export class StateNetworks {
+    hasLoaded: boolean;
     isLoading: boolean;
     errorMessages: string[];
     networks: any[];
@@ -98,7 +100,7 @@ export const initialState: State = {
     },
     virtualMachineActions: {
         isLoading: false,
-        errorMessages: []
+        errorMessages: [],
     },
     virtualMachineCreate: {
         isLoading: false,
@@ -118,6 +120,7 @@ export const initialState: State = {
         user: null
     },
     packages: {
+        hasLoaded: false,
         packages: [],
         errorMessages: [],
         showInformation: false,
@@ -129,6 +132,7 @@ export const initialState: State = {
         isLoading: false
     },
     networks: {
+        hasLoaded: false,
         networks: [],
         errorMessages: [],
         isLoading: false,

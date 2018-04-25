@@ -5,4 +5,5 @@ export default class CreateAccountModel {
     firstname: string;
     lastname: string;
     confirmPassword: string;
+    ownerId: string;
 }

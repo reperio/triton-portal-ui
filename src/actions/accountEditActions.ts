@@ -24,13 +24,12 @@ function getErrorMessageFromStatusCode(statusCode: number) {
 export const editAccount = (user: EditAccountModel, userId: string) => async (dispatch: Dispatch<any>) => {
 
     let errors = inputValidationService.validate([
-        {type: "Current password", value: user.currentPassword},
-        {type: "Username", value: user.username},
-        {type: "First name", value: user.firstName},
-        {type: "Last name", value: user.lastName},
-        {type: "Email", value: user.email},
-        {type: "SshKeys", value: user.sshKeys},
-        {type: "UserId", value: userId}
+        {name: "Current password", value: user.currentPassword, type: "string", required: true},
+        {name: "Username", value: user.username, type: "string", required: false},
+        {name: "First name", value: user.firstName, type: "string", required: false},
+        {name: "Last name", value: user.lastName, type: "string", required: false},
+        {name: "Email", value: user.email, type: "email", required: false},
+        {name: "Ssh keys", value: user.sshKeys, type: "array", required: false}
     ]);
 
     if (user.newPassword !== user.confirmNewPassword) {

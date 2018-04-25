@@ -14,6 +14,9 @@ async function load() {
         if (authToken != null) {
             await authActions.setAuthToken(authToken, true)(store.dispatch);
         }
+        else {
+            history.push('/login');
+        }
     } catch (e) {
         if (e.response == null || (e.response.status !== 401 && e.response.status !== 403)) {
             console.error("An error occurred while trying to get the logged in user from the saved auth token", e);

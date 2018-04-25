@@ -6,27 +6,15 @@ class UserService {
         return await axios.get(`/users/${userId}`);
     }
 
-    async createUser(username: string, password: string, firstName: string, lastName: string, email: string) {
+    async createUser(username: string, password: string, firstName: string, lastName: string, email: string, ownerUuid: string) {
         const payload = {
             user: {
                 username, 
                 password, 
                 firstName, 
                 lastName, 
-                email
-            }
-        };
-        return await axios.post(`/users`, payload);
-    }
-
-    async editUser(username: string, password: string, firstName: string, lastName: string, email: string) {
-        const payload = {
-            user: {
-                username, 
-                password, 
-                firstName, 
-                lastName, 
-                email
+                email,
+                ownerUuid
             }
         };
         return await axios.post(`/users`, payload);
