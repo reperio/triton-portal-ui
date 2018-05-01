@@ -3,10 +3,12 @@ import { Field, reduxForm, formValueSelector } from 'redux-form'
 import {FormGroup} from "react-bootstrap";
 import {DropdownList, Multiselect} from 'react-widgets'
 import PackageInformation from './packageInformation';
+import Error from "../../components/misc/error";
 import 'react-widgets/dist/css/react-widgets.css';
 
 const VirtualMachineCreateForm = (props: any) => (
     <form onSubmit={props.handleSubmit(props.onSubmit)}>
+        {props.errorMessages != null && props.errorMessages.length > 0 ? <Error errors={props.errorMessages}/> : null}
         <h2>Create a virtual machine</h2>
         <FormGroup style={{maxWidth: "280px"}}>
          <Field 

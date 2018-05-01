@@ -9,6 +9,7 @@ import { FormGroup } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import { NavItem}  from "react-bootstrap";
 import Error from '../../components/misc/error';
+import NetworkForm from '../../components/network/networkForm';
 
 class NetworkFormContainer extends React.Component {
     props: any;
@@ -33,7 +34,7 @@ class NetworkFormContainer extends React.Component {
         return (
             <div>
                 {this.props.networks.isLoading || this.props.networkActions.isLoading ? <LoadingSpinner/> : null}
-                {this.props.networks.errorMessages.length || this.props.networkActions.errorMessages.length > 0 ? <Error errors={this.props.networks.errorMessages.concat(this.props.networkActions.errorMessages)}/> : null}
+                <NetworkForm errorMessages={this.props.networks.errorMessages.concat(this.props.networkActions.errorMessages)} />
                 <FormGroup>
                     <LinkContainer to="/create-network"><NavItem>Create a network</NavItem></LinkContainer>
                 </FormGroup>

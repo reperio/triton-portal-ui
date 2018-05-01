@@ -3,6 +3,8 @@ export class State {
     virtualMachines: StateVirtualMachines;
     virtualMachineActions: StateVirtualMachineActions;
     virtualMachineCreate: StateVirtualMachineCreate;
+    virtualMachineEdit: StateVirtualMachineEdit;
+    virtualMachineLoad: StateVirtualMachineLoad;
     accountCreate: StateAccountCreate;
     accountEdit: StateAccountEdit;
     accountLoad: StateAccountLoad;
@@ -35,6 +37,18 @@ export class StateVirtualMachineActions {
 export class StateVirtualMachineCreate {
     isLoading: boolean;
     errorMessages: string[];
+}
+
+export class StateVirtualMachineEdit {
+    isLoading: boolean;
+    errorMessages: string[];
+    selectedVm: any;
+}
+
+export class StateVirtualMachineLoad {
+    hasLoaded: boolean;
+    errorMessages: string[];
+    vm: any;
 }
 
 export class StateAccountCreate {
@@ -105,6 +119,16 @@ export const initialState: State = {
     virtualMachineCreate: {
         isLoading: false,
         errorMessages: []
+    },
+    virtualMachineEdit: {
+        isLoading: false,
+        errorMessages: [],
+        selectedVm: null
+    },
+    virtualMachineLoad: {
+        hasLoaded: false,
+        errorMessages: [],
+        vm: null
     },
     accountCreate: {
         isLoading: false,

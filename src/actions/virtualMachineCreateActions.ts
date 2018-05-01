@@ -4,6 +4,7 @@ import { virtualMachineService } from "../services/virtualMachineService";
 import { userService } from "../services/userService";
 import { inputValidationService } from '../services/inputValidationService';
 import {history} from '../store/history';
+import { change } from 'redux-form';
 
 export const virtualMachineCreateActionTypes = {
     VIRTUAL_MACHINE_CREATE_INPUT_VALIDATE: "VIRTUAL_MACHINE_CREATE_INPUT_VALIDATE",
@@ -35,6 +36,8 @@ export const createVm = (owner_uuid: string, alias: string, networks: any[], bra
                 validationErrors: errors
             }
         });
+
+        dispatch(change('virtualMachineCreateForm', 'errorMessages', errors));
     } else {
         dispatch({
             type: virtualMachineCreateActionTypes.VIRTUAL_MACHINE_CREATE_START,

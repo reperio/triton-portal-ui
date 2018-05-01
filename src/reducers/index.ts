@@ -4,6 +4,7 @@ import { authSessionReducer } from "./authSessionReducer"
 import { virtualMachineActionsReducer } from "./virtualMachine/virtualMachineActionsReducer";
 import { virtualMachinesTableReducer } from "./virtualMachine/virtualMachinesTableReducer";
 import { virtualMachineCreateReducer } from './virtualMachine/virtualMachineCreateReducer';
+import { virtualMachineEditReducer } from './virtualMachine/virtualMachineEditReducer';
 import { accountCreateReducer } from "./account/accountCreateReducer";
 import { accountEditReducer } from "./account/accountEditReducer";
 import { accountLoadReducer } from "./account/accountLoadReducer";
@@ -19,6 +20,7 @@ export const rootReducer = combineReducers({
     virtualMachineActions: virtualMachineActionsReducer,
     virtualMachines: virtualMachinesTableReducer,
     virtualMachineCreate: virtualMachineCreateReducer,
+    virtualMachineEdit: virtualMachineEditReducer,
     accountCreate: accountCreateReducer,
     accountEdit: accountEditReducer,
     accountLoad: accountLoadReducer,

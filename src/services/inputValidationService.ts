@@ -1,5 +1,7 @@
+import ValidationModel from '../models/validationModel';
+
 class InputValidationService {
-    validate(inputs: any[]) {
+    validate(inputs: ValidationModel[]) {
         let errors: string[] = [];
         inputs.forEach(input => {
             const lowerCaseName = input.name.toLowerCase();

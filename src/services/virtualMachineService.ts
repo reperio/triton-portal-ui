@@ -27,6 +27,10 @@ class VirtualMachineService {
         return await axios.post(`/triton/vms`, payload);
     }
 
+    async editVm(id: string, billing_id: string) {
+        return await axios.put(`/triton/vms/${id}/update?billing_id=${billing_id}`);
+    }
+
     async startVm(owner_uuid: string, id: string) {
         return await axios.put(`triton/vms/${id}/start?owner_id=${owner_uuid}`);
     }

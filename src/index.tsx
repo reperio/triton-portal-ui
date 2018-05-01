@@ -15,7 +15,7 @@ async function load() {
             await authActions.setAuthToken(authToken, true)(store.dispatch);
         }
         else {
-            history.push('/login');
+            authActions.logout();
         }
     } catch (e) {
         if (e.response == null || (e.response.status !== 401 && e.response.status !== 403)) {

@@ -2,7 +2,8 @@ import React from 'react'
 import {connect} from "react-redux";
 
 import {bindActionCreators} from "redux";
-import {getVmsByOwner, getAllVms, startVm, stopVm, rebootVm, deleteVm} from "../../actions/virtualMachineActions";
+import { getVmsByOwner, getAllVms, startVm, stopVm, rebootVm, deleteVm } from "../../actions/virtualMachineActions";
+import { navigateToVirtualMachineEdit } from '../../actions/virtualMachineEditActions';
 import ReactTable from 'react-table';
 import 'react-table/react-table.css';
 import LoadingSpinner from '../../components/misc/loadingSpinner';
@@ -10,6 +11,8 @@ import {FormGroup} from "react-bootstrap";
 import {LinkContainer} from "react-router-bootstrap";
 import {NavItem} from "react-bootstrap";
 import Error from '../../components/misc/error';
+import VirtualMachineForm from '../../components/virtualMachine/virtualMachineForm';
+import { formValueSelector } from 'redux-form';
 
 class VirtualMachineContainer extends React.Component {
     props: any;
@@ -45,11 +48,15 @@ class VirtualMachineContainer extends React.Component {
         await this.componentDidMount();
     }
 
+    async editVirtualMachine(row: any) {
+        await this.props.actions.navigateToVirtualMachineEdit(row.original.uuid);
+    }
+
     render() {
         return (
             <div>
                 {this.props.virtualMachines.isLoading || this.props.virtualMachineActions.isLoading ? <LoadingSpinner/> : null}
-                {this.props.virtualMachines.errorMessages.length || this.props.virtualMachineActions.errorMessages.length > 0 ? <Error errors={this.props.virtualMachines.errorMessages.concat(this.props.virtualMachineActions.errorMessages)}/> : null}
+                <VirtualMachineForm errorMessages={this.props.errorMessages} />
                 <FormGroup>
                     <LinkContainer to="/create-virtual-machine"><NavItem>Create a virtual machine</NavItem></LinkContainer>
                 </FormGroup>
@@ -63,6 +70,7 @@ class VirtualMachineContainer extends React.Component {
                                 <button onClick={this.startVirtualMachine.bind(this, row)} className="btn btn-success vm-actions"><span className="glyphicon glyphicon-play" aria-hidden="true"></span></button>
                                 <button onClick={this.endVirtualMachine.bind(this, row)} className="btn btn-warning vm-actions"><span className="glyphicon glyphicon-stop" aria-hidden="true"></span></button>
                                 <button onClick={this.restartVirtualMachine.bind(this, row)} className="btn btn-info vm-actions"><span className="glyphicon glyphicon-refresh" aria-hidden="true"></span></button>
+                                {row.original.brand.toLowerCase() === "lx" || row.original.brand.toLowerCase() === "os"}<button onClick={this.editVirtualMachine.bind(this, row)} className="btn btn-default vm-actions"><span className="glyphicon glyphicon-edit" aria-hidden="true"></span></button>
                                 <button onClick={this.deleteVirtualMachine.bind(this, row)} className="btn btn-danger vm-actions"><span className="glyphicon glyphicon-trash" aria-hidden="true"></span></button>
                             </div>
                         );
@@ -73,16 +81,18 @@ class VirtualMachineContainer extends React.Component {
 }
 
 function mapStateToProps(state: any) {
+    const selector = formValueSelector('virtualMachineCreateForm');
     return {
         authSession: state.authSession,
         virtualMachines: state.virtualMachines,
-        virtualMachineActions: state.virtualMachineActions
+        virtualMachineActions: state.virtualMachineActions,
+        errorMessages: selector(state, 'errorMessages')
     };
 }
 
 function mapActionToProps(dispatch: any) {
     return {
-        actions: bindActionCreators({getVmsByOwner, getAllVms, startVm, stopVm, deleteVm, rebootVm}, dispatch)
+        actions: bindActionCreators({getVmsByOwner, getAllVms, startVm, stopVm, deleteVm, rebootVm, navigateToVirtualMachineEdit}, dispatch)
     };
 }
 

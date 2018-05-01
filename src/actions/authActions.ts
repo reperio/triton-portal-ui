@@ -1,9 +1,9 @@
-import {Dispatch} from "react-redux";
+import { Dispatch } from "react-redux";
 
 import { authService } from "../services/authService";
 import { userService } from "../services/userService";
 import { inputValidationService } from "../services/inputValidationService";
-import {history} from '../store/history';
+import { history } from '../store/history';
 
 export const authActionTypes = {
     AUTH_LOGIN_PENDING: "AUTH_LOGIN_PENDING",
@@ -11,7 +11,8 @@ export const authActionTypes = {
     AUTH_LOGIN_ERROR: "AUTH_LOGIN_ERROR",
     AUTH_SET_TOKEN: "AUTH_SET_TOKEN",
     AUTH_CLEAR_TOKEN: "AUTH_CLEAR_TOKEN",
-    INPUT_VALIDATE: "INPUT_VALIDATE"
+    INPUT_VALIDATE: "INPUT_VALIDATE",
+    AUTH_LOGIN_END: "AUTH_LOGIN_END"
 };
 
 function getErrorMessageFromStatusCode(statusCode: number) {
@@ -30,7 +31,7 @@ export const logout = () => async (dispatch: Dispatch<any>) => {
         type: authActionTypes.AUTH_CLEAR_TOKEN,
         payload: null
     });
-    history.push('./login');
+    history.push('/login');
 };
 
 export const getAuthToken = () => {
@@ -56,16 +57,9 @@ export const setAuthToken = (authToken: string, forceActionDispatch = false) => 
                 type: authActionTypes.AUTH_CLEAR_TOKEN,
                 payload: null
             });
-            history.push('login');
+            history.push('/login');
         }
     }
-};
-
-export const setAuth = (user: any) => async (dispatch: Dispatch<any>) => {
-    dispatch({
-        type: authActionTypes.AUTH_LOGIN_SUCCESSFUL,
-        payload: {user}
-    });
 };
 
 export const submitAuth = (email: string, password: string) => async (dispatch: Dispatch<any>) => {
@@ -89,6 +83,7 @@ export const submitAuth = (email: string, password: string) => async (dispatch: 
     
         try {
             await authService.login(email, password);
+
             history.push('/home');
         } catch (e) {
             dispatch({

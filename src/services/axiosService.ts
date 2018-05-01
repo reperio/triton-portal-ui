@@ -1,6 +1,7 @@
 import axiosStatic from "axios";
 import * as authActions from "../actions/authActions"
 import { store } from "../store/store";
+import { authService } from "../services/authService";
 
 declare const API_URL: string;
 
@@ -18,7 +19,7 @@ axios.interceptors.response.use(async response => {
     if (response.headers != null && response.headers.authorization != null && response.headers.authorization.slice(0, 6) === "Bearer") {
         const authToken = response.headers.authorization.slice(7);
         const currentState = store.getState();
-        await authActions.setAuthToken(authToken)(store.dispatch);
+        await authActions.setAuthToken(authToken, true)(store.dispatch);
     }
     return response;
 });
