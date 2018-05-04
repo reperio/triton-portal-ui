@@ -10,7 +10,17 @@ export const axios = axiosStatic.create({baseURL: API_URL});
 axios.interceptors.request.use(async config => {
     const authToken = authActions.getAuthToken();
     if (authToken != null) {
-        config.headers.authorization = `Bearer ${authToken}`;
+        const parsedToken = authService.parseJwt(authToken);
+        const hasTokenTimeExpired = authService.hasTokenTimeExpired(parsedToken)
+        if (hasTokenTimeExpired) {
+            authActions.logout()((store.dispatch));
+        }
+        else {
+            config.headers.authorization = `Bearer ${authToken}`;
+        }
+    }
+    else {
+        //authActions.logout()(store.dispatch);
     }
     return config;
 });

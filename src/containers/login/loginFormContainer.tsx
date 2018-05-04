@@ -9,6 +9,7 @@ import {NavItem} from "react-bootstrap";
 import Error from "../../components/misc/error";
 import LoginModel from '../../models/loginModel';
 import {Redirect} from "react-router";
+import { formValueSelector } from 'redux-form';
 
 class LoginFormContainer extends React.Component {
     props: any;
@@ -22,22 +23,22 @@ class LoginFormContainer extends React.Component {
             !this.props.authSession.isAuthenticated ? 
                 <div>
                     {this.props.authSession.isLoading ? <LoadingSpinner/> : null}
-                    {this.props.authSession.errorMessages.length > 0 ? <Error errors={this.props.authSession.errorMessages}/> : null}
-                    <LoginForm onSubmit={this.onSubmit.bind(this)}/>
+                    <LoginForm errorMessages={this.props.errorMessages} onSubmit={this.onSubmit.bind(this)}/>
                     <div>
                         Don't have an account?
                         <LinkContainer to="/create-account"><NavItem>Create Account</NavItem></LinkContainer>
                     </div>
                 </div>
-            :
-            <Redirect to="/home"/>
+            : null
         );
     }
 }
 
 function mapStateToProps(state: any) {
+    const selector = formValueSelector('loginForm');
     return {
-        authSession: state.authSession
+        authSession: state.authSession,
+        errorMessages: selector(state, 'errorMessages')
     };
 }
 

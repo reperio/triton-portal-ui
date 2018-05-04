@@ -1,5 +1,6 @@
 import {Dispatch} from "react-redux";
 import { packageService } from "../services/packageService";
+import { change } from 'redux-form';
 
 export const packagesActionTypes = {
     PACKAGES_GET_START: "PACKAGES_GET_START",
@@ -40,13 +41,6 @@ export const getAllPackages = () => async (dispatch: Dispatch<any>) => {
     }
 };
 
-export const showPackageInformation = (packages: any[], selectedPackage: any) => async (dispatch: Dispatch<any>) => {
-    dispatch({
-        type: packagesActionTypes.PACKAGES_SELECT,
-        payload: {
-            packages: packages,
-            showInformation:true,
-            selectedPackage: selectedPackage
-        }
-    });
+export const showPackageInformation = (selectedPackage: any) => async (dispatch: Dispatch<any>) => {
+    dispatch(change('packageInformation', 'selectedPackage', selectedPackage));
 };

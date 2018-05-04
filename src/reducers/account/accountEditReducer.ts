@@ -1,30 +1,21 @@
 import {initialState, StateAccountEdit} from "../../store/initialState";
-import { accountEditActionTypes } from "../../actions/accountEditActions";
+import { accountActionTypes } from "../../actions/accountActions";
 
 export function accountEditReducer(state = initialState.accountEdit, action: {type: string, payload: any}): StateAccountEdit {
     switch (action.type) {
-        case accountEditActionTypes.ACCOUNT_EDIT_INPUT_VALIDATE: {
+        case accountActionTypes.USER_EDIT_START: {
             return {
-                isLoading: false,
-                errorMessages: action.payload.validationErrors
+                isLoading: true
             };
         }
-        case accountEditActionTypes.USER_EDIT_START: {
+        case accountActionTypes.USER_EDIT_END: {
             return {
-                isLoading: true,
-                errorMessages: []
+                isLoading: false
             };
         }
-        case accountEditActionTypes.USER_EDIT_END: {
+        case accountActionTypes.USER_EDIT_ERROR: {
             return {
-                isLoading: false,
-                errorMessages: []
-            };
-        }
-        case accountEditActionTypes.USER_EDIT_ERROR: {
-            return {
-                isLoading: false,
-                errorMessages: [action.payload.message]
+                isLoading: false
             };
         }
         default: {

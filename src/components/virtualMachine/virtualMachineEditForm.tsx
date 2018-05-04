@@ -9,22 +9,38 @@ import Error from "../../components/misc/error";
 const VirtualMachineEditForm = (props: any) => (
     <form onSubmit={props.handleSubmit(props.onSubmit)}>
         {props.errorMessages != null && props.errorMessages.length > 0 ? <Error errors={props.errorMessages}/> : null}
-        <h2>Editing {props.selectedVm.alias}</h2>
+        <h2>Editing virtual machine: {props.initialValues.selectedVm.alias}</h2>
+        <FormGroup style={{maxWidth: "280px"}}>
+         <Field 
+            name="alias" 
+            component="input" 
+            className="form-control" 
+            type="text" 
+            placeholder="Virtual Machine Name" />
+        </FormGroup>
         <FormGroup style={{maxWidth: "280px"}}>
             <DropdownList 
-                defaultValue={props.selectedVm.billing_id}
+                defaultValue={props.initialValues.selectedVm.billing_id}
                 name="package" 
                 valueField="uuid" 
                 textField="name"
-                data={props.packages.packages}
+                data={props.initialValues.packages}
                 onSelect={props.showPackageInformation}
                 placeholder="Select A Package" />
         </FormGroup>
-        {props.packages.showInformation && props.packages.selectedPackage !== null
+        {props.selectedPackage != null
         ? <PackageInformation
-            data={props.packages.selectedPackage} 
+            data={props.selectedPackage} 
             style={{maxWidth: "280px", marginBottom: "15px"}} />
         : null}
+        <FormGroup style={{maxWidth: "280px"}}>
+            <Field
+                name="image" 
+                component="input" 
+                className="form-control" 
+                type="text" 
+                placeholder="Image" />
+        </FormGroup>
         <FormGroup>
             <button className="btn btn-primary" type="submit">Save</button>
         </FormGroup>

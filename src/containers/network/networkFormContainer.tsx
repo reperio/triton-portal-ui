@@ -10,6 +10,7 @@ import { LinkContainer } from "react-router-bootstrap";
 import { NavItem}  from "react-bootstrap";
 import Error from '../../components/misc/error';
 import NetworkForm from '../../components/network/networkForm';
+import { formValueSelector } from 'redux-form';
 
 class NetworkFormContainer extends React.Component {
     props: any;
@@ -34,7 +35,7 @@ class NetworkFormContainer extends React.Component {
         return (
             <div>
                 {this.props.networks.isLoading || this.props.networkActions.isLoading ? <LoadingSpinner/> : null}
-                <NetworkForm errorMessages={this.props.networks.errorMessages.concat(this.props.networkActions.errorMessages)} />
+                <NetworkForm errorMessages={this.props.errorMessages} />
                 <FormGroup>
                     <LinkContainer to="/create-network"><NavItem>Create a network</NavItem></LinkContainer>
                 </FormGroup>
@@ -55,10 +56,12 @@ class NetworkFormContainer extends React.Component {
 }
 
 function mapStateToProps(state: any) {
+    const selector = formValueSelector('networkForm');
     return {
         authSession: state.authSession,
         networks: state.networks,
-        networkActions: state.networkActions
+        networkActions: state.networkActions,
+        errorMessages: selector(state, 'errorMessages')
     };
 }
 

@@ -5,25 +5,16 @@ export function networkCreateReducer(state = initialState.networkCreate, action:
     switch (action.type) {
         case networkActionTypes.NETWORK_CREATE_START: {
             return {
-                errorMessages: [],
                 isLoading: true
             };
         }
         case networkActionTypes.NETWORK_CREATE_END: {
             return {
-                errorMessages: [],
                 isLoading: false
             };
         }
         case networkActionTypes.NETWORK_CREATE_ERROR: {
             return {
-                errorMessages: [action.payload.message],
-                isLoading: false
-            };
-        }
-        case networkActionTypes.NETWORK_CREATE_VALIDATE: {
-            return {
-                errorMessages: action.payload.validationErrors,
                 isLoading: false
             };
         }

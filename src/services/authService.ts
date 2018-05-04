@@ -15,6 +15,14 @@ class AuthService {
 
         return JSON.parse(window.atob(base64));
     }
+
+    hasTokenTimeExpired(parsedToken: any): boolean {
+        const time = Math.round((new Date()).getTime() / 1000);
+        if (time < parsedToken.exp) {
+            return false;
+        }
+        return true;
+    }
 }
 
 export const authService = new AuthService();

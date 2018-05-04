@@ -3,6 +3,7 @@ import { Field, reduxForm, formValueSelector, FieldArray } from 'redux-form'
 import {FormGroup} from "react-bootstrap";
 import {DropdownList, Multiselect} from 'react-widgets'
 import 'react-widgets/dist/css/react-widgets.css';
+import Error from '../../components/misc/error';
 
 const fieldArrayComponent = (props: any) => (
     <div>
@@ -39,6 +40,7 @@ const fieldArrayComponent = (props: any) => (
 
 const NetworkCreateForm = (props: any) => (
     <form onSubmit={props.handleSubmit(props.onSubmit)}>
+        {props.errorMessages != null && props.errorMessages.length > 0 ? <Error errors={props.errorMessages}/> : null}
         <h2>Create a network</h2>
         <FormGroup style={{maxWidth: "280px"}}>
          <Field 

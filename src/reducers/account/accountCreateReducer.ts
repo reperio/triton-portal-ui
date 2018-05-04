@@ -1,30 +1,21 @@
 import {initialState, StateAccountCreate} from "../../store/initialState";
-import { accountCreateActionTypes } from "../../actions/accountCreateActions";
+import { accountActionTypes } from "../../actions/accountActions";
 
 export function accountCreateReducer(state = initialState.accountCreate, action: {type: string, payload: any}): StateAccountCreate {
     switch (action.type) {
-        case accountCreateActionTypes.USER_CREATE_START: {
+        case accountActionTypes.USER_CREATE_START: {
             return {
-                isLoading: true,
-                errorMessages: []
+                isLoading: true
             };
         }
-        case accountCreateActionTypes.USER_CREATE_END: {
+        case accountActionTypes.USER_CREATE_END: {
             return {
-                isLoading: false,
-                errorMessages: []
+                isLoading: false
             };
         }
-        case accountCreateActionTypes.USER_CREATE_ERROR: {
+        case accountActionTypes.USER_CREATE_ERROR: {
             return {
-                isLoading: false,
-                errorMessages: [action.payload.message]
-            };
-        }
-        case accountCreateActionTypes.ACCOUNT_CREATE_INPUT_VALIDATE: {
-            return {
-                isLoading: false,
-                errorMessages: action.payload.validationErrors
+                isLoading: false
             };
         }
         default: {

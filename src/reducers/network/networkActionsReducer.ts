@@ -5,20 +5,17 @@ export function networkActionsReducer(state = initialState.networkActions, actio
     switch (action.type) {
         case networkActionTypes.NETWORK_DELETE_START: {
             return {
-                isLoading: true,
-                errorMessages: []
+                isLoading: true
             };
         }
         case networkActionTypes.NETWORK_DELETE_END: {
             return {
-                isLoading: false,
-                errorMessages: []
+                isLoading: false
             };
         }
         case networkActionTypes.NETWORK_DELETE_ERROR: {
             return {
-                isLoading: false,
-                errorMessages: [action.payload.message]
+                isLoading: false
             };
         }
         default: {

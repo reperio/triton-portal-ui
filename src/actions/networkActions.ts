@@ -3,6 +3,8 @@ import { networkService } from "../services/networkService";
 import CreateNetworkModel from '../models/createNetworkModel';
 import { inputValidationService } from "../services/inputValidationService";
 import { history } from '../store/history';
+import { change } from 'redux-form';
+var Joi = require('joi-browser');
 
 export const networkActionTypes = {
     NETWORKS_GET_START: "NETWORKS_GET_START",
@@ -14,8 +16,7 @@ export const networkActionTypes = {
     NETWORK_CREATE_ERROR: "NETWORK_CREATE_ERROR",
     NETWORK_DELETE_START: "NETWORK_DELETE_START",
     NETWORK_DELETE_END: "NETWORK_DELETE_END",
-    NETWORK_DELETE_ERROR: "NETWORK_DELETE_ERROR",
-    NETWORK_CREATE_VALIDATE: "NETWORK_CREATE_VALIDATE"
+    NETWORK_DELETE_ERROR: "NETWORK_DELETE_ERROR"
 };
 
 function getErrorMessageFromStatusCode(statusCode: number) {
@@ -46,11 +47,10 @@ export const getAllFabricNetworksByOwnerId = (ownerId: string) => async (dispatc
             }
         });
     } catch (e) {
+        dispatch(change('networkForm', 'errorMessages', [getErrorMessageFromStatusCode(e.response != null ? e.response.status : null)]));
+
         dispatch({
-            type: networkActionTypes.NETWORKS_ERROR,
-            payload: {
-                message: getErrorMessageFromStatusCode(e.response != null ? e.response.status : null)
-            }
+            type: networkActionTypes.NETWORKS_ERROR
         });
     }
 };
@@ -67,24 +67,36 @@ export const selectNetworks = (networks: any[], selectedNetworks: any[]) => asyn
 
 export const createFabricNetwork = (network: CreateNetworkModel, ownerUuid: string) => async (dispatch: Dispatch<any>) => {
     
-    let errors = inputValidationService.validate([
-        {name: "Name", value: network.name, type: "string", required: true},
-        {name: "Subnet", value: network.subnet, type: "string", required: true},
-        {name: "Provision start ip", value: network.provisionStartIp, type: "string", required: true},
-        {name: "Provision end ip", value: network.provisionEndIp, type: "string", required: true},
-        {name: "Gateway", value: network.gateway, type: "string", required: false},
-        {name: "Internet nat", value: network.internetNat, type: "boolean", required: false},
-        {name: "Resolvers", value: network.resolvers, type: "array", required: false}
-    ]);
+    const schema = Joi.object().keys({
+        name: Joi.string().required().label('Name'),
+        subnet: Joi.string().required().label('Subnet'),
+        provisionStartIp: Joi.string().required().label('Provision start ip'),
+        provisionEndIp: Joi.string().required().label('Provision end ip'),
+        gateway: Joi.string().email().required().label('Gateway'),
+        internetNat: Joi.string().guid().required().label('Internet nat'),
+        resolvers: Joi.array().items(
+            Joi.object(
+                {
+                    ip: Joi.string().required().label('Resolver ip')
+                }
+            )
+        ).optional().label('Resolvers'),
+        description: Joi.string().optional().label('Description')
+    }).options({ abortEarly: false });
 
-    if (errors.length > 0) {
-        dispatch({
-            type: networkActionTypes.NETWORK_CREATE_VALIDATE,
-            payload: {
-                validationErrors: errors
-            }
-        });
-    } else {
+    let errors = await inputValidationService.validate({
+        name: network.name,
+        subnet: network.subnet, 
+        provisionStartIp: network.provisionStartIp,
+        provisionEndIp: network.provisionEndIp,
+        gateway: network.gateway,
+        internetNat: network.internetNat,
+        resolvers: network.resolvers,
+        description: network.description}, schema);
+
+    dispatch(change('networkCreateForm', 'errorMessages', errors));
+
+    if (errors.length == 0) {
         dispatch({
             type: networkActionTypes.NETWORK_CREATE_START,
             payload: {
@@ -103,11 +115,10 @@ export const createFabricNetwork = (network: CreateNetworkModel, ownerUuid: stri
             });
             history.push('/networks');
         } catch (e) {
+            dispatch(change('networkCreateForm', 'errorMessages', [getErrorMessageFromStatusCode(e.response != null ? e.response.status : null)]));
+            
             dispatch({
-                type: networkActionTypes.NETWORK_CREATE_ERROR,
-                payload: {
-                    message: getErrorMessageFromStatusCode(e.response != null ? e.response.status : null)
-                }
+                type: networkActionTypes.NETWORK_CREATE_ERROR
             });
         }
     }
@@ -124,18 +135,13 @@ export const deleteFabricNetwork = (owner_uuid: string, vlanId:number, uuid: str
         const vm = await networkService.deleteFabricNetwork(owner_uuid, vlanId, uuid);
 
         dispatch({
-            type: networkActionTypes.NETWORK_DELETE_END,
-            payload: {
-                isLoading: false
-            }
+            type: networkActionTypes.NETWORK_DELETE_END
         });
     } catch (e) {
+        dispatch(change('networkForm', 'errorMessages', [getErrorMessageFromStatusCode(e.response != null ? e.response.status : null)]));
+        
         dispatch({
-            type: networkActionTypes.NETWORK_DELETE_ERROR,
-            payload: {
-                isLoading: false,
-                message: getErrorMessageFromStatusCode(e.response != null ? e.response.status : null)
-            }
+            type: networkActionTypes.NETWORK_DELETE_ERROR
         });
     }
 };

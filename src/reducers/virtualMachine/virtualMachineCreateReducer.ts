@@ -1,30 +1,21 @@
 import {initialState, StateVirtualMachineCreate} from "../../store/initialState";
-import { virtualMachineCreateActionTypes } from "../../actions/virtualMachineCreateActions";
+import { virtualMachineActionTypes } from "../../actions/virtualMachineActions";
 
 export function virtualMachineCreateReducer(state = initialState.virtualMachines, action: {type: string, payload: any}): StateVirtualMachineCreate {
     switch (action.type) {
-        case virtualMachineCreateActionTypes.VIRTUAL_MACHINE_CREATE_START: {
+        case virtualMachineActionTypes.VIRTUAL_MACHINE_CREATE_START: {
             return {
-                isLoading: true,
-                errorMessages: []
+                isLoading: true
             };
         }
-        case virtualMachineCreateActionTypes.VIRTUAL_MACHINE_CREATE_END: {
+        case virtualMachineActionTypes.VIRTUAL_MACHINE_CREATE_END: {
             return {
-                isLoading: false,
-                errorMessages: []
+                isLoading: false
             };
         }
-        case virtualMachineCreateActionTypes.VIRTUAL_MACHINE_CREATE_ERROR: {
+        case virtualMachineActionTypes.VIRTUAL_MACHINE_CREATE_ERROR: {
             return {
-                isLoading: false,
-                errorMessages: [action.payload.message]
-            };
-        }
-        case virtualMachineCreateActionTypes.VIRTUAL_MACHINE_CREATE_INPUT_VALIDATE: {
-            return {
-                isLoading: false,
-                errorMessages: action.payload.validationErrors
+                isLoading: false
             };
         }
         default: {

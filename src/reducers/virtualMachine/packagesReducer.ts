@@ -7,7 +7,6 @@ export function packagesReducer(state = initialState.packages, action: {type: st
             return {
                 hasLoaded: false,
                 packages: [],
-                errorMessages: [],
                 showInformation: false,
                 selectedPackage: null
             };
@@ -16,7 +15,6 @@ export function packagesReducer(state = initialState.packages, action: {type: st
             return {
                 hasLoaded: true,
                 packages: action.payload.packages,
-                errorMessages: [],
                 showInformation: false,
                 selectedPackage: null
             };
@@ -25,7 +23,6 @@ export function packagesReducer(state = initialState.packages, action: {type: st
             return {
                 hasLoaded: false,
                 packages: [],
-                errorMessages: [action.payload.message],
                 showInformation: false,
                 selectedPackage: null
             };
@@ -34,7 +31,6 @@ export function packagesReducer(state = initialState.packages, action: {type: st
             return {
                 hasLoaded: true,
                 packages: action.payload.packages,
-                errorMessages: [],
                 showInformation: true,
                 selectedPackage: action.payload.selectedPackage
             };

@@ -1,6 +1,7 @@
 import React from 'react'
 import { Field, reduxForm, FieldArray } from 'redux-form'
-import {FormGroup} from "react-bootstrap";
+import { FormGroup } from "react-bootstrap";
+import Error from '../../components/misc/error';
 
 const fieldArrayComponent = (props: any) => (
     <div>
@@ -44,6 +45,7 @@ const fieldArrayComponent = (props: any) => (
 
 const AccountEditForm = (props: any) => (
     <form onSubmit={props.handleSubmit(props.onSubmit)}>
+        {props.errorMessages != null && props.errorMessages.length > 0 ? <Error errors={props.errorMessages}/> : null}
         <h2>Edit account</h2>
         <FormGroup>
             <label>Old Password</label>

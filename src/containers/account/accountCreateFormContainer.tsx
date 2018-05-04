@@ -1,33 +1,35 @@
 import React from 'react'
-import {connect} from "react-redux";
-import {createAccount} from "../../actions/accountCreateActions";
-import {bindActionCreators} from "redux";
+import { connect } from "react-redux";
+import { createAccount } from "../../actions/accountActions";
+import { bindActionCreators } from "redux";
 import AccountCreateForm from "../../components/account/accountCreateForm";
 import LoadingSpinner from '../../components/misc/loadingSpinner';
 import Error from '../../components/misc/error'
 import CreateAccountModel from '../../models/createAccountModel';
+import { formValueSelector } from 'redux-form';
 
 class AccountCreateFormContainer extends React.Component {
     props: any;
 
     async onSubmit(values: CreateAccountModel) {
-        await this.props.actions.createAccount(values.username, values.password, values.confirmPassword, values.firstname, values.lastname, values.email, values.ownerId);
+        await this.props.actions.createAccount(values);
     };
 
     render() {
         return (
             <div>
                 {this.props.accountCreate.isLoading ? <LoadingSpinner/> : null}
-                {this.props.accountCreate.errorMessages.length > 0 ? <Error errors={this.props.accountCreate.errorMessages}/> : null}
-                <AccountCreateForm onSubmit={this.onSubmit.bind(this)} />
+                <AccountCreateForm errorMessages={this.props.errorMessages} onSubmit={this.onSubmit.bind(this)} />
             </div>
         );
     }
 }
 
 function mapStateToProps(state: any) {
+    const selector = formValueSelector('accountCreateForm');
     return {
-        accountCreate: state.accountCreate
+        accountCreate: state.accountCreate,
+        errorMessages: selector(state, 'errorMessages')
     };
 }
 

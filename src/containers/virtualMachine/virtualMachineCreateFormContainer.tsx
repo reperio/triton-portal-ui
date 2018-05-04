@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from "react-redux";
-import { createVm } from "../../actions/virtualMachineCreateActions";
+import { createVm } from "../../actions/virtualMachineActions";
 import { getAllPackages, showPackageInformation} from "../../actions/packagesActions";
 import { getAllFabricNetworksByOwnerId, selectNetworks } from "../../actions/networkActions";
 import { bindActionCreators } from "redux";

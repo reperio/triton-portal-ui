@@ -1,4 +1,4 @@
-import SshKeyModel from '../models/sshKeyModel';
+import sshKeyModel from '../models/sshKeyModel';
 
 export default class EditAccountModel {
     email: string;
@@ -8,5 +8,5 @@ export default class EditAccountModel {
     firstName: string;
     lastName: string;
     confirmNewPassword: string;
-    sshKeys: SshKeyModel[];
+    sshKeys: sshKeyModel[];
 }

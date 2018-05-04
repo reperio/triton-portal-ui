@@ -4,9 +4,8 @@ import { createFabricNetwork } from "../../actions/networkActions";
 import { bindActionCreators } from "redux";
 import NetworkCreateForm from "../../components/network/networkCreateForm";
 import LoadingSpinner from '../../components/misc/loadingSpinner';
-import Error from '../../components/misc/error'
-import CreateAccountModel from '../../models/createAccountModel';
 import CreateNetworkModel from '../../models/createNetworkModel';
+import { formValueSelector } from 'redux-form';
 
 class NetworkCreateFormContainer extends React.Component {
     props: any;
@@ -19,17 +18,18 @@ class NetworkCreateFormContainer extends React.Component {
         return (
             <div>
                 {this.props.networkCreate.isLoading ? <LoadingSpinner/> : null}
-                {this.props.networkCreate.errorMessages.length > 0 ? <Error errors={this.props.networkCreate.errorMessages}/> : null}
-                <NetworkCreateForm onSubmit={this.onSubmit.bind(this)} />
+                <NetworkCreateForm errorMessages={this.props.errorMessages} onSubmit={this.onSubmit.bind(this)} />
             </div>
         );
     }
 }
 
 function mapStateToProps(state: any) {
+    const selector = formValueSelector('networkCreateForm');
     return {
         networkCreate: state.networkCreate,
-        authSession: state.authSession
+        authSession: state.authSession,
+        errorMessages: selector(state, 'errorMessages')
     };
 }
 

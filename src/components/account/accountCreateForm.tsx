@@ -1,9 +1,11 @@
 import React from 'react'
 import { Field, reduxForm, FieldArray } from 'redux-form'
 import {FormGroup} from "react-bootstrap";
+import Error from '../../components/misc/error';
 
 const AccountCreateForm = (props: any) => (
     <form onSubmit={props.handleSubmit(props.onSubmit)}>
+        {props.errorMessages != null && props.errorMessages.length > 0 ? <Error errors={props.errorMessages}/> : null}
         <h2>Create an account</h2>
         <FormGroup>
             <Field name="username" component="input" className="form-control" type="text" placeholder="Username"
@@ -40,4 +42,4 @@ const AccountCreateForm = (props: any) => (
 );
 
 // casted to <any> because reduxForm doesn't play nicely with other things
-export default reduxForm({ form: 'accountCreate', destroyOnUnmount: true })(AccountCreateForm) as any;
+export default reduxForm({ form: 'accountCreateForm' })(AccountCreateForm) as any;

@@ -1,20 +1,21 @@
 import { axios } from "./axiosService";
 import EditAccountModel from "../models/editAccountModel";
+import CreateAccountModel from "../models/createAccountModel";
 
 class UserService {
     async getUserById(userId: string) {
         return await axios.get(`/users/${userId}`);
     }
 
-    async createUser(username: string, password: string, firstName: string, lastName: string, email: string, ownerUuid: string) {
+    async createUser(account: CreateAccountModel) {
         const payload = {
             user: {
-                username, 
-                password, 
-                firstName, 
-                lastName, 
-                email,
-                ownerUuid
+                username: account.username, 
+                password: account.password, 
+                firstName: account.firstname, 
+                lastName: account.lastname, 
+                email: account.email,
+                ownerUuid: account.ownerId
             }
         };
         return await axios.post(`/users`, payload);

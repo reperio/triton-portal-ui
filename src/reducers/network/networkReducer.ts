@@ -7,7 +7,6 @@ export function networksReducer(state = initialState.networks, action: {type: st
             return {
                 hasLoaded: false,
                 networks: [],
-                errorMessages: [],
                 selectedNetworks: null,
                 isLoading: true
             };
@@ -16,7 +15,6 @@ export function networksReducer(state = initialState.networks, action: {type: st
             return {
                 hasLoaded: true,
                 networks: action.payload.networks,
-                errorMessages: [],
                 selectedNetworks: null,
                 isLoading: false
             };
@@ -25,7 +23,6 @@ export function networksReducer(state = initialState.networks, action: {type: st
             return {
                 hasLoaded: false,
                 networks: [],
-                errorMessages: [action.payload.message],
                 selectedNetworks: null,
                 isLoading: false
             };
@@ -34,7 +31,6 @@ export function networksReducer(state = initialState.networks, action: {type: st
             return {
                 hasLoaded: true,
                 networks: action.payload.networks,
-                errorMessages: [],
                 selectedNetworks: action.payload.selectedNetworks,
                 isLoading: false
             };

@@ -5,74 +5,62 @@ export function virtualMachineActionsReducer(state = initialState.virtualMachine
     switch (action.type) {
         case virtualMachineActionTypes.VIRTUAL_MACHINE_START_START: {
             return {
-                isLoading: true,
-                errorMessages: []
+                isLoading: true
             };
         }
         case virtualMachineActionTypes.VIRTUAL_MACHINE_START_END: {
             return {
-                isLoading: false,
-                errorMessages: []
+                isLoading: false
             };
         }
         case virtualMachineActionTypes.VIRTUAL_MACHINE_START_ERROR: {
             return {
-                isLoading: false,
-                errorMessages: [action.payload.message]
+                isLoading: false
             };
         }
         case virtualMachineActionTypes.VIRTUAL_MACHINE_STOP_START: {
             return {
-                isLoading: true,
-                errorMessages: []
+                isLoading: true
             };
         }
         case virtualMachineActionTypes.VIRTUAL_MACHINE_STOP_END: {
             return {
-                isLoading: false,
-                errorMessages: []
+                isLoading: false
             };
         }
         case virtualMachineActionTypes.VIRTUAL_MACHINE_STOP_ERROR: {
             return {
-                isLoading: false,
-                errorMessages: [action.payload.message]
+                isLoading: false
             };
         }
         case virtualMachineActionTypes.VIRTUAL_MACHINE_START_START: {
             return {
-                isLoading: true,
-                errorMessages: []
+                isLoading: true
             };
         }
         case virtualMachineActionTypes.VIRTUAL_MACHINE_REBOOT_END: {
             return {
-                isLoading: false,
-                errorMessages: []
+                isLoading: false
             };
         }
         case virtualMachineActionTypes.VIRTUAL_MACHINE_REBOOT_ERROR: {
             return {
-                isLoading: false,
-                errorMessages: [action.payload.message]
+                isLoading: false
             };
         }
         case virtualMachineActionTypes.VIRTUAL_MACHINE_DELETE_START: {
             return {
-                isLoading: true,
-                errorMessages: []
+                isLoading: true
             };
         }
         case virtualMachineActionTypes.VIRTUAL_MACHINE_DELETE_END: {
             return {
-                isLoading: false,
-                errorMessages: []
+                isLoading: false
             };
         }
         case virtualMachineActionTypes.VIRTUAL_MACHINE_DELETE_ERROR: {
             return {
-                isLoading: false,
-                errorMessages: [action.payload.message]
+                isLoading: false
             };
         }
         default: {

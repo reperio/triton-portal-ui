@@ -16,9 +16,7 @@ export class State {
 }
 
 export class StateAuthSession {
-    isPending: boolean;
     isAuthenticated: boolean;
-    errorMessages: string[];
     user: any;
     isLoading: boolean;
 }
@@ -26,51 +24,41 @@ export class StateAuthSession {
 export class StateVirtualMachines {
     vms: any[];
     isLoading: boolean;
-    errorMessages: string[];
 }
 
 export class StateVirtualMachineActions {
     isLoading: boolean;
-    errorMessages: string[];
 }
 
 export class StateVirtualMachineCreate {
     isLoading: boolean;
-    errorMessages: string[];
 }
 
 export class StateVirtualMachineEdit {
     isLoading: boolean;
-    errorMessages: string[];
-    selectedVm: any;
 }
 
 export class StateVirtualMachineLoad {
     hasLoaded: boolean;
-    errorMessages: string[];
     vm: any;
 }
 
 export class StateAccountCreate {
     isLoading: boolean;
-    errorMessages: string[];
 }
 
 export class StateAccountEdit {
     isLoading: boolean;
-    errorMessages: string[];
 }
 
 export class StateAccountLoad {
     hasLoaded: boolean;
-    errorMessages: string[];
     user: any;
 }
 
 export class StatePackages {
     hasLoaded: boolean;
     packages: any[];
-    errorMessages: string[];
     showInformation: boolean;
     selectedPackage: any;
 }
@@ -78,96 +66,76 @@ export class StatePackages {
 export class StateSshKeys {
     sshKeys: any[];
     isLoading: boolean;
-    errorMessages: string[];
 }
 
 export class StateNetworks {
     hasLoaded: boolean;
     isLoading: boolean;
-    errorMessages: string[];
     networks: any[];
     selectedNetworks: any[];
 }
 
 export class StateNetworkCreate {
     isLoading: boolean;
-    errorMessages: string[];
 }
 
 export class StateNetworkActions {
     isLoading: boolean;
-    errorMessages: string[];
 }
 
 export const initialState: State = {
     authSession: {
-        isPending: false,
         isAuthenticated: false,
-        errorMessages: [],
         user: null,
         isLoading: false
     },
     virtualMachines: {
         vms: [], 
-        isLoading: false,
-        errorMessages: []
+        isLoading: false
     },
     virtualMachineActions: {
-        isLoading: false,
-        errorMessages: [],
+        isLoading: false
     },
     virtualMachineCreate: {
-        isLoading: false,
-        errorMessages: []
+        isLoading: false
     },
     virtualMachineEdit: {
-        isLoading: false,
-        errorMessages: [],
-        selectedVm: null
+        isLoading: false
     },
     virtualMachineLoad: {
         hasLoaded: false,
-        errorMessages: [],
         vm: null
     },
     accountCreate: {
-        isLoading: false,
-        errorMessages: []
+        isLoading: false
     },
     accountEdit: {
-        isLoading: false,
-        errorMessages: []
+        isLoading: false
     },
     accountLoad: {
         hasLoaded: false,
-        errorMessages: [],
         user: null
     },
     packages: {
         hasLoaded: false,
         packages: [],
-        errorMessages: [],
         showInformation: false,
         selectedPackage: null
     },
     sshKeys: {
         sshKeys: [],
-        errorMessages: [],
         isLoading: false
     },
     networks: {
         hasLoaded: false,
         networks: [],
-        errorMessages: [],
         isLoading: false,
         selectedNetworks: []
     },
     networkCreate: {
-        errorMessages: [],
         isLoading: false
     },
     networkActions: {
-        errorMessages: [],
         isLoading: false
     }
 };

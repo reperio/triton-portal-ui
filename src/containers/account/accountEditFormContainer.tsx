@@ -1,11 +1,12 @@
 import React from 'react'
 import {connect} from "react-redux";
-import {editAccount, loadAccount} from "../../actions/accountEditActions";
+import { editAccount, loadAccount } from "../../actions/accountActions";
 import {bindActionCreators} from "redux";
 import AccountEditForm from "../../components/account/accountEditForm";
 import LoadingSpinner from '../../components/misc/loadingSpinner';
 import Error from '../../components/misc/error'
 import EditAccountModel from '../../models/editAccountModel';
+import { formValueSelector } from 'redux-form';
 
 class AccountEditFormContainer extends React.Component {
     props: any;
@@ -22,19 +23,20 @@ class AccountEditFormContainer extends React.Component {
         return (
             <div>
                 {this.props.accountEdit.isLoading || !this.props.accountLoad.hasLoaded ? <LoadingSpinner/> : null}
-                {this.props.accountEdit.errorMessages.length > 0 ? <Error errors={this.props.accountEdit.errorMessages}/> : null}
                 {!this.props.accountLoad.hasLoaded ? null : 
-                <AccountEditForm initialValues={this.props.accountLoad.user} onSubmit={this.onSubmit.bind(this)} />}
+                <AccountEditForm errorMessages={this.props.errorMessages} initialValues={this.props.accountLoad.user} onSubmit={this.onSubmit.bind(this)} />}
             </div>
         );
     }
 }
 
 function mapStateToProps(state: any) {
+    const selector = formValueSelector('accountEditForm');
     return {
         accountEdit: state.accountEdit,
         accountLoad: state.accountLoad,
-        authSession: state.authSession
+        authSession: state.authSession,
+        errorMessages: selector(state, 'errorMessages')
     };
 }
 

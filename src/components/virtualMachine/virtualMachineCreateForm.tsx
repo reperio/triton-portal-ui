@@ -1,5 +1,5 @@
 import React from 'react'
-import { Field, reduxForm, formValueSelector } from 'redux-form'
+import { Field, reduxForm } from 'redux-form'
 import {FormGroup} from "react-bootstrap";
 import {DropdownList, Multiselect} from 'react-widgets'
 import PackageInformation from './packageInformation';

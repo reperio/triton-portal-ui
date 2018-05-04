@@ -3,7 +3,7 @@ import {connect} from "react-redux";
 
 import {bindActionCreators} from "redux";
 import { getVmsByOwner, getAllVms, startVm, stopVm, rebootVm, deleteVm } from "../../actions/virtualMachineActions";
-import { navigateToVirtualMachineEdit } from '../../actions/virtualMachineEditActions';
+import { navigateToVirtualMachineEdit } from '../../actions/virtualMachineActions';
 import ReactTable from 'react-table';
 import 'react-table/react-table.css';
 import LoadingSpinner from '../../components/misc/loadingSpinner';
@@ -49,13 +49,13 @@ class VirtualMachineContainer extends React.Component {
     }
 
     async editVirtualMachine(row: any) {
-        await this.props.actions.navigateToVirtualMachineEdit(row.original.uuid);
+        await this.props.actions.navigateToVirtualMachineEdit(row.original);
     }
 
     render() {
         return (
             <div>
-                {this.props.virtualMachines.isLoading || this.props.virtualMachineActions.isLoading ? <LoadingSpinner/> : null}
+                {this.props.virtualMachines.isLoading || this.props.virtualMachineActions.isLoading || this.props.virtualMachineEdit.isLoading ? <LoadingSpinner/> : null}
                 <VirtualMachineForm errorMessages={this.props.errorMessages} />
                 <FormGroup>
                     <LinkContainer to="/create-virtual-machine"><NavItem>Create a virtual machine</NavItem></LinkContainer>
@@ -81,11 +81,12 @@ class VirtualMachineContainer extends React.Component {
 }
 
 function mapStateToProps(state: any) {
-    const selector = formValueSelector('virtualMachineCreateForm');
+    const selector = formValueSelector('virtualMachineForm');
     return {
         authSession: state.authSession,
         virtualMachines: state.virtualMachines,
         virtualMachineActions: state.virtualMachineActions,
+        virtualMachineEdit: state.virtualMachineEdit,
         errorMessages: selector(state, 'errorMessages')
     };
 }
