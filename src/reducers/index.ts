@@ -4,7 +4,6 @@ import { authSessionReducer } from "./authSessionReducer"
 import { virtualMachineActionsReducer } from "./virtualMachine/virtualMachineActionsReducer";
 import { virtualMachinesTableReducer } from "./virtualMachine/virtualMachinesTableReducer";
 import { virtualMachineCreateReducer } from './virtualMachine/virtualMachineCreateReducer';
-import { virtualMachineEditReducer } from './virtualMachine/virtualMachineEditReducer';
 import { accountCreateReducer } from "./account/accountCreateReducer";
 import { accountEditReducer } from "./account/accountEditReducer";
 import { accountLoadReducer } from "./account/accountLoadReducer";
@@ -13,6 +12,7 @@ import { sshKeysReducer } from './account/sshKeysReducer';
 import { networksReducer } from "./network/networkReducer";
 import { networkCreateReducer } from "./network/networkCreateReducer";
 import { networkActionsReducer } from "./network/networkActionsReducer";
+import { imageReducer } from "./virtualMachine/imageReducer";
 
 export const rootReducer = combineReducers({
     form: formReducer,
@@ -20,7 +20,6 @@ export const rootReducer = combineReducers({
     virtualMachineActions: virtualMachineActionsReducer,
     virtualMachines: virtualMachinesTableReducer,
     virtualMachineCreate: virtualMachineCreateReducer,
-    virtualMachineEdit: virtualMachineEditReducer,
     accountCreate: accountCreateReducer,
     accountEdit: accountEditReducer,
     accountLoad: accountLoadReducer,
@@ -28,5 +27,6 @@ export const rootReducer = combineReducers({
     sshKeys: sshKeysReducer,
     networks: networksReducer,
     networkCreate: networkCreateReducer,
-    networkActions: networkActionsReducer
+    networkActions: networkActionsReducer,
+    images: imageReducer
 });

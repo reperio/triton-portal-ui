@@ -3,7 +3,6 @@ export class State {
     virtualMachines: StateVirtualMachines;
     virtualMachineActions: StateVirtualMachineActions;
     virtualMachineCreate: StateVirtualMachineCreate;
-    virtualMachineEdit: StateVirtualMachineEdit;
     virtualMachineLoad: StateVirtualMachineLoad;
     accountCreate: StateAccountCreate;
     accountEdit: StateAccountEdit;
@@ -13,6 +12,7 @@ export class State {
     networks: StateNetworks;
     networkCreate: StateNetworkCreate;
     networkActions: StateNetworkActions;
+    images: StateImages;
 }
 
 export class StateAuthSession {
@@ -31,10 +31,6 @@ export class StateVirtualMachineActions {
 }
 
 export class StateVirtualMachineCreate {
-    isLoading: boolean;
-}
-
-export class StateVirtualMachineEdit {
     isLoading: boolean;
 }
 
@@ -61,6 +57,12 @@ export class StatePackages {
     packages: any[];
     showInformation: boolean;
     selectedPackage: any;
+}
+
+export class StateImages {
+    hasLoaded: boolean;
+    images: any[];
+    selectedImage: any;
 }
 
 export class StateSshKeys {
@@ -99,9 +101,6 @@ export const initialState: State = {
     virtualMachineCreate: {
         isLoading: false
     },
-    virtualMachineEdit: {
-        isLoading: false
-    },
     virtualMachineLoad: {
         hasLoaded: false,
         vm: null
@@ -121,6 +120,11 @@ export const initialState: State = {
         packages: [],
         showInformation: false,
         selectedPackage: null
+    },
+    images: {
+        hasLoaded: false,
+        images: [],
+        selectedImage: null
     },
     sshKeys: {
         sshKeys: [],

@@ -3,18 +3,16 @@ import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { getAllFabricNetworksByOwnerId, deleteFabricNetwork } from "../../actions/networkActions";
 import ReactTable from 'react-table';
-import 'react-table/react-table.css';
 import LoadingSpinner from '../../components/misc/loadingSpinner';
 import { FormGroup } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
-import { NavItem}  from "react-bootstrap";
-import Error from '../../components/misc/error';
+import { NavItem, Button }  from "react-bootstrap";
 import NetworkForm from '../../components/network/networkForm';
 import { formValueSelector } from 'redux-form';
+import 'react-table/react-table.css';
 
 class NetworkFormContainer extends React.Component {
     props: any;
-    data: any[];
 
     columns: any[] = [
         { Header: 'Name', accessor: 'name' },
@@ -46,7 +44,7 @@ class NetworkFormContainer extends React.Component {
                     SubComponent={row => {
                         return(
                             <div>
-                                <button onClick={this.deleteNetwork.bind(this, row)} className="btn btn-danger vm-actions"><span className="glyphicon glyphicon-trash" aria-hidden="true"></span></button>
+                                <Button onClick={this.deleteNetwork.bind(this, row)} bsStyle="danger" className="vm-actions">Delete <span className="glyphicon glyphicon-trash" aria-hidden="true"></span></Button>
                             </div>
                         );
                     }}/>

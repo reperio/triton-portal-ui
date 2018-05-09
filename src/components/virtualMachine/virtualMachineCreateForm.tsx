@@ -19,7 +19,7 @@ const VirtualMachineCreateForm = (props: any) => (
             placeholder="Virtual Machine Name" />
         </FormGroup>
         <FormGroup style={{maxWidth: "280px"}}>
-            <DropdownList 
+            <DropdownList
                 name="package" 
                 valueField="uuid" 
                 textField="name" 

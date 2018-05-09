@@ -9,7 +9,6 @@ import MainDashboardContainer from "../../containers/main/mainDashboardContainer
 import VirtualMachineContainer from "../../containers/virtualMachine/virtualMachineContainer";
 import AccountCreateFormContainer from '../../containers/account/accountCreateFormContainer';
 import VirtualMachineCreateFormContainer from '../../containers/virtualMachine/virtualMachineCreateFormContainer';
-import VirtualMachineEditFormContainer from '../../containers/virtualMachine/virtualMachineEditContainer';
 import AccountEditFormContainer from '../../containers/account/accountEditFormContainer';
 import NetworkCreateFormContainer from '../../containers/network/networkCreateFormContainer';
 import NetworkFormContainer from '../../containers/network/networkFormContainer';
@@ -21,7 +20,6 @@ const Routes = (props: any) => (
             <PrivateRouteContainer exact path="/home" component={MainDashboardContainer} />
             <PrivateRouteContainer exact path="/virtual-machines" component={VirtualMachineContainer} />
             <PrivateRouteContainer exact path="/create-virtual-machine" component={VirtualMachineCreateFormContainer} />
-            <PrivateRouteContainer exact path="/edit-virtual-machine" component={VirtualMachineEditFormContainer} />
             <PublicRouteContainer exact path="/create-account" component={AccountCreateFormContainer} />
             <PrivateRouteContainer exact path="/edit-account" component={AccountEditFormContainer} />
             <PrivateRouteContainer exact path="/networks" component={NetworkFormContainer} />

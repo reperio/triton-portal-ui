@@ -63,6 +63,51 @@ export function virtualMachineActionsReducer(state = initialState.virtualMachine
                 isLoading: false
             };
         }
+        case virtualMachineActionTypes.VIRTUAL_MACHINE_RENAME_START: {
+            return {
+                isLoading: true
+            };
+        }
+        case virtualMachineActionTypes.VIRTUAL_MACHINE_RENAME_END: {
+            return {
+                isLoading: false
+            };
+        }
+        case virtualMachineActionTypes.VIRTUAL_MACHINE_RENAME_ERROR: {
+            return {
+                isLoading: false
+            };
+        }
+        case virtualMachineActionTypes.VIRTUAL_MACHINE_REPROVISION_START: {
+            return {
+                isLoading: true
+            };
+        }
+        case virtualMachineActionTypes.VIRTUAL_MACHINE_REPROVISION_END: {
+            return {
+                isLoading: false
+            };
+        }
+        case virtualMachineActionTypes.VIRTUAL_MACHINE_REPROVISION_ERROR: {
+            return {
+                isLoading: false
+            };
+        }
+        case virtualMachineActionTypes.VIRTUAL_MACHINE_RESIZE_START: {
+            return {
+                isLoading: true
+            };
+        }
+        case virtualMachineActionTypes.VIRTUAL_MACHINE_RESIZE_END: {
+            return {
+                isLoading: false
+            };
+        }
+        case virtualMachineActionTypes.VIRTUAL_MACHINE_RESIZE_ERROR: {
+            return {
+                isLoading: false
+            };
+        }
         default: {
             return state;
         }

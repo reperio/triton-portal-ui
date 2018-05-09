@@ -27,15 +27,31 @@ class VirtualMachineService {
         return await axios.post(`/triton/vms`, payload);
     }
 
-    async editVm(billing_id: string, id: string, alias: string, image_uuid: string) {
+    async reprovisionVm(id: string, image_uuid: string) {
         const payload = {
             virtualMachine: {
-                billing_id,
-                alias,
                 image_uuid
             }
         };
-        return await axios.put(`/triton/vms/${id}/update`, payload);
+        return await axios.put(`/triton/vms/${id}/reprovision`, payload);
+    }
+
+    async renameVm(id: string, alias: string) {
+        const payload = {
+            virtualMachine: {
+                alias
+            }
+        };
+        return await axios.put(`/triton/vms/${id}/rename`, payload);
+    }
+
+    async resizeVm(id: string, billing_id: string) {
+        const payload = {
+            virtualMachine: {
+                billing_id
+            }
+        };
+        return await axios.put(`/triton/vms/${id}/resize`, payload);
     }
 
     async startVm(owner_uuid: string, id: string) {
