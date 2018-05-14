@@ -1,4 +1,5 @@
 import { axios } from "./axiosService";
+import nic from "../models/nicModel";
 
 class VirtualMachineService {
     async getVmByUuid(uuid: string) {
@@ -13,12 +14,12 @@ class VirtualMachineService {
         return await axios.get(`/triton/vms/owner/${owner_uuid}`);
     }
     
-    async createVm(owner_uuid: string, alias: string, networks: any[], brand: string, billing_id: string, image_uuid: string) {
+    async createVm(owner_uuid: string, alias: string, networks: nic[], brand: string, billing_id: string, image_uuid: string) {
         const payload = {
             virtualMachine: {
                 owner_uuid,
                 alias,
-                networks, 
+                networks,
                 brand, 
                 billing_id, 
                 image_uuid

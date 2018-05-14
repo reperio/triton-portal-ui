@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from "react-redux";
-import { createVm } from "../../actions/virtualMachineActions";
+import { createVm, selectPrimaryNic } from "../../actions/virtualMachineActions";
 import { getAllPackages, showPackageInformation} from "../../actions/packagesActions";
 import { getAllFabricNetworksByOwnerId, selectNetworks } from "../../actions/networkActions";
 import { bindActionCreators } from "redux";
@@ -14,7 +14,7 @@ class VirtualMachineCreateFormContainer extends React.Component {
     props: any;
 
     async onSubmit(values: VirtualMachineCreateModel) {
-        await this.props.actions.createVm(this.props.authSession.user.data.ownerUuid, values.alias, this.props.networks.selectedNetworks, values.brand, this.props.packages.selectedPackage, values.image);
+        await this.props.actions.createVm(this.props.authSession.user.data.ownerUuid, values.alias, values.nics, values.brand, this.props.packages.selectedPackage, values.image);
     };
 
     async componentDidMount() {
@@ -30,12 +30,16 @@ class VirtualMachineCreateFormContainer extends React.Component {
         await this.props.actions.selectNetworks(this.props.networks.networks, selectedNetworks);
     }
 
+    async selectPrimaryNic(selectedPrimaryNic: any) {
+        await this.props.actions.selectPrimaryNic(selectedPrimaryNic.target.name);
+    }
+
     render() {
         return (
             <div>
                 {this.props.virtualMachineCreate.isLoading || !this.props.packages.hasLoaded || !this.props.networks.hasLoaded  ? <LoadingSpinner/> : null}
                 {this.props.packages.hasLoaded && this.props.networks.hasLoaded
-                    ? <VirtualMachineCreateForm errorMessages={this.props.errorMessages} networks={this.props.networks} packages={this.props.packages} showPackageInformation={this.showPackageInformation.bind(this)} selectNetworks={this.selectNetworks.bind(this)} onSubmit={this.onSubmit.bind(this)} /> 
+                    ? <VirtualMachineCreateForm selectPrimaryNic={this.selectPrimaryNic.bind(this)} errorMessages={this.props.errorMessages} networks={this.props.networks} packages={this.props.packages} showPackageInformation={this.showPackageInformation.bind(this)} selectNetworks={this.selectNetworks.bind(this)} onSubmit={this.onSubmit.bind(this)} /> 
                     : null}
                 
             </div>
@@ -56,7 +60,7 @@ function mapStateToProps(state: any) {
 
 function mapActionToProps(dispatch: any) {
     return {
-        actions: bindActionCreators({createVm, getAllPackages, showPackageInformation, getAllFabricNetworksByOwnerId, selectNetworks}, dispatch)
+        actions: bindActionCreators({createVm, getAllPackages, showPackageInformation, getAllFabricNetworksByOwnerId, selectNetworks, selectPrimaryNic}, dispatch)
     };
 }
 

@@ -1,27 +1,21 @@
 import React from 'react'
 import { Field, reduxForm, FieldArray } from 'redux-form'
-import { FormGroup } from "react-bootstrap";
+import { FormGroup, Button } from "react-bootstrap";
 import Error from '../../components/misc/error';
 
 const fieldArrayComponent = (props: any) => (
     <div>
-        <button 
-            type="button" 
-            onClick={() => props.fields.push({})}
-            className="btn btn-default">Add ssh key
-        </button>
         {props.fields.map((member:string, index:number) =>
-            <div key={index} style={{paddingTop: "10px"}}>
-                <div className="row" style={{maxWidth: "280px"}}>
-                    <div className="field-array-component-item-label col-md-10">SSH Key #{index + 1}</div>
-                    <div className="col-md-1">
-                        <button
-                            className="btn btn-danger"
-                            type="button"
-                            title="Remove key"
-                            onClick={() => props.fields.remove(index)}>
+            <div key={index} className="field-array-component" style={{maxWidth: "280px", position: "relative"}}>
+                <div>
+                    <div className="field-array-component-item-label">SSH Key #{index + 1}</div>
+                    <div className="field-array-component-delete-button">
+                        <Button
+                            bsStyle="danger"
+                            onClick={() => props.fields.remove(index)}>&nbsp;
                                 <span className="glyphicon glyphicon-trash" aria-hidden="true"></span>
-                        </button>
+                                &nbsp;
+                        </Button>
                     </div>
                 </div>
                 <Field
@@ -40,6 +34,12 @@ const fieldArrayComponent = (props: any) => (
                     placeholder="Description"/>
             </div>
         )}
+        <div className="field-array-component" style={{maxWidth: "280px"}}>
+            <Button
+                bsStyle="default"
+                onClick={() => props.fields.push({})}>Add ssh key
+            </Button>
+        </div>
     </div>
 );
 

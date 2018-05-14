@@ -5,7 +5,9 @@ import { inputValidationService } from '../services/inputValidationService';
 import { packageService } from "../services/packageService";
 import { imageService } from "../services/imageService";
 import { history } from '../store/history';
-import { change, submit } from 'redux-form';
+import { change, submit, formValueSelector } from 'redux-form';
+import { store } from "../store/store";
+import nic from '../models/nicModel';
 var Joi = require('joi-browser');
 
 export const virtualMachineActionTypes = {
@@ -184,14 +186,16 @@ export const deleteVm = (owner_uuid: string, uuid: string) => async (dispatch: D
     }
 };
 
-export const createVm = (owner_uuid: string, alias: string, networks: any[], brand: string, selectedPackage: any, imageUuid: string) => async (dispatch: Dispatch<any>) => {
+export const createVm = (owner_uuid: string, alias: string, networks: nic[], brand: string, selectedPackage: any, imageUuid: string) => async (dispatch: Dispatch<any>) => {
 
     const schema = Joi.object().keys({
         alias: Joi.string().required().label('Alias'),
         brand: Joi.string().required().label('Brand'),
         selectedPackage: Joi.string().guid().required().label('Selected package'),
-        networks: Joi.array().items(
-            Joi.string().guid()
+        networks: Joi.array().items(Joi.object({
+            ipv4_uuid: Joi.string().guid(),
+            primary: Joi.boolean()
+        })
         ).min(1).required().label('Networks'),
         imageUuid: Joi.string().guid().optional().label('Image uuid')
     }).options({ abortEarly: false });
@@ -200,7 +204,7 @@ export const createVm = (owner_uuid: string, alias: string, networks: any[], bra
         alias,
         brand,
         selectedPackage: selectedPackage !== null ? selectedPackage.uuid : null,
-        networks: networks !== null ? networks.map(x => x.uuid) : [],
+        networks,
         imageUuid}, schema);
 
     dispatch(change('virtualMachineCreateForm', 'errorMessages', errors));
@@ -211,7 +215,7 @@ export const createVm = (owner_uuid: string, alias: string, networks: any[], bra
         });
 
         try {
-            const vm = await virtualMachineService.createVm(owner_uuid, alias, networks.map(x => x.uuid), brand, selectedPackage.uuid, imageUuid);
+            const vm = await virtualMachineService.createVm(owner_uuid, alias, networks, brand, selectedPackage.uuid, imageUuid);
     
             dispatch({
                 type: virtualMachineActionTypes.VIRTUAL_MACHINE_CREATE_END
@@ -366,4 +370,21 @@ export const resizeVm = (uuid: string, billing_id: string) => async (dispatch: D
 
 export const remoteFormSubmit = (formName: string) => async (dispatch: Dispatch<any>) => {
     dispatch(submit(formName));
+}
+
+export const selectPrimaryNic = (name: string) => async (dispatch: Dispatch<any>) => {
+
+    const state = store.getState();
+    const selector = formValueSelector('virtualMachineCreateForm');
+
+    const nics = selector(state, 'nics');
+    const index = name.match( /\d+/g )[0];
+
+    nics.map((nic: any) =>  {
+        nic.primary = false;
+    });
+
+    nics[index].primary = !nics[index].primary;
+
+    dispatch(change('virtualMachineCreateForm', 'nics', nics));
 }
