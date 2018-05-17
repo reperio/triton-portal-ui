@@ -28,12 +28,7 @@ export function networksReducer(state = initialState.networks, action: {type: st
             };
         }
         case networkActionTypes.NETWORKS_SELECT: {
-            return {
-                hasLoaded: true,
-                networks: action.payload.networks,
-                selectedNetworks: action.payload.selectedNetworks,
-                isLoading: false
-            };
+            return Object.assign({}, state, {hasLoaded: true, selectedNetworks: action.payload.selectedNetworks});
         }
         default: {
             return state;

@@ -1,5 +1,5 @@
 import React from 'react'
-import {MenuItem, Nav, Navbar, NavDropdown, NavItem} from "react-bootstrap";
+import {MenuItem, Nav, Navbar, NavDropdown, NavItem, Button} from "react-bootstrap";
 import LinkContainer from "react-router-bootstrap/lib/LinkContainer";
 
 import NavMenuLoginLink from "./navMenuLoginLink";
@@ -15,24 +15,20 @@ const NavMenu = (props: any) => (
             </div>
         </div>
         {props.authSession.isAuthenticated ? 
-            <div className="r-menu-item">
-                <LinkContainer to="/home"><NavItem>Home</NavItem></LinkContainer>
-            </div> : null}
+            <LinkContainer className="r-menu-item" to="/home"><Button bsStyle="link">Home</Button></LinkContainer>
+            : null}
         {props.authSession.isAuthenticated ? 
-            <div className="r-menu-item">
-                <LinkContainer to="/virtual-machines"><NavItem>Virtual Machines</NavItem></LinkContainer> 
-            </div> : null}
+            <LinkContainer className="r-menu-item" to="/virtual-machines"><Button bsStyle="link">Virtual Machines</Button></LinkContainer>
+            : null}
         {props.authSession.isAuthenticated ? 
-            <div className="r-menu-item">
-                <LinkContainer to="/networks"><NavItem>Networks</NavItem></LinkContainer> 
-            </div> : null}
+            <LinkContainer className="r-menu-item" to="/networks"><Button bsStyle="link">Networks</Button></LinkContainer>
+            : null}
             {props.authSession.isAuthenticated ? 
-            <div className="r-menu-item">
-                <LinkContainer to="/edit-account"><NavItem>Account</NavItem></LinkContainer> 
-            </div> : null}
-        <div className="r-menu-item">
-            {props.authSession.isAuthenticated ? <NavMenuLogOutLinkContainer/> : <NavMenuLoginLink/>}
-        </div>
+            <LinkContainer className="r-menu-item" to="/edit-account"><Button bsStyle="link">Account</Button></LinkContainer>
+            : null}
+        {props.authSession.isAuthenticated ?
+            <NavMenuLogOutLinkContainer/> 
+            : <NavMenuLoginLink/>}
     </div>    
 );
 

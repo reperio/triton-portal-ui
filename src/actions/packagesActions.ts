@@ -41,11 +41,10 @@ export const getAllPackages = () => async (dispatch: Dispatch<any>) => {
     }
 };
 
-export const showPackageInformation = (packages: any[], selectedPackage: any) => async (dispatch: Dispatch<any>) => {
+export const showPackageInformation = (selectedPackage: any) => async (dispatch: Dispatch<any>) => {
     dispatch({
         type: packagesActionTypes.PACKAGES_SELECT,
         payload: {
-            packages,
             selectedPackage
         }
     });

@@ -28,12 +28,7 @@ export function packagesReducer(state = initialState.packages, action: {type: st
             };
         }
         case packagesActionTypes.PACKAGES_SELECT: {
-            return {
-                hasLoaded: true,
-                packages: action.payload.packages,
-                showInformation: true,
-                selectedPackage: action.payload.selectedPackage
-            };
+            return Object.assign({}, state, {selectedPackage: action.payload.selectedPackage, showInformation: true});
         }
         default: {
             return state;

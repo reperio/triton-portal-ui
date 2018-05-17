@@ -1,10 +1,10 @@
 import React from 'react'
-import {NavItem} from "react-bootstrap";
+import {NavItem, Button} from "react-bootstrap";
 
 const NavMenuLogOutLink = (props: any) => (
-    <NavItem onClick={props.logout}>
+    <Button className="r-menu-item" bsStyle="link" onClick={props.logout}>
         Log out
-    </NavItem>
+    </Button>
 );
 
 export default NavMenuLogOutLink;

@@ -33,11 +33,7 @@ export function authSessionReducer(state = initialState.authSession, action: {ty
             }
         }
         case authActionTypes.AUTH_CLEAR_TOKEN: {
-            return {
-                isAuthenticated: false,
-                user: null,
-                isLoading: false
-            };
+            return Object.assign({}, state, {user: null, isAuthenticated: false});
         }
         default: {
             return state;

@@ -8,7 +8,6 @@ import EditAccountModel from '../models/editAccountModel';
 import { change } from 'redux-form';
 var Joi = require('joi-browser');
 
-
 export const accountActionTypes = {
     USER_CREATE_START: "USER_CREATE_START",
     USER_CREATE_END: "USER_CREATE_END",
@@ -78,7 +77,7 @@ export const createAccount = (account: CreateAccountModel) => async (dispatch: D
 };
 
 export const editAccount = (user: EditAccountModel, userId: string) => async (dispatch: Dispatch<any>) => {
-
+    
     const schema = Joi.object().keys({
         currentPassword: Joi.string().required().label('Current password'),
         newPassword: Joi.string().optional().label('New password'),
@@ -96,6 +95,13 @@ export const editAccount = (user: EditAccountModel, userId: string) => async (di
         ).optional().label('Ssh key')
     }).options({ abortEarly: false });
 
+    const sshKeys = user.sshKeys.map( sshKey => {
+        return {
+            description: sshKey.description,
+            key: sshKey.key
+        };
+    });
+
     let errors = await inputValidationService.validate({
         currentPassword: user.currentPassword,
         newPassword: user.newPassword,
@@ -103,7 +109,7 @@ export const editAccount = (user: EditAccountModel, userId: string) => async (di
         firstname: user.firstName,
         lastname: user.lastName,
         email: user.email,
-        sshKeys: user.sshKeys}, schema);
+        sshKeys}, schema);
 
     if (user.newPassword !== user.confirmNewPassword) {
         errors.push("Passwords do not match");
@@ -112,33 +118,20 @@ export const editAccount = (user: EditAccountModel, userId: string) => async (di
     dispatch(change('accountEditForm', 'errorMessages', errors));
 
     if (errors.length == 0) {
-        try {
-            const sshKeys = user.sshKeys.map( sshKey => {
-                return {
-                    description: sshKey.description,
-                    key: sshKey.key
-                };
-            });
-
+        try {``
             user.sshKeys = sshKeys;
 
-            const {data: {data: validPassword}} = await userService.updateUser(userId, user);
-            if (!validPassword) {
-                dispatch(change('accountEditForm', 'errorMessages', ['Invalid password']));
-                dispatch({
-                    type: accountActionTypes.USER_EDIT_ERROR,
-                });
-            }
-            else {
-                dispatch({
-                    type: accountActionTypes.USER_EDIT_END,
-                    payload: {
-                        isLoading: false
-                    }
-                });
-            }
+            dispatch({
+                type: accountActionTypes.USER_EDIT_START
+            });
+
+            await userService.updateUser(userId, user);
+
+            dispatch({
+                type: accountActionTypes.USER_EDIT_END
+            });
         } catch (e) {
-            dispatch(change('accountEditForm', 'errorMessages', [getErrorMessageFromStatusCode(e.response != null ? e.response.status : null)]));
+            dispatch(change('accountEditForm', 'errorMessages', [e.response.data.message]));
             dispatch({
                 type: accountActionTypes.USER_EDIT_ERROR,
             });

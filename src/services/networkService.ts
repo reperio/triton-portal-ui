@@ -34,6 +34,10 @@ class NetworkService {
     async deleteFabricNetwork(ownerUuid: string, vlanId: number, networkUuid: string) {
         return await axios.delete(`/triton/fabrics/${ownerUuid}/vlans/${vlanId}/networks/${networkUuid}`);
     }
+
+    async deleteFabricVlan(ownerUuid: string, vlanId: number) {
+        return await axios.delete(`/triton/fabrics/${ownerUuid}/vlans/${vlanId}/`);
+    }
 }
 
 export const networkService = new NetworkService();

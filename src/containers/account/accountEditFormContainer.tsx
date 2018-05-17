@@ -13,6 +13,7 @@ class AccountEditFormContainer extends React.Component {
 
     async onSubmit(values: EditAccountModel) {
         await this.props.actions.editAccount(values, this.props.authSession.user.data.id);
+        this.componentDidMount();
     };
 
     async componentDidMount () {

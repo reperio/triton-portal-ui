@@ -11,7 +11,7 @@ import NetworkForm from '../../components/network/networkForm';
 import { formValueSelector } from 'redux-form';
 import 'react-table/react-table.css';
 
-class NetworkFormContainer extends React.Component {
+class NetworkContainer extends React.Component {
     props: any;
 
     columns: any[] = [
@@ -21,12 +21,15 @@ class NetworkFormContainer extends React.Component {
     ];
 
     async componentDidMount() {
-        await this.props.actions.getAllFabricNetworksByOwnerId(this.props.authSession.user.data.ownerUuid);
+        this.refreshTable();
     }
 
     async deleteNetwork(row:any) {
         await this.props.actions.deleteFabricNetwork(this.props.authSession.user.data.ownerUuid, row.original.vlan_id, row.original.uuid);
-        await this.componentDidMount();
+    }
+
+    async refreshTable() {
+        await this.props.actions.getAllFabricNetworksByOwnerId(this.props.authSession.user.data.ownerUuid);
     }
 
     render() {
@@ -34,9 +37,15 @@ class NetworkFormContainer extends React.Component {
             <div>
                 {this.props.networks.isLoading || this.props.networkActions.isLoading ? <LoadingSpinner/> : null}
                 <NetworkForm errorMessages={this.props.errorMessages} />
+
                 <FormGroup>
-                    <LinkContainer to="/create-network"><NavItem>Create a network</NavItem></LinkContainer>
+                    <LinkContainer to="/create-network"><Button bsStyle="primary">Create a network <span className="glyphicon glyphicon-plus-sign" aria-hidden="true"></span></Button></LinkContainer>
                 </FormGroup>
+                
+                <FormGroup>
+                    <Button onClick={this.refreshTable.bind(this)} bsStyle="default"><span className="glyphicon glyphicon-refresh" aria-hidden="true"></span></Button>
+                </FormGroup>
+
                 <ReactTable 
                     data={this.props.networks.networks} 
                     columns={this.columns}
@@ -69,4 +78,4 @@ function mapActionToProps(dispatch: any) {
     };
 }
 
-export default connect(mapStateToProps, mapActionToProps)(NetworkFormContainer);
+export default connect(mapStateToProps, mapActionToProps)(NetworkContainer);

@@ -27,10 +27,7 @@ function getErrorMessageFromStatusCode(statusCode: number) {
 
 export const getAllFabricNetworksByOwnerId = (ownerId: string) => async (dispatch: Dispatch<any>) => {
     dispatch({
-        type: networkActionTypes.NETWORKS_GET_START,
-        payload: {
-            packages:[]
-        }
+        type: networkActionTypes.NETWORKS_GET_START
     });
     
     try {
@@ -55,11 +52,10 @@ export const getAllFabricNetworksByOwnerId = (ownerId: string) => async (dispatc
     }
 };
 
-export const selectNetworks = (networks: any[], selectedNetworks: any[]) => async (dispatch: Dispatch<any>) => {
+export const selectNetworks = (selectedNetworks: any[]) => async (dispatch: Dispatch<any>) => {
     dispatch({
         type: networkActionTypes.NETWORKS_SELECT,
         payload: {
-            networks: networks,
             selectedNetworks: selectedNetworks
         }
     });
@@ -98,21 +94,17 @@ export const createFabricNetwork = (network: CreateNetworkModel, ownerUuid: stri
 
     if (errors.length == 0) {
         dispatch({
-            type: networkActionTypes.NETWORK_CREATE_START,
-            payload: {
-                packages:[]
-            }
+            type: networkActionTypes.NETWORK_CREATE_START
         });
         
         try {
             const fabricVlan = await networkService.createFabricVlan(network.name, ownerUuid, network.description);
             const networks = await networkService.createFabricNetwork(network, ownerUuid, fabricVlan.data.data.vlan_id);
+
             dispatch({
-                type: networkActionTypes.NETWORK_CREATE_END,
-                payload: {
-                    isLoading: false
-                }
+                type: networkActionTypes.NETWORK_CREATE_END
             });
+
             history.push('/networks');
         } catch (e) {
             dispatch(change('networkCreateForm', 'errorMessages', [getErrorMessageFromStatusCode(e.response != null ? e.response.status : null)]));
@@ -125,20 +117,22 @@ export const createFabricNetwork = (network: CreateNetworkModel, ownerUuid: stri
 };
 
 export const deleteFabricNetwork = (owner_uuid: string, vlanId:number, uuid: string) => async (dispatch: Dispatch<any>) => {
+
     dispatch({
-        type: networkActionTypes.NETWORK_DELETE_START,
-        payload: {
-            isLoading: true
-        }
+        type: networkActionTypes.NETWORK_DELETE_START
     });
+
     try {
-        const vm = await networkService.deleteFabricNetwork(owner_uuid, vlanId, uuid);
+        await networkService.deleteFabricNetwork(owner_uuid, vlanId, uuid);
+        await networkService.deleteFabricVlan(owner_uuid, vlanId);
 
         dispatch({
             type: networkActionTypes.NETWORK_DELETE_END
         });
+        
+        history.push('/networks');
     } catch (e) {
-        dispatch(change('networkForm', 'errorMessages', [getErrorMessageFromStatusCode(e.response != null ? e.response.status : null)]));
+        dispatch(change('networkForm', 'errorMessages', [e.response.data.message]));
         
         dispatch({
             type: networkActionTypes.NETWORK_DELETE_ERROR

@@ -1,40 +1,42 @@
 import React from 'react'
 import { Field, reduxForm, formValueSelector, FieldArray } from 'redux-form'
-import {FormGroup} from "react-bootstrap";
-import {DropdownList, Multiselect} from 'react-widgets'
+import { FormGroup, Button } from "react-bootstrap";
+import { DropdownList, Multiselect } from 'react-widgets'
 import 'react-widgets/dist/css/react-widgets.css';
 import Error from '../../components/misc/error';
 
 const fieldArrayComponent = (props: any) => (
     <div>
-        <button 
-            type="button" 
-            onClick={() => props.fields.push({})}
-            className="btn btn-default">Add resolver ip
-        </button>
         {props.fields.map((member:string, index:number) =>
-            <div key={index} style={{paddingTop: "10px"}}>
-                <div className="row" style={{maxWidth: "280px"}}>
-                    <div className="field-array-component-item-label col-md-10">Resolver IP #{index + 1}</div>
-                    <div className="col-md-1">
-                        <button
-                            className="btn btn-danger"
-                            type="button"
-                            title="Remove IP"
-                            onClick={() => props.fields.remove(index)}>
+            <div key={index} className="field-array-component" style={{maxWidth: "280px", position: "relative"}}>
+                <div>
+                    <div className="field-array-component-item-label">Resolver IP #{index + 1}</div>
+                    <div className="field-array-component-delete-button">
+                        <Button
+                            bsStyle="danger"
+                            onClick={() => props.fields.remove(index)}>&nbsp;
                                 <span className="glyphicon glyphicon-trash" aria-hidden="true"></span>
-                        </button>
+                                &nbsp;
+                        </Button>
                     </div>
                 </div>
-                <Field
-                    name={`${member}.ip`}
-                    type="text"
-                    component="input"
-                    className="form-control"
-                    style={{maxWidth: "280px"}}
-                    placeholder="IP"/>
+                <FormGroup>
+                    <Field
+                        name={`${member}.ip`}
+                        type="text"
+                        component="input"
+                        className="form-control"
+                        style={{maxWidth: "280px"}}
+                        placeholder="IP"/>
+                </FormGroup>
             </div>
         )}
+        <div className="field-array-component" style={{maxWidth: "280px"}}>
+            <Button
+                bsStyle="default"
+                onClick={() => props.fields.push({})}>Add resolver ip
+            </Button>
+        </div>
     </div>
 );
 

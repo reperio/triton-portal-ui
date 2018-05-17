@@ -24,14 +24,6 @@ export function imageReducer(state = initialState.images, action: {type: string,
                 selectedImage: null
             };
         }
-        // case imageActionTypes.PACKAGES_SELECT: {
-        //     return {
-        //         hasLoaded: true,
-        //         packages: action.payload.packages,
-        //         showInformation: true,
-        //         selectedPackage: action.payload.selectedPackage
-        //     };
-        // }
         default: {
             return state;
         }

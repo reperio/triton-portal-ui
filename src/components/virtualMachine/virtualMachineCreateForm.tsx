@@ -11,7 +11,6 @@ const dropdownList = (input:any, data:any, valueField:any, textField:any) => {
         valueField={valueField}
         textField={textField}
         data={data}
-        //onChange={props.selectNetworks}
         placeholder="Select a network" />
 }
 
@@ -35,9 +34,10 @@ const fieldArrayComponent = (props: any) => (
                         className="form-control"
                         name={`${member}.ipv4_uuid`}
                         component="select">
+                        <option disabled={false} defaultValue={null}> -- Select a network -- </option>
                         {
-                            props.networks.map((member:any, index:number) => {
-                                return (<option value={member.uuid}>{member.name}</option>)
+                            props.networks.map((network:any, i:number) => {
+                                return (<option key={i} value={network.uuid}>{network.name}</option>)
                             })
                         }
                      </Field>
@@ -45,7 +45,7 @@ const fieldArrayComponent = (props: any) => (
                 <FormGroup>
                     Make this the primary NIC&nbsp;
                     <Field
-                        onChange={props.selectPrimaryNic}
+                        onChange={()=> props.selectPrimaryNic(index)}
                         name={`${member}.primary`}
                         type="checkbox"
                         component="input" />
@@ -112,7 +112,6 @@ const VirtualMachineCreateForm = (props: any) => (
         </FormGroup>
     </form>
 );
-
 
 
 // casted to <any> because reduxForm doesn't play nicely with other things

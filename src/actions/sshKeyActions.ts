@@ -24,10 +24,7 @@ function getErrorMessageFromStatusCode(statusCode: number) {
 
 export const getSshKeysByUser = (userId: number) => async (dispatch: Dispatch<any>) => {
     dispatch({
-        type: sshKeyActionTypes.SSHKEYS_GET_START,
-        payload: {
-            isLoading: true
-        }
+        type: sshKeyActionTypes.SSHKEYS_GET_START
     });
     try {
         const sshKeys = await userService.getSshKeysByUser(userId);
@@ -35,16 +32,14 @@ export const getSshKeysByUser = (userId: number) => async (dispatch: Dispatch<an
         dispatch({
             type: sshKeyActionTypes.SSHKEYS_GET_END,
             payload: {
-                sshKeys: sshKeys.data.data,
-                isLoading: false
+                sshKeys: sshKeys.data.data
             }
         });
     } catch (e) {
         dispatch({
             type: sshKeyActionTypes.SSHKEYS_GET_ERROR,
             payload: {
-                message: getErrorMessageFromStatusCode(e.response != null ? e.response.status : null),
-                isLoading: false
+                message: getErrorMessageFromStatusCode(e.response != null ? e.response.status : null)
             }
         });
     }
@@ -54,7 +49,6 @@ export const addSshKey = (sshKey: any, sshKeys: any[]) => async (dispatch: Dispa
     dispatch({
         type: sshKeyActionTypes.SSHKEYS_ADD_REFRESH,
         payload: {
-            isLoading: false,
             sshKeys: sshKeys.push(sshKey)
         }
     });
@@ -68,7 +62,6 @@ export const deleteSshKey = (sshKey: any, sshKeys: any[]) => async (dispatch: Di
     dispatch({
         type: sshKeyActionTypes.SSHKEYS_DELETE_REFRESH,
         payload: {
-            isLoading: false,
             sshKeys: sshKeys
         }
     });

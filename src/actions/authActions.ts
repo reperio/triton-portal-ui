@@ -13,7 +13,8 @@ export const authActionTypes = {
     AUTH_LOGIN_END: "AUTH_LOGIN_END",
     AUTH_LOGIN_ERROR: "AUTH_LOGIN_ERROR",
     AUTH_SET_TOKEN: "AUTH_SET_TOKEN",
-    AUTH_CLEAR_TOKEN: "AUTH_CLEAR_TOKEN"
+    AUTH_CLEAR_TOKEN: "AUTH_CLEAR_TOKEN",
+    AUTH_SESSION_EXTEND: "AUTH_SESSION_EXTEND"
 };
 
 function getErrorMessageFromStatusCode(statusCode: number) {
@@ -26,6 +27,16 @@ function getErrorMessageFromStatusCode(statusCode: number) {
             return "An error occurred, please contact your system administrator"}
 }
 
+export const extendSession = () => async(dispatch: Dispatch<any>) => {
+    hideExpirationDialog()(dispatch);
+
+    dispatch({
+        type: authActionTypes.AUTH_SESSION_EXTEND
+    });
+
+    authService.getIsLoggedIn();
+}
+
 export const logout = () => async (dispatch: Dispatch<any>) => {
     window.localStorage.removeItem("authToken");
     dispatch({
@@ -35,15 +46,28 @@ export const logout = () => async (dispatch: Dispatch<any>) => {
     history.push('/login');
 };
 
-export const getAuthToken = () => {
-    return window.localStorage.getItem("authToken");
-};
+export const updateTimeLeftOnToken = (showingExpirationDialog: boolean) => async(dispatch: Dispatch<any>) => {
+    const tokenExpirationDate = authService.getTokenExpirationDate();
+    if (tokenExpirationDate != null) {
+        const time = Math.round((new Date()).getTime() / 1000);
+        let diff = tokenExpirationDate - time;
+
+        if (diff <= 0) {
+            logout()(dispatch);
+        } else if (diff < 60) {
+            if (!showingExpirationDialog) {
+                dispatch(change('navMenu', 'showingExpirationDialog', true));
+            }
+            dispatch(change('navMenu', 'timeLeftOnToken', diff--));
+        }
+    }
+}
 
 export const setAuthToken = (authToken: string, forceActionDispatch = false) => async (dispatch: Dispatch<any>) => {
     const parsedToken = authToken == null ? null : authService.parseJwt(authToken);
-    const oldAuthToken = getAuthToken();
+    const oldAuthToken = authService.readToken()
     const oldParsedToken = oldAuthToken == null ? null : authService.parseJwt(oldAuthToken);
-    if (parsedToken != null && !authService.hasTokenTimeExpired(parsedToken)) {
+    if (parsedToken != null && !authService.hasTokenExpired(parsedToken.exp)) {
         window.localStorage.setItem("authToken", authToken);
         if (forceActionDispatch || oldParsedToken == null || oldParsedToken.currentUserId !== parsedToken.currentUserId) {
             const {data: user} = await userService.getUserById(parsedToken.currentUserId);
@@ -62,6 +86,10 @@ export const setAuthToken = (authToken: string, forceActionDispatch = false) => 
         }
     }
 };
+
+export const hideExpirationDialog = () => async (dispatch: Dispatch<any>) => { 
+    dispatch(change('navMenu', 'showingExpirationDialog', false));
+}
 
 export const submitAuth = (email: string, password: string) => async (dispatch: Dispatch<any>) => {
     

@@ -11,7 +11,7 @@ import AccountCreateFormContainer from '../../containers/account/accountCreateFo
 import VirtualMachineCreateFormContainer from '../../containers/virtualMachine/virtualMachineCreateFormContainer';
 import AccountEditFormContainer from '../../containers/account/accountEditFormContainer';
 import NetworkCreateFormContainer from '../../containers/network/networkCreateFormContainer';
-import NetworkFormContainer from '../../containers/network/networkFormContainer';
+import NetworkContainer from '../../containers/network/networkContainer';
 
 const Routes = (props: any) => (
     <div className="contentContainer" style={{backgroundColor: "white", padding: "15px"}}>
@@ -22,7 +22,7 @@ const Routes = (props: any) => (
             <PrivateRouteContainer exact path="/create-virtual-machine" component={VirtualMachineCreateFormContainer} />
             <PublicRouteContainer exact path="/create-account" component={AccountCreateFormContainer} />
             <PrivateRouteContainer exact path="/edit-account" component={AccountEditFormContainer} />
-            <PrivateRouteContainer exact path="/networks" component={NetworkFormContainer} />
+            <PrivateRouteContainer exact path="/networks" component={NetworkContainer} />
             <PrivateRouteContainer exact path="/create-network" component={NetworkCreateFormContainer} />
             <Route>
                 <Redirect to="/home"/>

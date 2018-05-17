@@ -8,22 +8,9 @@ declare const API_URL: string;
 export const axios = axiosStatic.create({baseURL: API_URL});
 
 axios.interceptors.request.use(async config => {
-    const authToken = authActions.getAuthToken();
-    const currentState = store.getState();
+    const authToken = authService.readToken();
     if (authToken != null) {
-        const parsedToken = authService.parseJwt(authToken);
-        const hasTokenTimeExpired = authService.hasTokenTimeExpired(parsedToken)
-        if (hasTokenTimeExpired) {
-            authActions.logout()((store.dispatch));
-        }
-        else {
             config.headers.authorization = `Bearer ${authToken}`;
-        }
-    }
-    else {
-        if (!currentState.authSession.isLoading) {
-            authActions.logout()(store.dispatch);
-        }
     }
     return config;
 });
@@ -31,7 +18,7 @@ axios.interceptors.request.use(async config => {
 axios.interceptors.response.use(async response => {
     if (response.headers != null && response.headers.authorization != null && response.headers.authorization.slice(0, 6) === "Bearer") {
         const authToken = response.headers.authorization.slice(7);
-        await authActions.setAuthToken(authToken, true)(store.dispatch);
+        await authActions.setAuthToken(authToken)(store.dispatch);
     }
     return response;
 });

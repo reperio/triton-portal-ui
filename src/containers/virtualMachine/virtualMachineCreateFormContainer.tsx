@@ -1,7 +1,7 @@
 import React from 'react'
 import { connect } from "react-redux";
 import { createVm, selectPrimaryNic } from "../../actions/virtualMachineActions";
-import { getAllPackages, showPackageInformation} from "../../actions/packagesActions";
+import { getAllPackages, showPackageInformation } from "../../actions/packagesActions";
 import { getAllFabricNetworksByOwnerId, selectNetworks } from "../../actions/networkActions";
 import { bindActionCreators } from "redux";
 import VirtualMachineCreateForm from "../../components/virtualMachine/virtualMachineCreateForm";
@@ -23,15 +23,15 @@ class VirtualMachineCreateFormContainer extends React.Component {
     }
 
     async showPackageInformation(selectedPackage: any) {
-        await this.props.actions.showPackageInformation(this.props.packages.packages, selectedPackage);
+        await this.props.actions.showPackageInformation(selectedPackage);
     }
 
     async selectNetworks(selectedNetworks: any[]) {
-        await this.props.actions.selectNetworks(this.props.networks.networks, selectedNetworks);
+        await this.props.actions.selectNetworks(selectedNetworks);
     }
 
-    async selectPrimaryNic(selectedPrimaryNic: any) {
-        await this.props.actions.selectPrimaryNic(selectedPrimaryNic.target.name);
+    async selectPrimaryNic(nicIndex: number) {
+        await this.props.actions.selectPrimaryNic(nicIndex);
     }
 
     render() {

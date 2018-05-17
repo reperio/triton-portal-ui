@@ -1,7 +1,7 @@
 import React from 'react'
 import {connect, Dispatch} from "react-redux";
 import { bindActionCreators } from "redux";
-import { getVmsByOwner, getAllVms, startVm, stopVm, rebootVm, deleteVm, showDeleteModal, hideDeleteModal, showRenameModal, hideRenameModal, showReprovisionModal, hideReprovisionModal, remoteFormSubmit, renameVm, hideResizeModal, showResizeModal } from "../../actions/virtualMachineActions";
+import { getVmsByOwner, getAllVms, startVm, stopVm, rebootVm, deleteVm, showDeleteModal, hideDeleteModal, showRenameModal, hideRenameModal, showReprovisionModal, hideReprovisionModal, remoteFormSubmit, renameVm, hideResizeModal, showResizeModal, resizeVm } from "../../actions/virtualMachineActions";
 import { getAllImages } from '../../actions/imageActions';
 import ReactTable from 'react-table';
 import LoadingSpinner from '../../components/misc/loadingSpinner';
@@ -27,22 +27,19 @@ class VirtualMachineContainer extends React.Component {
     ];
 
     async componentDidMount() {
-        await this.props.actions.getVmsByOwner(this.props.authSession.user.data.ownerUuid);
+        this.refreshTable();
     }
 
     async startVirtualMachine(row:any) {
         await this.props.actions.startVm(this.props.authSession.user.data.ownerUuid, row.original.uuid);
-        await this.componentDidMount();
     }
 
     async endVirtualMachine(row:any) {
         await this.props.actions.stopVm(this.props.authSession.user.data.ownerUuid, row.original.uuid);
-        await this.componentDidMount();
     }
 
     async restartVirtualMachine(row:any) {
         await this.props.actions.rebootVm(this.props.authSession.user.data.ownerUuid, row.original.uuid);
-        await this.componentDidMount();
     }
 
     async deleteVirtualMachine(row:any) {
@@ -68,7 +65,7 @@ class VirtualMachineContainer extends React.Component {
     async renameModal(form: any) {
         await this.closeRenameModal();
         await this.props.actions.renameVm(this.props.row.original.uuid, form.alias);
-        await this.componentDidMount();
+        this.refreshTable();
     }
 
     async hideDeleteModal() {
@@ -77,8 +74,8 @@ class VirtualMachineContainer extends React.Component {
 
     async resizeModal() {
         await this.hideResizeModal();
-        await this.props.actions.deleteVm(this.props.authSession.user.data.ownerUuid, this.props.row.original.uuid);
-        await this.componentDidMount();
+        await this.props.actions.resizeVm(this.props.authSession.user.data.ownerUuid, this.props.row.original.uuid);
+        this.refreshTable();
     }
     
     async remoteVmRename() {
@@ -104,7 +101,11 @@ class VirtualMachineContainer extends React.Component {
     async deleteModal() {
         await this.hideDeleteModal();
         await this.props.actions.deleteVm(this.props.authSession.user.data.ownerUuid, this.props.row.original.uuid);
-        await this.componentDidMount();
+        this.refreshTable();
+    }
+
+    async refreshTable() {
+        await this.props.actions.getVmsByOwner(this.props.authSession.user.data.ownerUuid);
     }
 
     render() {
@@ -197,8 +198,13 @@ class VirtualMachineContainer extends React.Component {
                     </MuiThemeProvider>
                 : null}
                 <FormGroup>
-                    <LinkContainer to="/create-virtual-machine"><NavItem>Create a virtual machine</NavItem></LinkContainer>
+                    <LinkContainer to="/create-virtual-machine"><Button bsStyle="primary">Create a virtual machine <span className="glyphicon glyphicon-plus-sign" aria-hidden="true"></span></Button></LinkContainer>
                 </FormGroup>
+                
+                <FormGroup>
+                    <Button onClick={this.refreshTable.bind(this)} bsStyle="default"><span className="glyphicon glyphicon-refresh" aria-hidden="true"></span></Button>
+                </FormGroup>
+                
                 <ReactTable 
                     data={this.props.virtualMachines.vms} 
                     columns={this.columns}
@@ -268,7 +274,8 @@ function mapActionToProps(dispatch: any) {
             renameVm, 
             hideReprovisionModal, 
             hideResizeModal, 
-            showResizeModal
+            showResizeModal,
+            resizeVm
         }, dispatch)
     };
 }

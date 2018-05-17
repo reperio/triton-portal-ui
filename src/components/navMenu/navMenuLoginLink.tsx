@@ -1,12 +1,12 @@
 import React from 'react'
-import {NavItem} from "react-bootstrap";
+import { NavItem, Button } from "react-bootstrap";
 import LinkContainer from "react-router-bootstrap/lib/LinkContainer";
 
 const NavMenuLoginLink = () => (
-    <LinkContainer to="/login">
-        <NavItem>
+    <LinkContainer className="r-menu-item" to="/login">
+        <Button bsStyle="link">
             Login
-        </NavItem>
+        </Button>
     </LinkContainer>
 );
 

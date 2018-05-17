@@ -193,7 +193,7 @@ export const createVm = (owner_uuid: string, alias: string, networks: nic[], bra
         brand: Joi.string().required().label('Brand'),
         selectedPackage: Joi.string().guid().required().label('Selected package'),
         networks: Joi.array().items(Joi.object({
-            ipv4_uuid: Joi.string().guid(),
+            ipv4_uuid: Joi.string().guid().required().label('NIC Network'),
             primary: Joi.boolean()
         })
         ).min(1).required().label('Networks'),
@@ -294,8 +294,6 @@ export const reprovisionVm = (uuid: string, image_uuid: string) => async (dispat
             dispatch({
                 type: virtualMachineActionTypes.VIRTUAL_MACHINE_REPROVISION_END
             });
-
-            history.push('/virtual-machines');
         } catch (e) {
             dispatch(change('virtualMachineForm', 'errorMessages', [getErrorMessageFromStatusCode(e.response != null ? e.response.status : null)]));
 
@@ -325,8 +323,6 @@ export const renameVm = (uuid: string, alias: string) => async (dispatch: Dispat
             dispatch({
                 type: virtualMachineActionTypes.VIRTUAL_MACHINE_RENAME_END
             });
-
-            history.push('/virtual-machines');
         } catch (e) {
             dispatch(change('virtualMachineForm', 'errorMessages', [getErrorMessageFromStatusCode(e.response != null ? e.response.status : null)]));
 
@@ -356,8 +352,6 @@ export const resizeVm = (uuid: string, billing_id: string) => async (dispatch: D
             dispatch({
                 type: virtualMachineActionTypes.VIRTUAL_MACHINE_RESIZE_END
             });
-
-            history.push('/virtual-machines');
         } catch (e) {
             dispatch(change('virtualMachineForm', 'errorMessages', [getErrorMessageFromStatusCode(e.response != null ? e.response.status : null)]));
 
@@ -372,19 +366,14 @@ export const remoteFormSubmit = (formName: string) => async (dispatch: Dispatch<
     dispatch(submit(formName));
 }
 
-export const selectPrimaryNic = (name: string) => async (dispatch: Dispatch<any>) => {
+export const selectPrimaryNic = (nicIndex: number) => async (dispatch: Dispatch<any>) => {
 
     const state = store.getState();
     const selector = formValueSelector('virtualMachineCreateForm');
 
     const nics = selector(state, 'nics');
-    const index = name.match( /\d+/g )[0];
 
-    nics.map((nic: any) =>  {
-        nic.primary = false;
-    });
+    const newNics = nics.map((nic: any, i: number) => Object.assign({}, nic, {primary: i === nicIndex}));
 
-    nics[index].primary = !nics[index].primary;
-
-    dispatch(change('virtualMachineCreateForm', 'nics', nics));
+    dispatch(change('virtualMachineCreateForm', 'nics', newNics));
 }
