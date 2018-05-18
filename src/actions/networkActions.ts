@@ -68,8 +68,8 @@ export const createFabricNetwork = (network: CreateNetworkModel, ownerUuid: stri
         subnet: Joi.string().required().label('Subnet'),
         provisionStartIp: Joi.string().required().label('Provision start ip'),
         provisionEndIp: Joi.string().required().label('Provision end ip'),
-        gateway: Joi.string().email().required().label('Gateway'),
-        internetNat: Joi.string().guid().required().label('Internet nat'),
+        gateway: Joi.string().required().label('Gateway'),
+        //internetNat: Joi.string().guid().required().label('Internet nat'),
         resolvers: Joi.array().items(
             Joi.object(
                 {
@@ -86,7 +86,7 @@ export const createFabricNetwork = (network: CreateNetworkModel, ownerUuid: stri
         provisionStartIp: network.provisionStartIp,
         provisionEndIp: network.provisionEndIp,
         gateway: network.gateway,
-        internetNat: network.internetNat,
+        //internetNat: network.internetNat,
         resolvers: network.resolvers,
         description: network.description}, schema);
 

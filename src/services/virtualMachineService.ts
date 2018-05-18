@@ -14,12 +14,22 @@ class VirtualMachineService {
         return await axios.get(`/triton/vms/owner/${owner_uuid}`);
     }
     
-    async createVm(owner_uuid: string, alias: string, networks: nic[], brand: string, billing_id: string, image_uuid: string) {
+    async createVm(owner_uuid: string, alias: string, networks: any[], brand: string, billing_id: string, image_uuid: string) {
+
+        let newNetworksObject: nic[] = [];
+
+        networks.map(network => {
+            newNetworksObject.push({
+                primary: network.primary,
+                ipv4_uuid: network.network_uuid
+            });
+        });
+
         const payload = {
             virtualMachine: {
                 owner_uuid,
                 alias,
-                networks,
+                networks: newNetworksObject,
                 brand, 
                 billing_id, 
                 image_uuid
@@ -69,6 +79,10 @@ class VirtualMachineService {
 
     async deleteVm(owner_uuid: string, id: string) {
         return await axios.delete(`triton/vms/${id}?owner_id=${owner_uuid}`);
+    }
+
+    async editNics(nics: any[], id: string) {
+        return await axios.post(`triton/vms/${id}/nics`, {nics});
     }
 }
 

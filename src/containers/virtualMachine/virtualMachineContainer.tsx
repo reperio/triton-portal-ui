@@ -1,7 +1,7 @@
 import React from 'react'
 import {connect, Dispatch} from "react-redux";
 import { bindActionCreators } from "redux";
-import { getVmsByOwner, getAllVms, startVm, stopVm, rebootVm, deleteVm, showDeleteModal, hideDeleteModal, showRenameModal, hideRenameModal, showReprovisionModal, hideReprovisionModal, remoteFormSubmit, renameVm, hideResizeModal, showResizeModal, resizeVm } from "../../actions/virtualMachineActions";
+import { getVmsByOwner, getAllVms, startVm, stopVm, rebootVm, deleteVm, showDeleteModal, hideDeleteModal, showRenameModal, hideRenameModal, showReprovisionModal, hideReprovisionModal, remoteFormSubmit, renameVm, hideResizeModal, showResizeModal, resizeVm, showNicModal, hideNicModal, editVmNics } from "../../actions/virtualMachineActions";
 import { getAllImages } from '../../actions/imageActions';
 import ReactTable from 'react-table';
 import LoadingSpinner from '../../components/misc/loadingSpinner';
@@ -11,6 +11,7 @@ import Error from '../../components/misc/error';
 import VirtualMachineForm from '../../components/virtualMachine/virtualMachineForm';
 import { formValueSelector, Field, submit } from 'redux-form';
 import VirtualMachineRenameModal from '../../components/virtualMachine/virtualMachineRenameModal';
+import VirtualMachineEditNicsModalContainer from '../../containers/virtualMachine/virtualMachineEditNicsModalContainer';
 import VirtualMachineReprovisionModalContainer from '../../containers/virtualMachine/virtualMachineReprovisionModalContainer';
 import VirtualMachineResizeModalContainer from '../../containers/virtualMachine/virtualMachineResizeModalContainer';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
@@ -58,12 +59,11 @@ class VirtualMachineContainer extends React.Component {
         await this.props.actions.showResizeModal(row);
     }
 
-    async closeRenameModal() {
+    async hideRenameModal() {
         await this.props.actions.hideRenameModal();
     }
 
     async renameModal(form: any) {
-        await this.closeRenameModal();
         await this.props.actions.renameVm(this.props.row.original.uuid, form.alias);
         this.refreshTable();
     }
@@ -73,7 +73,6 @@ class VirtualMachineContainer extends React.Component {
     }
 
     async resizeModal() {
-        await this.hideResizeModal();
         await this.props.actions.resizeVm(this.props.authSession.user.data.ownerUuid, this.props.row.original.uuid);
         this.refreshTable();
     }
@@ -99,9 +98,20 @@ class VirtualMachineContainer extends React.Component {
     }
 
     async deleteModal() {
-        await this.hideDeleteModal();
         await this.props.actions.deleteVm(this.props.authSession.user.data.ownerUuid, this.props.row.original.uuid);
         this.refreshTable();
+    }
+
+    async editNics(row: any) {
+        await this.props.actions.showNicModal(row);
+    }
+
+    async remoteNic() {
+        await this.props.actions.remoteFormSubmit('virtualMachineEditNicsModal');
+    }
+
+    async hideNicModal() {
+        await this.props.actions.hideNicModal();
     }
 
     async refreshTable() {
@@ -184,7 +194,7 @@ class VirtualMachineContainer extends React.Component {
                             <FlatButton
                                 label="Cancel"
                                 primary={true}
-                                onClick={this.closeRenameModal.bind(this)}/>,
+                                onClick={this.hideRenameModal.bind(this)}/>,
                             <FlatButton
                                 label="Update"
                                 primary={true}
@@ -197,6 +207,28 @@ class VirtualMachineContainer extends React.Component {
                         </Dialog>
                     </MuiThemeProvider>
                 : null}
+
+                {this.props.showingNicModal != undefined ?
+                    <MuiThemeProvider>
+                        <Dialog 
+                            actions={[    
+                            <FlatButton
+                                label="Cancel"
+                                primary={true}
+                                onClick={this.hideNicModal.bind(this)}/>,
+                            <FlatButton
+                                label="Update"
+                                primary={true}
+                                onClick={this.remoteNic.bind(this)}
+                                type="submit"/>]}
+                            title={`${this.props.row !== null ? this.props.row.original.alias : ''} Nics`}
+                            modal={true}
+                            open={this.props.showingNicModal}> 
+                            <VirtualMachineEditNicsModalContainer />
+                        </Dialog>
+                    </MuiThemeProvider>
+                : null}
+
                 <FormGroup>
                     <LinkContainer to="/create-virtual-machine"><Button bsStyle="primary">Create a virtual machine <span className="glyphicon glyphicon-plus-sign" aria-hidden="true"></span></Button></LinkContainer>
                 </FormGroup>
@@ -229,6 +261,7 @@ class VirtualMachineContainer extends React.Component {
                                             <MenuItem divider />
                                             <MenuItem onClick={this.reprovisionVirtualMachine.bind(this, row)} eventKey="2">Reprovision</MenuItem>
                                             <MenuItem onClick={this.resizeVirtualMachine.bind(this, row)} eventKey="3">Resize</MenuItem>
+                                            <MenuItem onClick={this.editNics.bind(this, row)} eventKey="3">Edit Nics</MenuItem>
                                         </DropdownButton> : null}
 
                                     <Button onClick={this.deleteVirtualMachine.bind(this, row)} bsStyle="danger" className="vm-actions">Delete <span className="glyphicon glyphicon-trash" aria-hidden="true"></span></Button>
@@ -252,6 +285,7 @@ function mapStateToProps(state: any) {
         showingRenameModal: selector(state, 'showingRenameModal'),
         showingReprovisionModal: selector(state, 'showingReprovisionModal'),
         showingResizeModal: selector(state, 'showingResizeModal'),
+        showingNicModal: selector(state, 'showingNicModal'),
         row: selector(state, 'row')
     };
 }
@@ -275,7 +309,10 @@ function mapActionToProps(dispatch: any) {
             hideReprovisionModal, 
             hideResizeModal, 
             showResizeModal,
-            resizeVm
+            resizeVm,
+            showNicModal,
+            hideNicModal,
+            editVmNics
         }, dispatch)
     };
 }

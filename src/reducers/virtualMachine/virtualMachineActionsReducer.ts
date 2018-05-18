@@ -108,6 +108,21 @@ export function virtualMachineActionsReducer(state = initialState.virtualMachine
                 isLoading: false
             };
         }
+        case virtualMachineActionTypes.VIRTUAL_MACHINE_EDIT_NICS_START: {
+            return {
+                isLoading: true
+            };
+        }
+        case virtualMachineActionTypes.VIRTUAL_MACHINE_EDIT_NICS_END: {
+            return {
+                isLoading: false
+            };
+        }
+        case virtualMachineActionTypes.VIRTUAL_MACHINE_EDIT_NICS_ERROR: {
+            return {
+                isLoading: false
+            };
+        }
         default: {
             return state;
         }

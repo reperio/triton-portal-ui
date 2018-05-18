@@ -5,6 +5,7 @@ import { DropdownList, Multiselect } from 'react-widgets'
 import PackageInformation from './packageInformation';
 import Error from "../../components/misc/error";
 import 'react-widgets/dist/css/react-widgets.css';
+import { NicFieldArrayComponent } from '../network/nicFieldArrayComponent';
 
 const dropdownList = (input:any, data:any, valueField:any, textField:any) => {
     <DropdownList {...input}
@@ -13,53 +14,6 @@ const dropdownList = (input:any, data:any, valueField:any, textField:any) => {
         data={data}
         placeholder="Select a network" />
 }
-
-const fieldArrayComponent = (props: any) => (
-    <div>
-        {props.fields.map((member:string, index:number) =>
-            <div key={index} className="field-array-component" style={{maxWidth: "280px", position: "relative"}}>
-                <div>
-                    <div className="field-array-component-item-label">NIC #{index + 1}</div>
-                    <div className="field-array-component-delete-button">
-                        <Button
-                            bsStyle="danger"
-                            onClick={() => props.fields.remove(index)}>&nbsp;
-                                <span className="glyphicon glyphicon-trash" aria-hidden="true"></span>
-                                &nbsp;
-                        </Button>
-                    </div>
-                </div>
-                <FormGroup>
-                    <Field
-                        className="form-control"
-                        name={`${member}.ipv4_uuid`}
-                        component="select">
-                        <option disabled={false} defaultValue={null}> -- Select a network -- </option>
-                        {
-                            props.networks.map((network:any, i:number) => {
-                                return (<option key={i} value={network.uuid}>{network.name}</option>)
-                            })
-                        }
-                     </Field>
-                </FormGroup>
-                <FormGroup>
-                    Make this the primary NIC&nbsp;
-                    <Field
-                        onChange={()=> props.selectPrimaryNic(index)}
-                        name={`${member}.primary`}
-                        type="checkbox"
-                        component="input" />
-                </FormGroup>
-            </div>
-        )}
-        <div className="field-array-component" style={{maxWidth: "280px"}}>
-            <Button
-                bsStyle="default"
-                onClick={() => props.fields.push({})}>Attach another NIC
-            </Button>
-        </div>
-    </div>
-);
 
 const VirtualMachineCreateForm = (props: any) => (
     <form onSubmit={props.handleSubmit(props.onSubmit)}>
@@ -105,7 +59,7 @@ const VirtualMachineCreateForm = (props: any) => (
         </FormGroup>
         <FormGroup>
             <label>Network Interfaces</label>
-            <FieldArray name="nics" selectNetworks={props.selectNetworks} selectPrimaryNic={props.selectPrimaryNic} networks={props.networks.networks} component={fieldArrayComponent}/>
+            <FieldArray name="nics" selectNetworks={props.selectNetworks} selectPrimaryNic={props.selectPrimaryNic} networks={props.networks.networks} component={NicFieldArrayComponent}/>
         </FormGroup>
         <FormGroup>
             <button className="btn btn-primary" type="submit">Create</button>

@@ -40,7 +40,10 @@ export const virtualMachineActionTypes = {
     VIRTUAL_MACHINE_RENAME_ERROR: "VIRTUAL_MACHINE_RENAME_ERROR",
     VIRTUAL_MACHINE_RESIZE_START: "VIRTUAL_MACHINE_RESIZE_START",
     VIRTUAL_MACHINE_RESIZE_END: "VIRTUAL_MACHINE_RESIZE_END",
-    VIRTUAL_MACHINE_RESIZE_ERROR: "VIRTUAL_MACHINE_RESIZE_ERROR"
+    VIRTUAL_MACHINE_RESIZE_ERROR: "VIRTUAL_MACHINE_RESIZE_ERROR",
+    VIRTUAL_MACHINE_EDIT_NICS_START: "VIRTUAL_MACHINE_EDIT_NICS_START",
+    VIRTUAL_MACHINE_EDIT_NICS_END: "VIRTUAL_MACHINE_EDIT_NICS_END",
+    VIRTUAL_MACHINE_EDIT_NICS_ERROR: "VIRTUAL_MACHINE_EDIT_NICS_ERROR"
 };
 
 function getErrorMessageFromStatusCode(statusCode: number) {
@@ -189,15 +192,15 @@ export const deleteVm = (owner_uuid: string, uuid: string) => async (dispatch: D
 export const createVm = (owner_uuid: string, alias: string, networks: nic[], brand: string, selectedPackage: any, imageUuid: string) => async (dispatch: Dispatch<any>) => {
 
     const schema = Joi.object().keys({
-        alias: Joi.string().required().label('Alias'),
-        brand: Joi.string().required().label('Brand'),
-        selectedPackage: Joi.string().guid().required().label('Selected package'),
+        alias: Joi.string().required(),
+        brand: Joi.string().required(),
+        selectedPackage: Joi.string().guid().required().label('Package'),
         networks: Joi.array().items(Joi.object({
-            ipv4_uuid: Joi.string().guid().required().label('NIC Network'),
+            network_uuid: Joi.string().guid().required().label('NIC network'),
             primary: Joi.boolean()
         })
-        ).min(1).required().label('Networks'),
-        imageUuid: Joi.string().guid().optional().label('Image uuid')
+        ).min(1).required().label('Network interfaces'),
+        imageUuid: Joi.string().guid().optional()
     }).options({ abortEarly: false });
 
     let errors = await inputValidationService.validate({
@@ -206,6 +209,21 @@ export const createVm = (owner_uuid: string, alias: string, networks: nic[], bra
         selectedPackage: selectedPackage !== null ? selectedPackage.uuid : null,
         networks,
         imageUuid}, schema);
+
+    let networkPrimaryCount = 0;
+
+    if (networks !== undefined && networks.length !== 0) {
+        networks.map((network: nic) => {
+            if (network.primary) {
+                networkPrimaryCount++;
+            }
+        });
+    
+        if (networkPrimaryCount === 0) {
+            errors.push('A primary NIC must be selected.');
+        }
+    }
+
 
     dispatch(change('virtualMachineCreateForm', 'errorMessages', errors));
     
@@ -223,7 +241,7 @@ export const createVm = (owner_uuid: string, alias: string, networks: nic[], bra
 
             history.push('/virtual-machines');
         } catch (e) {
-            dispatch(change('virtualMachineCreateForm', 'errorMessages', [getErrorMessageFromStatusCode(e.response != null ? e.response.status : null)]));
+            dispatch(change('virtualMachineCreateForm', 'errorMessages', [e.response.data.message]));
             dispatch({
                 type: virtualMachineActionTypes.VIRTUAL_MACHINE_CREATE_ERROR
             });
@@ -285,10 +303,13 @@ export const reprovisionVm = (uuid: string, image_uuid: string) => async (dispat
 
     dispatch(change('virtualMachineForm', 'errorMessages', errors));
     if (errors.length == 0) {
-        dispatch({
-            type: virtualMachineActionTypes.VIRTUAL_MACHINE_REPROVISION_START
-        });
         try {
+            dispatch({
+                type: virtualMachineActionTypes.VIRTUAL_MACHINE_REPROVISION_START
+            });
+    
+            hideReprovisionModal(null)(dispatch);
+
             await virtualMachineService.reprovisionVm(uuid, image_uuid);
     
             dispatch({
@@ -314,10 +335,13 @@ export const renameVm = (uuid: string, alias: string) => async (dispatch: Dispat
 
     dispatch(change('virtualMachineForm', 'errorMessages', errors));
     if (errors.length == 0) {
-        dispatch({
-            type: virtualMachineActionTypes.VIRTUAL_MACHINE_RENAME_START
-        });
         try {
+            dispatch({
+                type: virtualMachineActionTypes.VIRTUAL_MACHINE_RENAME_START
+            });
+    
+            hideRenameModal(null)(dispatch);
+
             await virtualMachineService.renameVm(uuid, alias);
     
             dispatch({
@@ -343,10 +367,13 @@ export const resizeVm = (uuid: string, billing_id: string) => async (dispatch: D
 
     dispatch(change('virtualMachineForm', 'errorMessages', errors));
     if (errors.length == 0) {
-        dispatch({
-            type: virtualMachineActionTypes.VIRTUAL_MACHINE_RESIZE_START
-        });
         try {
+            dispatch({
+                type: virtualMachineActionTypes.VIRTUAL_MACHINE_RESIZE_START
+            });
+
+            hideResizeModal(null)(dispatch);
+
             await virtualMachineService.resizeVm(uuid, billing_id);
     
             dispatch({
@@ -366,14 +393,67 @@ export const remoteFormSubmit = (formName: string) => async (dispatch: Dispatch<
     dispatch(submit(formName));
 }
 
-export const selectPrimaryNic = (nicIndex: number) => async (dispatch: Dispatch<any>) => {
+export const selectPrimaryNic = (nicIndex: number, form: string) => async (dispatch: Dispatch<any>) => {
 
     const state = store.getState();
-    const selector = formValueSelector('virtualMachineCreateForm');
+
+    const selector = formValueSelector(form);
 
     const nics = selector(state, 'nics');
 
     const newNics = nics.map((nic: any, i: number) => Object.assign({}, nic, {primary: i === nicIndex}));
 
-    dispatch(change('virtualMachineCreateForm', 'nics', newNics));
+    dispatch(change(form, 'nics', newNics));
+}
+
+export const showNicModal = (row: any) => async (dispatch: Dispatch<any>) => {
+    dispatch(change('virtualMachineForm', 'row', row));
+    dispatch(change('virtualMachineForm', 'showingNicModal', true));
+}
+
+export const hideNicModal = (row: any) => async (dispatch: Dispatch<any>) => {
+    dispatch(change('virtualMachineForm', 'showingNicModal', false));
+}
+
+export const editVmNics = (nics: any[], id: string, ownerUuid: string) => async (dispatch: Dispatch<any>) => {
+
+    let newNetworksObject: any[] = [];
+
+    nics.map(network => {
+        newNetworksObject.push({
+            primary: network.primary !== undefined ? network.primary: false,
+            uuid: network.network_uuid,
+            mac: network.mac !== undefined ? network.mac: ""
+        });
+    });
+
+    const schema = Joi.object().keys({
+        newNetworksObject: Joi.array().items(Joi.object({
+            uuid: Joi.string().guid().required().label('NIC network'),
+            primary: Joi.boolean().required(),
+            mac: Joi.string().allow('').optional()
+        })
+        ).optional(),
+    }).options({ abortEarly: false });
+
+    let errors = await inputValidationService.validate({
+        newNetworksObject}, schema);
+
+    dispatch(change('virtualMachineEditNicsModal', 'errorMessages', errors));
+
+    if (errors.length == 0) {
+        try {
+            hideNicModal(null)(dispatch);
+
+            dispatch({ type: virtualMachineActionTypes.VIRTUAL_MACHINE_EDIT_NICS_START });
+
+            await virtualMachineService.editNics(newNetworksObject, id);
+            
+            getVmsByOwner(ownerUuid)(dispatch);
+            
+            dispatch({ type: virtualMachineActionTypes.VIRTUAL_MACHINE_EDIT_NICS_END });
+        } catch(e) {
+            dispatch({ type: virtualMachineActionTypes.VIRTUAL_MACHINE_EDIT_NICS_ERROR });
+        }
+    }
 }

@@ -31,7 +31,7 @@ class VirtualMachineCreateFormContainer extends React.Component {
     }
 
     async selectPrimaryNic(nicIndex: number) {
-        await this.props.actions.selectPrimaryNic(nicIndex);
+        await this.props.actions.selectPrimaryNic(nicIndex, 'virtualMachineCreateForm');
     }
 
     render() {
