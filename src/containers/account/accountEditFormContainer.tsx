@@ -1,10 +1,9 @@
 import React from 'react'
 import { connect } from "react-redux";
-import { editAccount, loadAccount } from "../../actions/accountActions";
+import { editAccount, getAccount } from "../../actions/accountActions";
 import { bindActionCreators } from "redux";
 import AccountEditForm from "../../components/account/accountEditForm";
 import LoadingSpinner from '../../components/misc/loadingSpinner';
-import Error from '../../components/misc/error'
 import EditAccountModel from '../../models/editAccountModel';
 import { formValueSelector } from 'redux-form';
 
@@ -13,20 +12,19 @@ class AccountEditFormContainer extends React.Component {
 
     async onSubmit(values: EditAccountModel) {
         await this.props.actions.editAccount(values, this.props.authSession.user.data.id);
-        this.componentDidMount();
     };
 
     async componentDidMount () {
-        await this.props.actions.loadAccount(this.props.authSession.user.data.id);
+        await this.props.actions.getAccount(this.props.authSession.user.data.id);
     };
 
     render() {
         return (
             <div>
-                {this.props.accountEdit.isLoading || !this.props.accountLoad.hasLoaded ? <LoadingSpinner/> : null}
-                {!this.props.accountLoad.hasLoaded ? null : 
+                {this.props.accountEdit.isLoading || !this.props.account.hasLoaded ? <LoadingSpinner/> : null}
+                {!this.props.account.hasLoaded ? null : 
                 <AccountEditForm    errorMessages={this.props.errorMessages} 
-                                    initialValues={this.props.accountLoad.user} 
+                                    initialValues={this.props.account.user} 
                                     onSubmit={this.onSubmit.bind(this)} />}
             </div>
         );
@@ -37,7 +35,7 @@ function mapStateToProps(state: any) {
     const selector = formValueSelector('accountEditForm');
     return {
         accountEdit: state.accountEdit,
-        accountLoad: state.accountLoad,
+        account: state.account,
         authSession: state.authSession,
         errorMessages: selector(state, 'errorMessages')
     };
@@ -45,7 +43,7 @@ function mapStateToProps(state: any) {
 
 function mapActionToProps(dispatch: any) {
     return {
-        actions: bindActionCreators({editAccount, loadAccount}, dispatch)
+        actions: bindActionCreators({editAccount, getAccount}, dispatch)
     };
 }
 

@@ -118,7 +118,7 @@ export const editAccount = (user: EditAccountModel, userId: string) => async (di
     dispatch(change('accountEditForm', 'errorMessages', errors));
 
     if (errors.length == 0) {
-        try {``
+        try {
             user.sshKeys = sshKeys;
 
             dispatch({
@@ -139,7 +139,7 @@ export const editAccount = (user: EditAccountModel, userId: string) => async (di
     }
 };
 
-export const loadAccount = (userId: string) => async (dispatch: Dispatch<any>) => {
+export const getAccount = (userId: string) => async (dispatch: Dispatch<any>) => {
     dispatch({
         type: accountActionTypes.USER_LOAD_START,
         payload: {

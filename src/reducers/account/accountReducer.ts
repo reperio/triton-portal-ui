@@ -1,12 +1,12 @@
-import {initialState, StateAccountLoad} from "../../store/initialState";
+import { initialState, StateAccount } from "../../store/initialState";
 import { accountActionTypes } from "../../actions/accountActions";
 
-export function accountLoadReducer(state = initialState.accountLoad, action: {type: string, payload: any}): StateAccountLoad {
+export function accountReducer(state = initialState.account, action: {type: string, payload: any}): StateAccount {
     switch (action.type) {
         case accountActionTypes.USER_LOAD_START: {
             return {
                 hasLoaded: false,
-                user: []
+                user: state.user
             };
         }
         case accountActionTypes.USER_LOAD_END: {

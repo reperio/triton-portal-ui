@@ -115,3 +115,21 @@ html, body {
 .redux-form {
   max-width: 280px;
 }
+
+//loading spinner container
+.sweet-loading {
+  background: rgba(0,0,0,0.1);
+  position: fixed;
+  left: 0px;
+  top: 0px;
+  width: 100%;
+  height: 100%;
+  z-index: 9999;
+}
+
+//loading spinner
+.css-18zexoh {
+  position: relative;
+  left: 50%;
+  top: 50%;
+}

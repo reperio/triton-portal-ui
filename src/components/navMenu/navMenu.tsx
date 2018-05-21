@@ -32,8 +32,8 @@ const NavMenu = (props: any) => (
             : null}
 
             {props.authSession.isAuthenticated ? 
-            <LinkContainer className={props.location === '/edit-accounts' ? 'r-menu-item r-menu-item-active' : 'r-menu-item'} to="/edit-account">
-                <Button onClick={() => props.navigateTo('/edit-accounts')} bsStyle="link">Account</Button>
+            <LinkContainer className={props.location === '/edit-account' ? 'r-menu-item r-menu-item-active' : 'r-menu-item'} to="/edit-account">
+                <Button onClick={() => props.navigateTo('/edit-account')} bsStyle="link">Account</Button>
             </LinkContainer>
             : null}
 
