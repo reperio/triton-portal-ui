@@ -4,7 +4,6 @@ import { createAccount } from "../../actions/accountActions";
 import { bindActionCreators } from "redux";
 import AccountCreateForm from "../../components/account/accountCreateForm";
 import LoadingSpinner from '../../components/misc/loadingSpinner';
-import Error from '../../components/misc/error'
 import CreateAccountModel from '../../models/createAccountModel';
 import { formValueSelector } from 'redux-form';
 
@@ -19,7 +18,8 @@ class AccountCreateFormContainer extends React.Component {
         return (
             <div>
                 {this.props.accountCreate.isLoading ? <LoadingSpinner/> : null}
-                <AccountCreateForm errorMessages={this.props.errorMessages} onSubmit={this.onSubmit.bind(this)} />
+                <AccountCreateForm  errorMessages={this.props.errorMessages} 
+                                    onSubmit={this.onSubmit.bind(this)} />
             </div>
         );
     }

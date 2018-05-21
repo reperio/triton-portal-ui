@@ -1,7 +1,7 @@
 import React from 'react'
-import {connect} from "react-redux";
+import { connect } from "react-redux";
 import { editAccount, loadAccount } from "../../actions/accountActions";
-import {bindActionCreators} from "redux";
+import { bindActionCreators } from "redux";
 import AccountEditForm from "../../components/account/accountEditForm";
 import LoadingSpinner from '../../components/misc/loadingSpinner';
 import Error from '../../components/misc/error'
@@ -25,7 +25,9 @@ class AccountEditFormContainer extends React.Component {
             <div>
                 {this.props.accountEdit.isLoading || !this.props.accountLoad.hasLoaded ? <LoadingSpinner/> : null}
                 {!this.props.accountLoad.hasLoaded ? null : 
-                <AccountEditForm errorMessages={this.props.errorMessages} initialValues={this.props.accountLoad.user} onSubmit={this.onSubmit.bind(this)} />}
+                <AccountEditForm    errorMessages={this.props.errorMessages} 
+                                    initialValues={this.props.accountLoad.user} 
+                                    onSubmit={this.onSubmit.bind(this)} />}
             </div>
         );
     }

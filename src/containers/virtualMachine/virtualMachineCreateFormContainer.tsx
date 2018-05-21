@@ -38,10 +38,15 @@ class VirtualMachineCreateFormContainer extends React.Component {
         return (
             <div>
                 {this.props.virtualMachineCreate.isLoading || !this.props.packages.hasLoaded || !this.props.networks.hasLoaded  ? <LoadingSpinner/> : null}
-                {this.props.packages.hasLoaded && this.props.networks.hasLoaded
-                    ? <VirtualMachineCreateForm selectPrimaryNic={this.selectPrimaryNic.bind(this)} errorMessages={this.props.errorMessages} networks={this.props.networks} packages={this.props.packages} showPackageInformation={this.showPackageInformation.bind(this)} selectNetworks={this.selectNetworks.bind(this)} onSubmit={this.onSubmit.bind(this)} /> 
+                {this.props.packages.hasLoaded && this.props.networks.hasLoaded ? 
+                    <VirtualMachineCreateForm selectPrimaryNic={this.selectPrimaryNic.bind(this)}
+                                                    errorMessages={this.props.errorMessages} 
+                                                    networks={this.props.networks} 
+                                                    packages={this.props.packages} 
+                                                    showPackageInformation={this.showPackageInformation.bind(this)} 
+                                                    selectNetworks={this.selectNetworks.bind(this)} 
+                                                    onSubmit={this.onSubmit.bind(this)} /> 
                     : null}
-                
             </div>
         );
     }

@@ -18,7 +18,8 @@ class NetworkCreateFormContainer extends React.Component {
         return (
             <div>
                 {this.props.networkCreate.isLoading ? <LoadingSpinner/> : null}
-                <NetworkCreateForm errorMessages={this.props.errorMessages} onSubmit={this.onSubmit.bind(this)} />
+                <NetworkCreateForm  errorMessages={this.props.errorMessages} 
+                                    onSubmit={this.onSubmit.bind(this)} />
             </div>
         );
     }

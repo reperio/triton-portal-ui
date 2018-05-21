@@ -1,13 +1,18 @@
 import React from 'react';
 import { Field, reduxForm } from 'redux-form'
-import {FormGroup} from "react-bootstrap";
-import { FlatButton } from 'material-ui';
+import { FormGroup } from "react-bootstrap";
+import Error from '../misc/error';
 
 const VirtualMachineRenameModal = (props: any) => (
     <form onSubmit={props.handleSubmit(props.onSubmit)}>
+        {props.errorMessages != null && props.errorMessages.length > 0 ? <Error errors={props.errorMessages}/> : null}
         <FormGroup>
             <label>Rename Virtual Machine alias</label>
-            <Field name="alias" component="input" className="form-control" type="text" placeholder="Virtual Machine Name" />
+            <Field  name="alias"
+                    component="input" 
+                    className="form-control" 
+                    type="text" 
+                    placeholder="Virtual Machine Name" />
         </FormGroup>
     </form>
 );

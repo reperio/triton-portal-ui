@@ -32,7 +32,11 @@ class VirtualMachineResizeModalContainer extends React.Component {
         return (
             <div>
                 {!this.props.packages.hasLoaded ? <LoadingSpinner/> : 
-                    <VirtualMachineResizeModal selectPackage={this.selectPackage.bind(this)} close={this.closeResizeModal.bind(this)} onSubmit={this.resizeModal.bind(this)} initialValues={{billing_id: this.props.row.original.billing_id, packages: this.props.packages.packages}} />}
+                    <VirtualMachineResizeModal  selectPackage={this.selectPackage.bind(this)} 
+                                                close={this.closeResizeModal.bind(this)} 
+                                                onSubmit={this.resizeModal.bind(this)}
+                                                errorMessages={this.props.errorMessages}
+                                                initialValues={{billing_id: this.props.row.original.billing_id, packages: this.props.packages.packages}} />}
             </div>
         );
     }
@@ -40,10 +44,11 @@ class VirtualMachineResizeModalContainer extends React.Component {
 
 function mapStateToProps(state: any) {
     const selector = formValueSelector('virtualMachineForm');
+    const selectorModal = formValueSelector('virtualMachineResizeModal');
     return {
         authSession: state.authSession,
         packages: state.packages,
-        errorMessages: selector(state, 'errorMessages'),
+        errorMessages: selectorModal(state, 'errorMessages'),
         row: selector(state, 'row')
     };
 }

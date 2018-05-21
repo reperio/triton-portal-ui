@@ -6,7 +6,7 @@ import ReactTable from 'react-table';
 import LoadingSpinner from '../../components/misc/loadingSpinner';
 import { FormGroup } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
-import { NavItem, Button }  from "react-bootstrap";
+import { Button }  from "react-bootstrap";
 import NetworkForm from '../../components/network/networkForm';
 import { formValueSelector } from 'redux-form';
 import 'react-table/react-table.css';
@@ -39,24 +39,28 @@ class NetworkContainer extends React.Component {
                 <NetworkForm errorMessages={this.props.errorMessages} />
 
                 <FormGroup>
-                    <LinkContainer to="/create-network"><Button bsStyle="primary">Create a network <span className="glyphicon glyphicon-plus-sign" aria-hidden="true"></span></Button></LinkContainer>
+                    <LinkContainer to="/create-network">
+                        <Button bsStyle="primary">Create a network <span className="glyphicon glyphicon-plus-sign" aria-hidden="true"></span></Button>
+                    </LinkContainer>
                 </FormGroup>
                 
                 <FormGroup>
                     <Button onClick={this.refreshTable.bind(this)} bsStyle="default"><span className="glyphicon glyphicon-refresh" aria-hidden="true"></span></Button>
                 </FormGroup>
 
-                <ReactTable 
-                    data={this.props.networks.networks} 
-                    columns={this.columns}
-                    className="-striped -highlight"
-                    SubComponent={row => {
-                        return(
-                            <div>
-                                <Button onClick={this.deleteNetwork.bind(this, row)} bsStyle="danger" className="vm-actions">Delete <span className="glyphicon glyphicon-trash" aria-hidden="true"></span></Button>
-                            </div>
-                        );
-                    }}/>
+                <ReactTable data={this.props.networks.networks} 
+                            columns={this.columns}
+                            className="-striped -highlight"
+                            SubComponent={row => {
+                                return(
+                                    <div>
+                                        <Button bsStyle="danger"
+                                                onClick={this.deleteNetwork.bind(this, row)}
+                                                className="vm-actions">Delete <span className="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                                        </Button>
+                                    </div>
+                                );
+                            }}/>
             </div>
         );
     }

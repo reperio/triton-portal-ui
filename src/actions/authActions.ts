@@ -6,6 +6,7 @@ import { inputValidationService } from "../services/inputValidationService";
 import { history } from '../store/history';
 var Joi = require('joi-browser');
 import { change } from 'redux-form';
+import { locationChange } from '../actions/navActions';
 
 
 export const authActionTypes = {
@@ -44,6 +45,7 @@ export const logout = () => async (dispatch: Dispatch<any>) => {
         payload: null
     });
     history.push('/login');
+    locationChange(history.location.pathname)(dispatch);
 };
 
 export const updateTimeLeftOnToken = (showingExpirationDialog: boolean) => async(dispatch: Dispatch<any>) => {
@@ -111,6 +113,7 @@ export const submitAuth = (email: string, password: string) => async (dispatch: 
             await authService.login(email, password);
 
             history.push('/home');
+            locationChange(history.location.pathname)(dispatch);
         } catch (e) {
             dispatch(change('loginForm', 'errorMessages', [getErrorMessageFromStatusCode(e.response != null ? e.response.status : null)]));
 

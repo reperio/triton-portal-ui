@@ -1,14 +1,15 @@
 import React from 'react'
-import {connect} from "react-redux";
-import {submitAuth} from "../../actions/authActions";
-import {bindActionCreators} from "redux";
+import { connect } from "react-redux";
+import { submitAuth } from "../../actions/authActions";
+import { locationChange } from "../../actions/navActions";
+import { bindActionCreators } from "redux";
 import LoginForm from "../../components/login/loginForm";
 import LoadingSpinner from '../../components/misc/loadingSpinner';
 import LinkContainer from "react-router-bootstrap/lib/LinkContainer";
-import {NavItem} from "react-bootstrap";
+import { NavItem, Button } from "react-bootstrap";
 import Error from "../../components/misc/error";
 import LoginModel from '../../models/loginModel';
-import {Redirect} from "react-router";
+import { Redirect } from "react-router";
 import { formValueSelector } from 'redux-form';
 
 class LoginFormContainer extends React.Component {
@@ -18,6 +19,10 @@ class LoginFormContainer extends React.Component {
         await this.props.actions.submitAuth(values.email, values.password);
     };
 
+    locationChange(location: string) {
+        this.props.actions.locationChange(location);
+    }
+
     render() {
         return (
             !this.props.authSession.isAuthenticated ? 
@@ -25,8 +30,12 @@ class LoginFormContainer extends React.Component {
                     {this.props.authSession.isLoading ? <LoadingSpinner/> : null}
                     <LoginForm errorMessages={this.props.errorMessages} onSubmit={this.onSubmit.bind(this)}/>
                     <div>
-                        Don't have an account?
-                        <LinkContainer to="/create-account"><NavItem>Create Account</NavItem></LinkContainer>
+                        <div>
+                            Don't have an account?
+                        </div>
+                        <LinkContainer to="/create-account">
+                            <Button onClick={() => this.locationChange('/create-account')} bsStyle="default">Create Account</Button>
+                        </LinkContainer>
                     </div>
                 </div>
             : null
@@ -44,7 +53,7 @@ function mapStateToProps(state: any) {
 
 function mapActionToProps(dispatch: any) {
     return {
-        actions: bindActionCreators({submitAuth}, dispatch)
+        actions: bindActionCreators({submitAuth, locationChange}, dispatch)
     };
 }
 
