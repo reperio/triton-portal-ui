@@ -1,5 +1,6 @@
 import React from 'react'
 import Moment from 'moment'
+import { Button } from 'react-bootstrap';
 
 const VirtualMachineExtendedDetails = (props: any) => (
     <div className="nested-details-details col-xs-12" style={{minWidth: "500px"}}>
@@ -21,7 +22,9 @@ const VirtualMachineExtendedDetails = (props: any) => (
         </div>
         <div className="row col-xs-12 table-row-container">
             <div className="col-xs-4 table-row-property">Image</div>
-            <div className="col-xs-8">{props.data.image_uuid}</div>
+            <div className="col-xs-8" style={{padding: "0"}}>
+                <Button onClick={props.showImageInformation.bind(this)} bsStyle="link">{props.data.image_uuid}</Button>
+            </div>
         </div>
         <div className="row col-xs-12 table-row-container">
             <div className="col-xs-4 table-row-property">Server</div>

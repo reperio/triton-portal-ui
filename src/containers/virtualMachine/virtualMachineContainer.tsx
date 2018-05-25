@@ -2,6 +2,7 @@ import React from 'react'
 import {connect, Dispatch, ReactNode} from "react-redux";
 import { bindActionCreators } from "redux";
 import { getVmsByOwner, startVm, stopVm, rebootVm, deleteVm, showDeleteModal, hideDeleteModal, showRenameModal, hideRenameModal, showReprovisionModal, hideReprovisionModal, remoteFormSubmit, renameVm, hideResizeModal, showResizeModal, resizeVm, showNicModal, hideNicModal, showCreateModal, hideCreateModal } from "../../actions/virtualMachineActions";
+import { showImageInformation, hideImageInformation } from '../../actions/imageActions';
 import ReactTable, { RowInfo } from 'react-table';
 import LoadingSpinner from '../../components/misc/loadingSpinner';
 import { LinkContainer } from "react-router-bootstrap";
@@ -22,6 +23,7 @@ import VirtualMachineRenameModalContainer from './virtualMachineRenameModalConta
 import VirtualMachineExtendedDetails from '../../components/virtualMachine/virtualMachineExtendedDetails';
 import VirtualMachineActionsButton from '../../components/virtualMachine/virtualMachineActionsButton';
 import VirtualMachineCreateModalContainer from './virtualMachineCreateModalContainer';
+import ImageInformationModalContainer from './imageInformationModalContainer';
 
 class VirtualMachineContainer extends React.Component {
     props: any;
@@ -135,6 +137,14 @@ class VirtualMachineContainer extends React.Component {
 
     hideNicModal() {
         this.props.actions.hideNicModal();
+    }
+
+    showImageInformation(row: any) {
+        this.props.actions.showImageInformation(row);
+    }
+
+    hideImageInformationModal() {
+        this.props.actions.hideImageInformation();
     }
 
     async refreshTable() {
@@ -260,6 +270,21 @@ class VirtualMachineContainer extends React.Component {
                     </MuiThemeProvider>
                 : null}
 
+                {this.props.showingImageInformationModal != undefined ?
+                    <MuiThemeProvider>
+                        <Dialog actions={[    
+                            <FlatButton label="Close"
+                                        primary={true}
+                                        onClick={this.hideImageInformationModal.bind(this)}/>]}
+                                title={`${(this.props.image !== undefined && this.props.image !== null) ? this.props.image.name : 'Image'}`}
+                                modal={true}
+                                autoScrollBodyContent={true}
+                                open={this.props.showingImageInformationModal}> 
+                            <ImageInformationModalContainer />
+                        </Dialog>
+                    </MuiThemeProvider>
+                : null}
+
                 <FormGroup>
                     <Button bsStyle="primary" onClick={this.createVirtualMachine.bind(this)}>Create a virtual machine <span className="glyphicon glyphicon-plus-sign" aria-hidden="true"></span></Button>
                 </FormGroup>
@@ -276,7 +301,7 @@ class VirtualMachineContainer extends React.Component {
                             SubComponent={(row: RowInfo) => {
                                 return(
                                     <div className="nested-table-container">
-                                        <VirtualMachineExtendedDetails data={row.original} />
+                                        <VirtualMachineExtendedDetails showImageInformation={this.showImageInformation.bind(this, row)} data={row.original} />
                                     </div>
                                 );
                             }}/>
@@ -298,7 +323,9 @@ function mapStateToProps(state: any) {
         showingResizeModal: selector(state, 'showingResizeModal'),
         showingNicModal: selector(state, 'showingNicModal'),
         showingCreateModal: selector(state, 'showingCreateModal'),
-        row: selector(state, 'row')
+        showingImageInformationModal: selector(state, 'showingImageInformationModal'),
+        row: selector(state, 'row'),
+        image: selector(state, 'image')
     };
 }
 
@@ -324,7 +351,9 @@ function mapActionToProps(dispatch: any) {
             showNicModal,
             hideNicModal,
             showCreateModal,
-            hideCreateModal
+            hideCreateModal,
+            showImageInformation,
+            hideImageInformation
         }, dispatch)
     };
 }

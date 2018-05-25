@@ -2,6 +2,7 @@ import React from 'react'
 import { connect } from "react-redux";
 import { createVm, selectPrimaryNic, hideCreateModal } from "../../actions/virtualMachineActions";
 import { getAllPackages, showPackageInformation } from "../../actions/packagesActions";
+import { getAllImages, selectImage } from "../../actions/imageActions";
 import { getAllFabricNetworksByOwnerId, selectNetworks } from "../../actions/networkActions";
 import { bindActionCreators } from "redux";
 import VirtualMachineCreateModal from "../../components/virtualMachine/virtualMachineCreateModal";
@@ -19,15 +20,20 @@ class VirtualMachineCreateModalContainer extends React.Component {
 
     async componentDidMount() {
         await this.props.actions.getAllPackages('virtualMachineCreateModal');
+        await this.props.actions.getAllImages('virtualMachineCreateModal');
         await this.props.actions.getAllFabricNetworksByOwnerId(this.props.authSession.user.data.ownerUuid);
     }
 
-    async showPackageInformation(selectedPackage: any) {
-        await this.props.actions.showPackageInformation(selectedPackage);
+    async showPackageInformation(e: any) {
+        await this.props.actions.showPackageInformation(e.target.value, this.props.packages.packages);
     }
 
     async selectNetworks(selectedNetworks: any[]) {
         await this.props.actions.selectNetworks(selectedNetworks);
+    }
+
+    selectImage(e: any) {
+        this.props.actions.selectImage('virtualMachineCreateModal', e.target.value, this.props.images.images);
     }
 
     async selectPrimaryNic(nicIndex: number) {
@@ -41,11 +47,13 @@ class VirtualMachineCreateModalContainer extends React.Component {
     render() {
         return (
             <div>
-                {this.props.packages.isLoading || this.props.networks.isLoading  ? <LoadingSpinner/> : null}
+                {this.props.packages.isLoading || this.props.networks.isLoading || this.props.images.isLoading ? <LoadingSpinner/> : null}
                 <VirtualMachineCreateModal  selectPrimaryNic={this.selectPrimaryNic.bind(this)}
                                             errorMessages={this.props.errorMessages} 
-                                            networks={this.props.networks} 
-                                            packages={this.props.packages} 
+                                            networks={this.props.networks}
+                                            packages={this.props.packages}
+                                            selectImage={this.selectImage.bind(this)}
+                                            images={this.props.images}
                                             showPackageInformation={this.showPackageInformation.bind(this)} 
                                             selectNetworks={this.selectNetworks.bind(this)} 
                                             onSubmit={this.onSubmit.bind(this)} />
@@ -59,6 +67,7 @@ function mapStateToProps(state: any) {
     return {
         authSession: state.authSession,
         packages: state.packages,
+        images: state.images,
         networks: state.networks,
         errorMessages: selector(state, "errorMessages")
     };
@@ -66,7 +75,7 @@ function mapStateToProps(state: any) {
 
 function mapActionToProps(dispatch: any) {
     return {
-        actions: bindActionCreators({createVm, getAllPackages, showPackageInformation, getAllFabricNetworksByOwnerId, selectNetworks, selectPrimaryNic, hideCreateModal}, dispatch)
+        actions: bindActionCreators({createVm, getAllPackages, showPackageInformation, getAllFabricNetworksByOwnerId, selectNetworks, selectPrimaryNic, hideCreateModal, getAllImages, selectImage}, dispatch)
     };
 }
 

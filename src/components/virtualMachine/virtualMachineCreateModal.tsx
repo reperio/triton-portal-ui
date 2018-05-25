@@ -25,32 +25,46 @@ const VirtualMachineCreateModal = (props: any) => (
                 type="text" 
                 placeholder="Virtual Machine Name" />
         </FormGroup>
-        <FormGroup> 
-            <DropdownList   name="package" 
-                            valueField="uuid" 
-                            textField="name" 
-                            data={props.packages.packages}
-                            onSelect={props.showPackageInformation}
-                            placeholder="Select A Package" />
+        <FormGroup>
+            <Field  className="form-control"
+                    name='package'
+                    onChange={props.showPackageInformation}
+                    component="select">
+                        <option>-- Select a package --</option>
+                        {
+                            props.packages.packages.map((_package:any, i:number) => <option key={i} value={_package.uuid}>{_package.name}</option>)
+                        }
+            </Field>
         </FormGroup>
         {props.packages.showInformation
         ? <PackageInformation   data={props.packages.selectedPackage} 
                                 style={{marginBottom: "15px"}} />
         : null}
         <FormGroup>
-            <Field  name="image" 
-                    component="input" 
-                    className="form-control" 
-                    type="text" 
-                    placeholder="Image" />
+            <Field  className="form-control"
+                    name='image'
+                    onChange={props.selectImage}
+                    component="select">
+                        <option>-- Select an image --</option>
+                        {
+                            props.images.images.map((image:any, i:number) => <option key={i} value={image.uuid}>{image.name}</option>)
+                        }
+            </Field>
         </FormGroup>
+        {props.images.selectedImage !== null ?
         <FormGroup>
-            <Field  name="brand" 
-                    component="input" 
-                    className="form-control" 
-                    type="text" 
-                    placeholder="Brand" />
+            <Field  className="form-control"
+                    name='brand'
+                    component="select">
+                        <option> -- Select a brand -- </option>
+                        <option disabled={(props.images.selectedImage.type === 'zvol') || (props.images.selectedImage.type === 'lx-dataset')} key={0} value='joyent'>joyent</option>
+                        <option disabled={(props.images.selectedImage.type === 'lx-dataset') || (props.images.selectedImage.type === 'zone-dataset')} key={2} value='kvm'>kvm</option>
+                        <option disabled={(props.images.selectedImage.type === 'zone-dataset') || (props.images.selectedImage.type === 'zvol')} key={3} value='lx'>lx</option>
+                        {/* <option disabled={props.images.selectedImage.os === 'smartos'} key={4} value='sngl'>sngl</option> */}
+            </Field>
         </FormGroup>
+             : null}
+        
         <FormGroup>
             <label>Network Interfaces</label>
             <FieldArray name="nics" 
@@ -64,4 +78,4 @@ const VirtualMachineCreateModal = (props: any) => (
 
 
 // casted to <any> because reduxForm doesn't play nicely with other things
-export default reduxForm({ form: 'virtualMachineCreateModal', initialValues: {image: '7b5981c4-1889-11e7-b4c5-3f3bdfc9b88b', brand: 'lx'} })(VirtualMachineCreateModal) as any;
+export default reduxForm({ form: 'virtualMachineCreateModal' })(VirtualMachineCreateModal) as any;

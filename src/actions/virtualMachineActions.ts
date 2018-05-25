@@ -8,7 +8,6 @@ import { history } from '../store/history';
 import { change, submit, formValueSelector } from 'redux-form';
 import { store } from "../store/store";
 import nic from '../models/nicModel';
-import { serverService } from "../services/serverService";
 var Joi = require('joi-browser');
 
 export const virtualMachineActionTypes = {
@@ -412,8 +411,8 @@ export const hideResizeModal = () => async (dispatch: Dispatch<any>) => {
     dispatch(change('virtualMachineForm', 'showingResizeModal', false));
 }
 
-export const selectImage = (selectedImage : any) => async (dispatch: Dispatch<any>) => {
-    dispatch(change('virtualMachineReprovisionModal', 'selectedImage', selectedImage));
+export const selectImage = (formName: string, selectedImage : any) => async (dispatch: Dispatch<any>) => {
+    dispatch(change(formName, 'selectedImage', selectedImage));
 }
 
 export const selectPackage = (selectedPackage : any) => async (dispatch: Dispatch<any>) => {

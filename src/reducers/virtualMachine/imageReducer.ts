@@ -6,20 +6,26 @@ export function imageReducer(state = initialState.images, action: {type: string,
         case imageActionTypes.IMAGES_GET_START: {
             return {
                 isLoading: true,
-                images: []
+                images: [],
+                selectedImage: null
             };
         }
         case imageActionTypes.IMAGES_GET_END: {
             return {
                 isLoading: false,
-                images: action.payload.images
+                images: action.payload.images,
+                selectedImage: null
             };
         }
         case imageActionTypes.IMAGES_ERROR: {
             return {
                 isLoading: false,
-                images: []
+                images: [],
+                selectedImage: null
             };
+        }
+        case imageActionTypes.IMAGES_SELECT: {
+            return Object.assign({}, state, {selectedImage: action.payload.selectedImage});
         }
         default: {
             return state;

@@ -9,6 +9,7 @@ export const imageActionTypes = {
     IMAGE_GET_START: "IMAGE_GET_START",
     IMAGE_GET_END: "IMAGE_GET_END",
     IMAGE_ERROR: "IMAGE_ERROR",
+    IMAGES_SELECT: "IMAGES_SELECT"
 };
 
 function getErrorMessageFromStatusCode(statusCode: number) {
@@ -42,26 +43,53 @@ export const getAllImages = (formName: string) => async (dispatch: Dispatch<any>
     }
 };
 
-//getImageByUuid
-
 export const getImageByUuid = (image_uuid: string) => async (dispatch: Dispatch<any>) => {
     dispatch({
         type: imageActionTypes.IMAGE_GET_START
     });
     
     try {
+        dispatch(change('virtualMachineForm', 'image', null));
+        
         const image = (await imageService.getImageByUuid(image_uuid)).data.data;
 
-        dispatch(change('virtualMachineForm', 'imageName', image.name));
+        dispatch(change('virtualMachineForm', 'image', image));
 
         dispatch({
             type: imageActionTypes.IMAGE_GET_END
         });
     } catch (e) {
-        dispatch(change('virtualMachineForm', 'errorMessages', [getErrorMessageFromStatusCode(e.response != null ? e.response.status : null)]));
+        dispatch(change('imageInformationModal', 'errorMessages', [getErrorMessageFromStatusCode(e.response != null ? e.response.status : null)]));
 
         dispatch({
             type: imageActionTypes.IMAGES_ERROR
         });
     }
 };
+
+export const hideImageInformation = () => (dispatch: Dispatch<any>) => {
+    dispatch(change('virtualMachineForm', 'showingImageInformationModal', false));
+}
+
+export const showImageInformation = (row: any) => (dispatch: Dispatch<any>) => {
+    dispatch(change('virtualMachineForm', 'row', row));
+    dispatch(change('virtualMachineForm', 'showingImageInformationModal', true));
+}
+
+export const selectImage = (formName: string, uuid: string, images: any) => (dispatch: Dispatch<any>) => {
+    const image = images.filter((image:any) => {
+        if (image.uuid === uuid) {
+            return image;
+        }
+    });
+
+    if (image.length === 1) {
+        dispatch({
+            type: imageActionTypes.IMAGES_SELECT,
+            payload: {
+                selectedImage: image[0]
+            }
+        });
+        dispatch(change('virtualMachineCreateModal', 'brand', null));
+    }
+}

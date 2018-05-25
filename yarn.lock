@@ -25,9 +25,9 @@
   version "4.6.2"
   resolved "https://registry.yarnpkg.com/@types/history/-/history-4.6.2.tgz#12cfaba693ba20f114ed5765467ff25fdf67ddb0"
 
-"@types/material-ui@^0.21.2":
-  version "0.21.2"
-  resolved "https://registry.yarnpkg.com/@types/material-ui/-/material-ui-0.21.2.tgz#dd278eeb9e1b7a12e6df453fe1e5e887877c5659"
+"@types/material-ui@^0.20.8":
+  version "0.20.8"
+  resolved "https://registry.yarnpkg.com/@types/material-ui/-/material-ui-0.20.8.tgz#76e46f9accc48944f532c3b1038a2b46214454fa"
   dependencies:
     "@types/react" "*"
     "@types/react-addons-linked-state-mixin" "*"

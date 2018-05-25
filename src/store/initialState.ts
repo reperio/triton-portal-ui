@@ -12,7 +12,6 @@ export class State {
     networkCreate: StateNetworkCreate;
     networkActions: StateNetworkActions;
     images: StateImages;
-    virtualMachineExtendedDetails: StateVirtualMachineExtendedDetails;
 }
 
 export class StateAuthSession {
@@ -62,7 +61,7 @@ export class StatePackages {
 export class StateImages {
     isLoading: boolean;
     images: any[];
-    //selectedImage: any;
+    selectedImage: any;
 }
 
 export class StateSshKeys {
@@ -82,14 +81,6 @@ export class StateNetworkCreate {
 
 export class StateNetworkActions {
     isLoading: boolean;
-}
-
-export class StateVirtualMachineExtendedDetails {
-    isLoading: boolean;
-    imageName: string;
-    serverName: string;
-    packageName: string;
-    vm: any;
 }
 
 export const initialState: State = {
@@ -130,8 +121,8 @@ export const initialState: State = {
     },
     images: {
         isLoading: false,
-        images: []
-        //selectedImage: null
+        images: [],
+        selectedImage: null
     },
     networks: {
         isLoading: false,
@@ -143,12 +134,5 @@ export const initialState: State = {
     },
     networkActions: {
         isLoading: false
-    },
-    virtualMachineExtendedDetails: {
-        isLoading: false,
-        imageName: null,
-        packageName: null,
-        serverName: null,
-        vm: null
     }
 };

@@ -23,7 +23,7 @@ class VirtualMachineReprovisionModalContainer extends React.Component {
     }
 
     async selectImage(selectedImage: any) {
-        await this.props.actions.selectImage(selectedImage);
+        await this.props.actions.selectImage('virtualMachineReprovisionModal', selectedImage);
     }
 
     render() {

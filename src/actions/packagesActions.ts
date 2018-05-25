@@ -40,11 +40,19 @@ export const getAllPackages = (formName: string) => async (dispatch: Dispatch<an
     }
 };
 
-export const showPackageInformation = (selectedPackage: any) => async (dispatch: Dispatch<any>) => {
-    dispatch({
-        type: packagesActionTypes.PACKAGES_SELECT,
-        payload: {
-            selectedPackage
+export const showPackageInformation = (uuid: string, packages: any[]) => async (dispatch: Dispatch<any>) => {
+    const _package = packages.filter((_package:any) => {
+        if (_package.uuid === uuid) {
+            return _package;
         }
     });
+
+    if (_package.length === 1) {
+        dispatch({
+            type: packagesActionTypes.PACKAGES_SELECT,
+            payload: {
+                selectedPackage: _package[0]
+            }
+        });
+    }
 };
