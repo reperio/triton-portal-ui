@@ -6,7 +6,9 @@ export const imageActionTypes = {
     IMAGES_GET_START: "IMAGES_GET_START",
     IMAGES_GET_END: "IMAGES_GET_END",
     IMAGES_ERROR: "IMAGES_ERROR",
-    PACKAGES_SELECT: "PACKAGES_SELECT"
+    IMAGE_GET_START: "IMAGE_GET_START",
+    IMAGE_GET_END: "IMAGE_GET_END",
+    IMAGE_ERROR: "IMAGE_ERROR",
 };
 
 function getErrorMessageFromStatusCode(statusCode: number) {
@@ -15,7 +17,7 @@ function getErrorMessageFromStatusCode(statusCode: number) {
             return "An error occurred, please contact your system administrator"}
 }
 
-export const getAllImages = () => async (dispatch: Dispatch<any>) => {
+export const getAllImages = (formName: string) => async (dispatch: Dispatch<any>) => {
     dispatch({
         type: imageActionTypes.IMAGES_GET_START,
         payload: {
@@ -30,6 +32,30 @@ export const getAllImages = () => async (dispatch: Dispatch<any>) => {
             payload: {
                 images: images.data.data
             }
+        });
+    } catch (e) {
+        dispatch(change(formName, 'errorMessages', [getErrorMessageFromStatusCode(e.response != null ? e.response.status : null)]));
+
+        dispatch({
+            type: imageActionTypes.IMAGES_ERROR
+        });
+    }
+};
+
+//getImageByUuid
+
+export const getImageByUuid = (image_uuid: string) => async (dispatch: Dispatch<any>) => {
+    dispatch({
+        type: imageActionTypes.IMAGE_GET_START
+    });
+    
+    try {
+        const image = (await imageService.getImageByUuid(image_uuid)).data.data;
+
+        dispatch(change('virtualMachineForm', 'imageName', image.name));
+
+        dispatch({
+            type: imageActionTypes.IMAGE_GET_END
         });
     } catch (e) {
         dispatch(change('virtualMachineForm', 'errorMessages', [getErrorMessageFromStatusCode(e.response != null ? e.response.status : null)]));

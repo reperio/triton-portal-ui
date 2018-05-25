@@ -5,7 +5,7 @@ export function packagesReducer(state = initialState.packages, action: {type: st
     switch (action.type) {
         case packagesActionTypes.PACKAGES_GET_START: {
             return {
-                hasLoaded: false,
+                isLoading: true,
                 packages: [],
                 showInformation: false,
                 selectedPackage: null
@@ -13,7 +13,7 @@ export function packagesReducer(state = initialState.packages, action: {type: st
         }
         case packagesActionTypes.PACKAGES_GET_END: {
             return {
-                hasLoaded: true,
+                isLoading: false,
                 packages: action.payload.packages,
                 showInformation: false,
                 selectedPackage: null
@@ -21,7 +21,7 @@ export function packagesReducer(state = initialState.packages, action: {type: st
         }
         case packagesActionTypes.PACKAGES_ERROR: {
             return {
-                hasLoaded: false,
+                isLoading: false,
                 packages: [],
                 showInformation: false,
                 selectedPackage: null

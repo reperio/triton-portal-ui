@@ -5,15 +5,13 @@ export function networksReducer(state = initialState.networks, action: {type: st
     switch (action.type) {
         case networkActionTypes.NETWORKS_GET_START: {
             return {
-                hasLoaded: false,
+                isLoading: true,
                 networks: [],
-                selectedNetworks: null,
-                isLoading: true
+                selectedNetworks: null
             };
         }
         case networkActionTypes.NETWORKS_GET_END: {
             return {
-                hasLoaded: true,
                 networks: action.payload.networks,
                 selectedNetworks: null,
                 isLoading: false
@@ -21,14 +19,13 @@ export function networksReducer(state = initialState.networks, action: {type: st
         }
         case networkActionTypes.NETWORKS_ERROR: {
             return {
-                hasLoaded: false,
                 networks: [],
                 selectedNetworks: null,
                 isLoading: false
             };
         }
         case networkActionTypes.NETWORKS_SELECT: {
-            return Object.assign({}, state, {hasLoaded: true, selectedNetworks: action.payload.selectedNetworks});
+            return Object.assign({}, state, {selectedNetworks: action.payload.selectedNetworks});
         }
         default: {
             return state;

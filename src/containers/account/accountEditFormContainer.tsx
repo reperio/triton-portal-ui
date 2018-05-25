@@ -21,11 +21,10 @@ class AccountEditFormContainer extends React.Component {
     render() {
         return (
             <div>
-                {this.props.accountEdit.isLoading || !this.props.account.hasLoaded ? <LoadingSpinner/> : null}
-                {!this.props.account.hasLoaded ? null : 
+                {this.props.accountEdit.isLoading || this.props.account.isLoading  ? <LoadingSpinner/> : null}
                 <AccountEditForm    errorMessages={this.props.errorMessages} 
                                     initialValues={this.props.account.user} 
-                                    onSubmit={this.onSubmit.bind(this)} />}
+                                    onSubmit={this.onSubmit.bind(this)} />
             </div>
         );
     }

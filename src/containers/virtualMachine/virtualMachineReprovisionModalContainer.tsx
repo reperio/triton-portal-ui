@@ -11,7 +11,7 @@ class VirtualMachineReprovisionModalContainer extends React.Component {
     props: any;
 
     async componentDidMount() {
-        await this.props.actions.getAllImages();
+        await this.props.actions.getAllImages('virtualMachineReprovisionModal');
     }
 
     async closeReprovisionModal() {
@@ -19,9 +19,7 @@ class VirtualMachineReprovisionModalContainer extends React.Component {
     }
 
     async reprovisionModal(form: any) {
-        await this.closeReprovisionModal();
-        await this.props.actions.reprovisionVm(this.props.row.original.uuid, form.selectedImage.uuid);
-        await this.componentDidMount();
+        await this.props.actions.reprovisionVm(this.props.authSession.user.data.ownerUuid, this.props.row.original.uuid, form.selectedImage.uuid);
     }
 
     async selectImage(selectedImage: any) {
@@ -31,12 +29,12 @@ class VirtualMachineReprovisionModalContainer extends React.Component {
     render() {
         return (
             <div>
-                {!this.props.images.hasLoaded ? <LoadingSpinner/> : 
-                    <VirtualMachineReprovisionModal selectImage={this.selectImage.bind(this)} 
-                                                    close={this.closeReprovisionModal.bind(this)} 
-                                                    onSubmit={this.reprovisionModal.bind(this)} 
-                                                    initialValues={{image_uuid: this.props.row.original.image_uuid, images: this.props.images.images}}
-                                                    errorMessages={this.props.errorMessages}/>}
+                {this.props.images.isLoading ? <LoadingSpinner/>: null}
+                <VirtualMachineReprovisionModal selectImage={this.selectImage.bind(this)} 
+                                                close={this.closeReprovisionModal.bind(this)} 
+                                                onSubmit={this.reprovisionModal.bind(this)} 
+                                                initialValues={{image_uuid: this.props.row.original.image_uuid, images: this.props.images.images}}
+                                                errorMessages={this.props.errorMessages}/>
             </div>
         );
     }

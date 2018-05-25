@@ -7,7 +7,7 @@ const VirtualMachineRenameModal = (props: any) => (
     <form onSubmit={props.handleSubmit(props.onSubmit)}>
         {props.errorMessages != null && props.errorMessages.length > 0 ? <Error errors={props.errorMessages}/> : null}
         <FormGroup>
-            <label>Rename Virtual Machine alias</label>
+            <label>Alias</label>
             <Field  name="alias"
                     component="input" 
                     className="form-control" 

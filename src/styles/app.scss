@@ -133,3 +133,70 @@ html, body {
   left: 50%;
   top: 50%;
 }
+
+.row {
+  margin-left: 0px;
+  margin-right: 0px;
+}
+
+.table-row-container {
+    background-color: white;
+    border-bottom: solid;
+    border-color: #f3f3f3;
+    border-width: 1px;
+    padding: 7px;
+}
+
+.table-row-bottom-container {
+  background-color: white;
+  padding: 7px;
+}
+
+.table-row-property {
+  color: gray;
+}
+
+.nested-table-container {
+  padding: "10px";
+  min-width: "620px";
+}
+
+.danger > a {
+  color: red !important;
+}
+
+h2, h3 {
+  color: $primary-color !important;
+}
+
+.rt-thead {
+  background-color: $primary-color;
+}
+
+.rt-resizable-header-content {
+  color: white;
+}
+
+.-odd{
+  background-color: $table-row-odd !important;
+  height: 45px;
+  position: relative;
+  line-height: 30px;
+}
+
+.-even{
+  height: 45px;
+  position: relative;
+  line-height: 30px;
+}
+
+.table-action-button-toolbar {
+  top: 0;
+  position: absolute;
+
+  button {
+    ul {
+      position: relative;
+    }
+  }
+}

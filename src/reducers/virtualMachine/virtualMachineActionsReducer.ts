@@ -33,7 +33,7 @@ export function virtualMachineActionsReducer(state = initialState.virtualMachine
                 isLoading: false
             };
         }
-        case virtualMachineActionTypes.VIRTUAL_MACHINE_START_START: {
+        case virtualMachineActionTypes.VIRTUAL_MACHINE_REBOOT_START: {
             return {
                 isLoading: true
             };

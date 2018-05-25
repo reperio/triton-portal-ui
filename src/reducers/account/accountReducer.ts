@@ -5,19 +5,19 @@ export function accountReducer(state = initialState.account, action: {type: stri
     switch (action.type) {
         case accountActionTypes.USER_LOAD_START: {
             return {
-                hasLoaded: false,
+                isLoading: true,
                 user: state.user
             };
         }
         case accountActionTypes.USER_LOAD_END: {
             return {
-                hasLoaded: true,
+                isLoading: false,
                 user: action.payload.user
             };
         }
         case accountActionTypes.USER_LOAD_ERROR: {
             return {
-                hasLoaded: false,
+                isLoading: false,
                 user: []
             };
         }

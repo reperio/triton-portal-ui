@@ -2,12 +2,11 @@ import React from 'react'
 import { connect } from "react-redux";
 import { createFabricNetwork } from "../../actions/networkActions";
 import { bindActionCreators } from "redux";
-import NetworkCreateForm from "../../components/network/networkCreateForm";
-import LoadingSpinner from '../../components/misc/loadingSpinner';
 import CreateNetworkModel from '../../models/createNetworkModel';
 import { formValueSelector } from 'redux-form';
+import NetworkCreateModal from '../../components/network/networkCreateModal';
 
-class NetworkCreateFormContainer extends React.Component {
+class NetworkCreateModalContainer extends React.Component {
     props: any;
 
     async onSubmit(network: CreateNetworkModel) {
@@ -17,8 +16,7 @@ class NetworkCreateFormContainer extends React.Component {
     render() {
         return (
             <div>
-                {this.props.networkCreate.isLoading ? <LoadingSpinner/> : null}
-                <NetworkCreateForm  errorMessages={this.props.errorMessages} 
+                <NetworkCreateModal errorMessages={this.props.errorMessages} 
                                     onSubmit={this.onSubmit.bind(this)} />
             </div>
         );
@@ -26,9 +24,8 @@ class NetworkCreateFormContainer extends React.Component {
 }
 
 function mapStateToProps(state: any) {
-    const selector = formValueSelector('networkCreateForm');
+    const selector = formValueSelector('networkCreateModal');
     return {
-        networkCreate: state.networkCreate,
         authSession: state.authSession,
         errorMessages: selector(state, 'errorMessages')
     };
@@ -40,4 +37,4 @@ function mapActionToProps(dispatch: any) {
     };
 }
 
-export default connect(mapStateToProps, mapActionToProps)(NetworkCreateFormContainer);
+export default connect(mapStateToProps, mapActionToProps)(NetworkCreateModalContainer);

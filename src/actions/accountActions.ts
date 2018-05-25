@@ -141,10 +141,7 @@ export const editAccount = (user: EditAccountModel, userId: string) => async (di
 
 export const getAccount = (userId: string) => async (dispatch: Dispatch<any>) => {
     dispatch({
-        type: accountActionTypes.USER_LOAD_START,
-        payload: {
-            hasLoaded: false
-        }
+        type: accountActionTypes.USER_LOAD_START
     });
     try {
         const {data: {data: user}} = await userService.getUserById(userId);
@@ -152,7 +149,6 @@ export const getAccount = (userId: string) => async (dispatch: Dispatch<any>) =>
         dispatch({
             type: accountActionTypes.USER_LOAD_END,
             payload: {
-                hasLoaded: true,
                 user: user
             }
         });

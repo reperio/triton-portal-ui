@@ -8,9 +8,7 @@ import PublicRouteContainer from "../../containers/route/publicRouteContainer";
 import MainDashboardContainer from "../../containers/main/mainDashboardContainer";
 import VirtualMachineContainer from "../../containers/virtualMachine/virtualMachineContainer";
 import AccountCreateFormContainer from '../../containers/account/accountCreateFormContainer';
-import VirtualMachineCreateFormContainer from '../../containers/virtualMachine/virtualMachineCreateFormContainer';
 import AccountEditFormContainer from '../../containers/account/accountEditFormContainer';
-import NetworkCreateFormContainer from '../../containers/network/networkCreateFormContainer';
 import NetworkContainer from '../../containers/network/networkContainer';
 
 const Routes = (props: any) => (
@@ -19,11 +17,9 @@ const Routes = (props: any) => (
             <PublicRouteContainer exact path="/login" component={LoginFormContainer} />
             <PrivateRouteContainer exact path="/home" component={MainDashboardContainer} />
             <PrivateRouteContainer exact path="/virtual-machines" component={VirtualMachineContainer} />
-            <PrivateRouteContainer exact path="/create-virtual-machine" component={VirtualMachineCreateFormContainer} />
             <PublicRouteContainer exact path="/create-account" component={AccountCreateFormContainer} />
             <PrivateRouteContainer exact path="/edit-account" component={AccountEditFormContainer} />
             <PrivateRouteContainer exact path="/networks" component={NetworkContainer} />
-            <PrivateRouteContainer exact path="/create-network" component={NetworkCreateFormContainer} />
             <Route>
                 <Redirect to="/home"/>
             </Route>

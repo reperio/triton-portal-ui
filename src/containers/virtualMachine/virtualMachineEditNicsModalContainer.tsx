@@ -33,14 +33,14 @@ class VirtualMachineEditNicsModalContainer extends React.Component {
     render() {
         return (
             <div>
-                {!this.props.networks.hasLoaded ? <LoadingSpinner/> : 
-                    <VirtualMachineEditNicsModal    close={this.closeEditNicModal.bind(this)} 
-                                                    onSubmit={this.editNicModal.bind(this)} 
-                                                    networks={this.props.networks} 
-                                                    selectNetworks={this.selectNetworks.bind(this)}
-                                                    initialValues={{nics: this.props.row.original.nics}}
-                                                    selectPrimaryNic={this.selectPrimaryNic.bind(this)}
-                                                    errorMessages={this.props.errorMessages}/>}
+                {this.props.networks.isLoading ? <LoadingSpinner/> : null}
+                <VirtualMachineEditNicsModal    close={this.closeEditNicModal.bind(this)} 
+                                                onSubmit={this.editNicModal.bind(this)} 
+                                                networks={this.props.networks} 
+                                                selectNetworks={this.selectNetworks.bind(this)}
+                                                initialValues={{nics: this.props.row.original.nics}}
+                                                selectPrimaryNic={this.selectPrimaryNic.bind(this)}
+                                                errorMessages={this.props.errorMessages}/>
             </div>
         );
     }

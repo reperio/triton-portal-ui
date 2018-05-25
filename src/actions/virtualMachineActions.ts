@@ -8,6 +8,7 @@ import { history } from '../store/history';
 import { change, submit, formValueSelector } from 'redux-form';
 import { store } from "../store/store";
 import nic from '../models/nicModel';
+import { serverService } from "../services/serverService";
 var Joi = require('joi-browser');
 
 export const virtualMachineActionTypes = {
@@ -91,6 +92,8 @@ export const getVmsByOwner = (owner_uuid: string) => async (dispatch: Dispatch<a
                 vms: vms.data.data
             }
         });
+
+        dispatch(change('virtualMachineForm', 'errorMessages', []));
     } catch (e) {
         dispatch(change('virtualMachineForm', 'errorMessages', [getErrorMessageFromStatusCode(e.response != null ? e.response.status : null)]));
 
@@ -109,11 +112,13 @@ export const startVm = (owner_uuid: string, uuid: string) => async (dispatch: Di
     try {
         const vm = await virtualMachineService.startVm(owner_uuid, uuid);
 
+        getVmsByOwner(owner_uuid)(dispatch);
+
         dispatch({
             type: virtualMachineActionTypes.VIRTUAL_MACHINE_START_END
         });
     } catch (e) {
-        dispatch(change('virtualMachineForm', 'errorMessages', [getErrorMessageFromStatusCode(e.response != null ? e.response.status : null)]));
+        dispatch(change('virtualMachineForm', 'errorMessages', [e.response.data.message]));
 
         dispatch({
             type: virtualMachineActionTypes.VIRTUAL_MACHINE_START_ERROR
@@ -129,11 +134,13 @@ export const stopVm = (owner_uuid: string, uuid: string) => async (dispatch: Dis
     try {
         const vm = await virtualMachineService.stopVm(owner_uuid, uuid);
 
+        getVmsByOwner(owner_uuid)(dispatch);
+
         dispatch({
             type: virtualMachineActionTypes.VIRTUAL_MACHINE_STOP_END
         });
     } catch (e) {
-        dispatch(change('virtualMachineForm', 'errorMessages', [getErrorMessageFromStatusCode(e.response != null ? e.response.status : null)]));
+        dispatch(change('virtualMachineForm', 'errorMessages', [e.response.data.message]));
 
         dispatch({
             type: virtualMachineActionTypes.VIRTUAL_MACHINE_STOP_ERROR
@@ -175,13 +182,17 @@ export const deleteVm = (owner_uuid: string, uuid: string) => async (dispatch: D
     try {
         const vm = await virtualMachineService.deleteVm(owner_uuid, uuid);
 
-        dispatch(change('virtualMachineForm', 'row', null));
+        dispatch(change('virtualMachineDeleteModal', 'row', null));
+
+        hideDeleteModal()(dispatch);
+
+        getVmsByOwner(owner_uuid)(dispatch);
 
         dispatch({
             type: virtualMachineActionTypes.VIRTUAL_MACHINE_DELETE_END
         });
     } catch (e) {
-        dispatch(change('virtualMachineForm', 'errorMessages', [getErrorMessageFromStatusCode(e.response != null ? e.response.status : null)]));
+        dispatch(change('virtualMachineDeleteModal', 'errorMessages', [e.response.data.message]));
 
         dispatch({
             type: virtualMachineActionTypes.VIRTUAL_MACHINE_DELETE_ERROR
@@ -194,7 +205,7 @@ export const showDeleteModal = (row: any) => async (dispatch: Dispatch<any>) => 
     dispatch(change('virtualMachineForm', 'showingDeleteModal', true));
 }
 
-export const hideDeleteModal = (row: any) => async (dispatch: Dispatch<any>) => {
+export const hideDeleteModal = () => async (dispatch: Dispatch<any>) => {
     dispatch(change('virtualMachineForm', 'showingDeleteModal', false));
 }
 
@@ -233,7 +244,7 @@ export const createVm = (owner_uuid: string, alias: string, networks: nic[], bra
         }
     }
 
-    dispatch(change('virtualMachineCreateForm', 'errorMessages', errors));
+    dispatch(change('virtualMachineCreateModal', 'errorMessages', errors));
     
     if (errors.length == 0) {
         dispatch({
@@ -247,9 +258,12 @@ export const createVm = (owner_uuid: string, alias: string, networks: nic[], bra
                 type: virtualMachineActionTypes.VIRTUAL_MACHINE_CREATE_END
             });
 
-            history.push('/virtual-machines');
+            hideCreateModal()(dispatch);
+
+            getVmsByOwner(owner_uuid)(dispatch);
+
         } catch (e) {
-            dispatch(change('virtualMachineCreateForm', 'errorMessages', [e.response.data.message]));
+            dispatch(change('virtualMachineCreateModal', 'errorMessages', [e.response.data.message]));
             dispatch({
                 type: virtualMachineActionTypes.VIRTUAL_MACHINE_CREATE_ERROR
             });
@@ -257,11 +271,19 @@ export const createVm = (owner_uuid: string, alias: string, networks: nic[], bra
     }
 };
 
+export const showCreateModal = () => async (dispatch: Dispatch<any>) => {
+    dispatch(change('virtualMachineForm', 'showingCreateModal', true));
+}
+
+export const hideCreateModal = () => async (dispatch: Dispatch<any>) => {
+    dispatch(change('virtualMachineForm', 'showingCreateModal', false));
+}
+
 export const remoteFormSubmit = (formName: string) => async (dispatch: Dispatch<any>) => {
     dispatch(submit(formName));
 }
 
-export const renameVm = (uuid: string, alias: string) => async (dispatch: Dispatch<any>) => {
+export const renameVm = (owner_uuid: string, uuid: string, alias: string) => async (dispatch: Dispatch<any>) => {
     const schema = Joi.object().keys({
         alias: Joi.string().required().label('Alias')
     }).options({ abortEarly: false });
@@ -269,7 +291,7 @@ export const renameVm = (uuid: string, alias: string) => async (dispatch: Dispat
     let errors = await inputValidationService.validate({
         alias}, schema);
 
-    dispatch(change('virtualMachineForm', 'errorMessages', errors));
+    dispatch(change('virtualMachineRenameModal', 'errorMessages', errors));
     if (errors.length == 0) {
         try {
             dispatch({
@@ -278,13 +300,15 @@ export const renameVm = (uuid: string, alias: string) => async (dispatch: Dispat
 
             await virtualMachineService.renameVm(uuid, alias);
 
-            hideRenameModal(null)(dispatch);
+            hideRenameModal()(dispatch);
+
+            getVmsByOwner(owner_uuid)(dispatch);
     
             dispatch({
                 type: virtualMachineActionTypes.VIRTUAL_MACHINE_RENAME_END
             });
         } catch (e) {
-            dispatch(change('virtualMachineForm', 'errorMessages', [getErrorMessageFromStatusCode(e.response != null ? e.response.status : null)]));
+            dispatch(change('virtualMachineRenameModal', 'errorMessages', [e.response.data.message]));
 
             dispatch({
                 type: virtualMachineActionTypes.VIRTUAL_MACHINE_RENAME_ERROR
@@ -298,11 +322,11 @@ export const showRenameModal = (row: any) => async (dispatch: Dispatch<any>) => 
     dispatch(change('virtualMachineForm', 'showingRenameModal', true));
 }
 
-export const hideRenameModal = (row: any) => async (dispatch: Dispatch<any>) => {
+export const hideRenameModal = () => async (dispatch: Dispatch<any>) => {
     dispatch(change('virtualMachineForm', 'showingRenameModal', false));
 }
 
-export const reprovisionVm = (uuid: string, image_uuid: string) => async (dispatch: Dispatch<any>) => {
+export const reprovisionVm = (owner_uuid: string, uuid: string, image_uuid: string) => async (dispatch: Dispatch<any>) => {
     const schema = Joi.object().keys({
         image_uuid: Joi.string().guid().required().label('Image')
     }).options({ abortEarly: false });
@@ -310,7 +334,7 @@ export const reprovisionVm = (uuid: string, image_uuid: string) => async (dispat
     let errors = await inputValidationService.validate({
         image_uuid}, schema);
 
-    dispatch(change('virtualMachineForm', 'errorMessages', errors));
+    dispatch(change('virtualMachineReprovisionModal', 'errorMessages', errors));
     if (errors.length == 0) {
         try {
             dispatch({
@@ -319,13 +343,15 @@ export const reprovisionVm = (uuid: string, image_uuid: string) => async (dispat
 
             await virtualMachineService.reprovisionVm(uuid, image_uuid);
 
-            hideReprovisionModal(null)(dispatch);
+            hideReprovisionModal()(dispatch);
+
+            getVmsByOwner(owner_uuid)(dispatch);
     
             dispatch({
                 type: virtualMachineActionTypes.VIRTUAL_MACHINE_REPROVISION_END
             });
         } catch (e) {
-            dispatch(change('virtualMachineForm', 'errorMessages', [getErrorMessageFromStatusCode(e.response != null ? e.response.status : null)]));
+            dispatch(change('virtualMachineReprovisionModal', 'errorMessages', [e.response.data.message]));
 
             dispatch({
                 type: virtualMachineActionTypes.VIRTUAL_MACHINE_REPROVISION_ERROR
@@ -339,11 +365,11 @@ export const showReprovisionModal = (row: any) => async (dispatch: Dispatch<any>
     dispatch(change('virtualMachineForm', 'showingReprovisionModal', true));
 }
 
-export const hideReprovisionModal = (row: any) => async (dispatch: Dispatch<any>) => {
+export const hideReprovisionModal = () => async (dispatch: Dispatch<any>) => {
     dispatch(change('virtualMachineForm', 'showingReprovisionModal', false));
 }
 
-export const resizeVm = (uuid: string, billing_id: string) => async (dispatch: Dispatch<any>) => {
+export const resizeVm = (owner_uuid: string, uuid: string, billing_id: string) => async (dispatch: Dispatch<any>) => {
     const schema = Joi.object().keys({
         billing_id: Joi.string().guid().required().label('Package')
     }).options({ abortEarly: false });
@@ -351,7 +377,7 @@ export const resizeVm = (uuid: string, billing_id: string) => async (dispatch: D
     let errors = await inputValidationService.validate({
         billing_id}, schema);
 
-    dispatch(change('virtualMachineForm', 'errorMessages', errors));
+    dispatch(change('virtualMachineResizeModal', 'errorMessages', errors));
     if (errors.length == 0) {
         try {
             dispatch({
@@ -360,13 +386,15 @@ export const resizeVm = (uuid: string, billing_id: string) => async (dispatch: D
 
             await virtualMachineService.resizeVm(uuid, billing_id);
 
-            hideResizeModal(null)(dispatch);
+            hideResizeModal()(dispatch);
+
+            getVmsByOwner(owner_uuid)(dispatch);
     
             dispatch({
                 type: virtualMachineActionTypes.VIRTUAL_MACHINE_RESIZE_END
             });
         } catch (e) {
-            dispatch(change('virtualMachineForm', 'errorMessages', [getErrorMessageFromStatusCode(e.response != null ? e.response.status : null)]));
+            dispatch(change('virtualMachineResizeModal', 'errorMessages', [e.response.data.message]));
 
             dispatch({
                 type: virtualMachineActionTypes.VIRTUAL_MACHINE_RESIZE_ERROR
@@ -380,7 +408,7 @@ export const showResizeModal = (row: any) => async (dispatch: Dispatch<any>) => 
     dispatch(change('virtualMachineForm', 'showingResizeModal', true));
 }
 
-export const hideResizeModal = (row: any) => async (dispatch: Dispatch<any>) => {
+export const hideResizeModal = () => async (dispatch: Dispatch<any>) => {
     dispatch(change('virtualMachineForm', 'showingResizeModal', false));
 }
 
@@ -437,12 +465,14 @@ export const editVmNics = (nics: any[], id: string, ownerUuid: string) => async 
 
             await virtualMachineService.editNics(newNetworksObject, id);
 
-            hideNicModal(null)(dispatch);
+            hideNicModal()(dispatch);
             
             getVmsByOwner(ownerUuid)(dispatch);
             
             dispatch({ type: virtualMachineActionTypes.VIRTUAL_MACHINE_EDIT_NICS_END });
         } catch(e) {
+            dispatch(change('virtualMachineEditNicsModal', 'errorMessages', [e.response.data.message]));
+
             dispatch({ type: virtualMachineActionTypes.VIRTUAL_MACHINE_EDIT_NICS_ERROR });
         }
     }
@@ -453,6 +483,6 @@ export const showNicModal = (row: any) => async (dispatch: Dispatch<any>) => {
     dispatch(change('virtualMachineForm', 'showingNicModal', true));
 }
 
-export const hideNicModal = (row: any) => async (dispatch: Dispatch<any>) => {
+export const hideNicModal = () => async (dispatch: Dispatch<any>) => {
     dispatch(change('virtualMachineForm', 'showingNicModal', false));
 }

@@ -11,7 +11,7 @@ class VirtualMachineResizeModalContainer extends React.Component {
     props: any;
 
     async componentDidMount() {
-        await this.props.actions.getAllPackages();
+        await this.props.actions.getAllPackages('virtualMachineResizeModal');
     }
 
     async closeResizeModal() {
@@ -19,9 +19,7 @@ class VirtualMachineResizeModalContainer extends React.Component {
     }
 
     async resizeModal(form: any) {
-        await this.closeResizeModal();
-        await this.props.actions.resizeVm(this.props.row.original.uuid, form.selectedPackage.uuid);
-        await this.componentDidMount();
+        await this.props.actions.resizeVm(this.props.authSession.user.data.ownerUuid, this.props.row.original.uuid, form.selectedPackage.uuid);
     }
 
     async selectPackage(selectedPackage: any) {
@@ -31,12 +29,12 @@ class VirtualMachineResizeModalContainer extends React.Component {
     render() {
         return (
             <div>
-                {!this.props.packages.hasLoaded ? <LoadingSpinner/> : 
-                    <VirtualMachineResizeModal  selectPackage={this.selectPackage.bind(this)} 
-                                                close={this.closeResizeModal.bind(this)} 
-                                                onSubmit={this.resizeModal.bind(this)}
-                                                errorMessages={this.props.errorMessages}
-                                                initialValues={{billing_id: this.props.row.original.billing_id, packages: this.props.packages.packages}} />}
+                {this.props.packages.isLoading ? <LoadingSpinner/> : null}
+                <VirtualMachineResizeModal  selectPackage={this.selectPackage.bind(this)} 
+                                            close={this.closeResizeModal.bind(this)} 
+                                            onSubmit={this.resizeModal.bind(this)}
+                                            errorMessages={this.props.errorMessages}
+                                            initialValues={{billing_id: this.props.row.original.billing_id, packages: this.props.packages.packages}} />
             </div>
         );
     }

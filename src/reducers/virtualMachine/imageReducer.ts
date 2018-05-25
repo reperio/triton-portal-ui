@@ -5,19 +5,19 @@ export function imageReducer(state = initialState.images, action: {type: string,
     switch (action.type) {
         case imageActionTypes.IMAGES_GET_START: {
             return {
-                hasLoaded: false,
+                isLoading: true,
                 images: []
             };
         }
         case imageActionTypes.IMAGES_GET_END: {
             return {
-                hasLoaded: true,
+                isLoading: false,
                 images: action.payload.images
             };
         }
         case imageActionTypes.IMAGES_ERROR: {
             return {
-                hasLoaded: false,
+                isLoading: false,
                 images: []
             };
         }

@@ -15,7 +15,7 @@ function getErrorMessageFromStatusCode(statusCode: number) {
             return "An error occurred, please contact your system administrator"}
 }
 
-export const getAllPackages = () => async (dispatch: Dispatch<any>) => {
+export const getAllPackages = (formName: string) => async (dispatch: Dispatch<any>) => {
     dispatch({
         type: packagesActionTypes.PACKAGES_GET_START,
         payload: {
@@ -33,11 +33,10 @@ export const getAllPackages = () => async (dispatch: Dispatch<any>) => {
         });
     } catch (e) {
         dispatch({
-            type: packagesActionTypes.PACKAGES_ERROR,
-            payload: {
-                message: getErrorMessageFromStatusCode(e.response != null ? e.response.status : null)
-            }
+            type: packagesActionTypes.PACKAGES_ERROR
         });
+
+        dispatch(change(formName, 'errorMessages', [getErrorMessageFromStatusCode(e.response != null ? e.response.status : null)]));
     }
 };
 

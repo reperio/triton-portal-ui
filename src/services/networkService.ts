@@ -2,8 +2,8 @@ import { axios } from "./axiosService";
 import CreateNetworkModel from '../models/createNetworkModel';
 
 class NetworkService {
-    async getFabricNetworksByOwnerAndVLanId(ownerId: string, vlanId: string) {
-        return await axios.get(`/triton/fabrics/${ownerId}/vlans/${vlanId}/networks`);
+    async getFabricNetworksByOwnerAndVLanIds(ownerId: string, vlan_ids: number[]) {
+        return await axios.post(`/triton/fabrics/${ownerId}/fabricNetworks`, {vlan_ids});
     }
 
     async getFabricLansByOwnerId(ownerId: string) {

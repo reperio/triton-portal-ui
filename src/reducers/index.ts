@@ -12,7 +12,6 @@ import { networksReducer } from "./network/networkReducer";
 import { networkCreateReducer } from "./network/networkCreateReducer";
 import { networkActionsReducer } from "./network/networkActionsReducer";
 import { imageReducer } from "./virtualMachine/imageReducer";
-
 export const rootReducer = combineReducers({
     form: formReducer,
     authSession: authSessionReducer,

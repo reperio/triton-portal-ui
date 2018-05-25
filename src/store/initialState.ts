@@ -12,6 +12,7 @@ export class State {
     networkCreate: StateNetworkCreate;
     networkActions: StateNetworkActions;
     images: StateImages;
+    virtualMachineExtendedDetails: StateVirtualMachineExtendedDetails;
 }
 
 export class StateAuthSession {
@@ -34,7 +35,7 @@ export class StateVirtualMachineCreate {
 }
 
 export class StateVirtualMachineLoad {
-    hasLoaded: boolean;
+    isLoading: boolean;
     vm: any;
 }
 
@@ -47,19 +48,19 @@ export class StateAccountEdit {
 }
 
 export class StateAccount {
-    hasLoaded: boolean;
+    isLoading: boolean;
     user: any;
 }
 
 export class StatePackages {
-    hasLoaded: boolean;
+    isLoading: boolean;
     packages: any[];
     showInformation: boolean;
     selectedPackage: any;
 }
 
 export class StateImages {
-    hasLoaded: boolean;
+    isLoading: boolean;
     images: any[];
     //selectedImage: any;
 }
@@ -70,7 +71,6 @@ export class StateSshKeys {
 }
 
 export class StateNetworks {
-    hasLoaded: boolean;
     isLoading: boolean;
     networks: any[];
     selectedNetworks: any[];
@@ -82,6 +82,14 @@ export class StateNetworkCreate {
 
 export class StateNetworkActions {
     isLoading: boolean;
+}
+
+export class StateVirtualMachineExtendedDetails {
+    isLoading: boolean;
+    imageName: string;
+    serverName: string;
+    packageName: string;
+    vm: any;
 }
 
 export const initialState: State = {
@@ -101,7 +109,7 @@ export const initialState: State = {
         isLoading: false
     },
     virtualMachineLoad: {
-        hasLoaded: false,
+        isLoading: false,
         vm: null
     },
     accountCreate: {
@@ -111,24 +119,23 @@ export const initialState: State = {
         isLoading: false
     },
     account: {
-        hasLoaded: false,
+        isLoading: false,
         user: null
     },
     packages: {
-        hasLoaded: false,
+        isLoading: false,
         packages: [],
         showInformation: false,
         selectedPackage: null
     },
     images: {
-        hasLoaded: false,
+        isLoading: false,
         images: []
         //selectedImage: null
     },
     networks: {
-        hasLoaded: false,
-        networks: [],
         isLoading: false,
+        networks: [],
         selectedNetworks: []
     },
     networkCreate: {
@@ -136,5 +143,12 @@ export const initialState: State = {
     },
     networkActions: {
         isLoading: false
+    },
+    virtualMachineExtendedDetails: {
+        isLoading: false,
+        imageName: null,
+        packageName: null,
+        serverName: null,
+        vm: null
     }
 };

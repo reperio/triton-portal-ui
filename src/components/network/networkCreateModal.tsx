@@ -2,8 +2,8 @@ import React from 'react'
 import { Field, reduxForm, formValueSelector, FieldArray } from 'redux-form'
 import { FormGroup, Button } from "react-bootstrap";
 import { DropdownList } from 'react-widgets'
-import 'react-widgets/dist/css/react-widgets.css';
 import Error from '../../components/misc/error';
+import 'react-widgets/dist/css/react-widgets.css';
 
 const fieldArrayComponent = (props: any) => (
     <div>
@@ -36,10 +36,9 @@ const fieldArrayComponent = (props: any) => (
     </div>
 );
 
-const NetworkCreateForm = (props: any) => (
-    <form onSubmit={props.handleSubmit(props.onSubmit)} className="redux-form">
+const NetworkCreateModal = (props: any) => (
+    <form onSubmit={props.handleSubmit(props.onSubmit)}>
         {props.errorMessages != null && props.errorMessages.length > 0 ? <Error errors={props.errorMessages}/> : null}
-        <h2>Create a network</h2>
         <FormGroup>
         <Field  name="name" 
                 component="input" 
@@ -91,11 +90,8 @@ const NetworkCreateForm = (props: any) => (
         </FormGroup>
         <FieldArray name="resolvers" 
                     component={fieldArrayComponent}/>
-        <FormGroup>
-            <Button bsStyle="primary" type="submit">Create</Button>
-        </FormGroup>
     </form>
 );
 
 // casted to <any> because reduxForm doesn't play nicely with other things
-export default reduxForm({ form: 'networkCreateForm' })(NetworkCreateForm) as any;
+export default reduxForm({ form: 'networkCreateModal' })(NetworkCreateModal) as any;

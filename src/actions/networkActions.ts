@@ -3,7 +3,7 @@ import { networkService } from "../services/networkService";
 import CreateNetworkModel from '../models/createNetworkModel';
 import { inputValidationService } from "../services/inputValidationService";
 import { history } from '../store/history';
-import { change } from 'redux-form';
+import { change, submit } from 'redux-form';
 var Joi = require('joi-browser');
 
 export const networkActionTypes = {
@@ -31,18 +31,16 @@ export const getAllFabricNetworksByOwnerId = (ownerId: string) => async (dispatc
     });
     
     try {
-        const fabricVlans = (await networkService.getFabricLansByOwnerId(ownerId)).data.data;
-        const networks: any[] = await Promise.all(fabricVlans.map(async (vlan:any): Promise<any> => {
-            let network = (await networkService.getFabricNetworksByOwnerAndVLanId(ownerId, vlan.vlan_id)).data.data[0];
-            return network;
-        }));
+        const fabricVlanIds = (await networkService.getFabricLansByOwnerId(ownerId)).data.data.map((fabricVlan:any) => fabricVlan.vlan_id);
+        const fabricNetworks = (await networkService.getFabricNetworksByOwnerAndVLanIds(ownerId, fabricVlanIds)).data.data;
 
         dispatch({
             type: networkActionTypes.NETWORKS_GET_END,
             payload: {
-                networks: networks.filter(function(n){ return n !== undefined }) 
+                networks: fabricNetworks
             }
         });
+        dispatch(change('networkForm', 'errorMessages', []));
     } catch (e) {
         dispatch(change('networkForm', 'errorMessages', [getErrorMessageFromStatusCode(e.response != null ? e.response.status : null)]));
 
@@ -90,7 +88,7 @@ export const createFabricNetwork = (network: CreateNetworkModel, ownerUuid: stri
         resolvers: network.resolvers,
         description: network.description}, schema);
 
-    dispatch(change('networkCreateForm', 'errorMessages', errors));
+    dispatch(change('networkCreateModal', 'errorMessages', errors));
 
     if (errors.length == 0) {
         dispatch({
@@ -105,9 +103,12 @@ export const createFabricNetwork = (network: CreateNetworkModel, ownerUuid: stri
                 type: networkActionTypes.NETWORK_CREATE_END
             });
 
-            history.push('/networks');
+            hideCreateModal()(dispatch);
+
+            getAllFabricNetworksByOwnerId(ownerUuid)(dispatch);
+
         } catch (e) {
-            dispatch(change('networkCreateForm', 'errorMessages', [getErrorMessageFromStatusCode(e.response != null ? e.response.status : null)]));
+            dispatch(change('networkCreateModal', 'errorMessages', [getErrorMessageFromStatusCode(e.response != null ? e.response.status : null)]));
             
             dispatch({
                 type: networkActionTypes.NETWORK_CREATE_ERROR
@@ -129,13 +130,37 @@ export const deleteFabricNetwork = (owner_uuid: string, vlanId:number, uuid: str
         dispatch({
             type: networkActionTypes.NETWORK_DELETE_END
         });
+
+        hideDeleteModal()(dispatch);
+
+        getAllFabricNetworksByOwnerId(owner_uuid)(dispatch);
         
-        history.push('/networks');
     } catch (e) {
-        dispatch(change('networkForm', 'errorMessages', [e.response.data.message]));
-        
+        dispatch(change('networkDeleteModal', 'errorMessages', [e.response.data.message]));
+
         dispatch({
             type: networkActionTypes.NETWORK_DELETE_ERROR
         });
     }
 };
+
+export const showDeleteModal = (row: any) => async (dispatch: Dispatch<any>) => {
+    dispatch(change('networkForm', 'row', row));
+    dispatch(change('networkForm', 'showingDeleteModal', true));
+}
+
+export const hideDeleteModal = () => async (dispatch: Dispatch<any>) => {
+    dispatch(change('networkForm', 'showingDeleteModal', false));
+}
+
+export const showCreateModal = () => async (dispatch: Dispatch<any>) => {
+    dispatch(change('networkForm', 'showingCreateModal', true));
+}
+
+export const hideCreateModal = () => async (dispatch: Dispatch<any>) => {
+    dispatch(change('networkForm', 'showingCreateModal', false));
+}
+
+export const remoteFormSubmit = (formName: string) => async (dispatch: Dispatch<any>) => {
+    dispatch(submit(formName));
+}

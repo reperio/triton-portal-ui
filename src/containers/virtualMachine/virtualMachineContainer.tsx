@@ -1,22 +1,27 @@
 import React from 'react'
-import {connect, Dispatch} from "react-redux";
+import {connect, Dispatch, ReactNode} from "react-redux";
 import { bindActionCreators } from "redux";
-import { getVmsByOwner, startVm, stopVm, rebootVm, deleteVm, showDeleteModal, hideDeleteModal, showRenameModal, hideRenameModal, showReprovisionModal, hideReprovisionModal, remoteFormSubmit, renameVm, hideResizeModal, showResizeModal, resizeVm, showNicModal, hideNicModal } from "../../actions/virtualMachineActions";
-import { getAllImages } from '../../actions/imageActions';
-import ReactTable from 'react-table';
+import { getVmsByOwner, startVm, stopVm, rebootVm, deleteVm, showDeleteModal, hideDeleteModal, showRenameModal, hideRenameModal, showReprovisionModal, hideReprovisionModal, remoteFormSubmit, renameVm, hideResizeModal, showResizeModal, resizeVm, showNicModal, hideNicModal, showCreateModal, hideCreateModal } from "../../actions/virtualMachineActions";
+import ReactTable, { RowInfo } from 'react-table';
 import LoadingSpinner from '../../components/misc/loadingSpinner';
 import { LinkContainer } from "react-router-bootstrap";
-import { FormGroup, NavItem, DropdownButton, MenuItem, ButtonToolbar, Glyphicon, Dropdown, Button } from "react-bootstrap";
+import { FormGroup, NavItem, Button } from "react-bootstrap";
 import Error from '../../components/misc/error';
 import VirtualMachineForm from '../../components/virtualMachine/virtualMachineForm';
 import { formValueSelector, Field, submit } from 'redux-form';
 import VirtualMachineRenameModal from '../../components/virtualMachine/virtualMachineRenameModal';
-import VirtualMachineEditNicsModalContainer from '../../containers/virtualMachine/virtualMachineEditNicsModalContainer';
-import VirtualMachineReprovisionModalContainer from '../../containers/virtualMachine/virtualMachineReprovisionModalContainer';
-import VirtualMachineResizeModalContainer from '../../containers/virtualMachine/virtualMachineResizeModalContainer';
+import VirtualMachineEditNicsModalContainer from './virtualMachineEditNicsModalContainer';
+import VirtualMachineReprovisionModalContainer from './virtualMachineReprovisionModalContainer';
+import VirtualMachineResizeModalContainer from './virtualMachineResizeModalContainer';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import { FlatButton, Dialog } from 'material-ui';
 import 'react-table/react-table.css';
+import VirtualMachineDeleteModal from '../../components/virtualMachine/virtualMachineDeleteModal';
+import VirtualMachineDeleteModalContainer from './virtualMachineDeleteModalContainer';
+import VirtualMachineRenameModalContainer from './virtualMachineRenameModalContainer';
+import VirtualMachineExtendedDetails from '../../components/virtualMachine/virtualMachineExtendedDetails';
+import VirtualMachineActionsButton from '../../components/virtualMachine/virtualMachineActionsButton';
+import VirtualMachineCreateModalContainer from './virtualMachineCreateModalContainer';
 
 class VirtualMachineContainer extends React.Component {
     props: any;
@@ -24,11 +29,34 @@ class VirtualMachineContainer extends React.Component {
     columns: any[] = [
         { Header: 'Name', accessor: 'alias' },
         { Header: 'Ram', accessor: 'ram' },
-        { Header: 'State', accessor: 'state'}
+        { Header: 'State', accessor: 'state'},
+        { Header: 'Actions', Cell: (row:any) => (
+            <VirtualMachineActionsButton    row={row} 
+                                            editNics={this.editNics.bind(this)} 
+                                            startVirtualMachine={this.startVirtualMachine.bind(this)}
+                                            endVirtualMachine={this.endVirtualMachine.bind(this, row)}
+                                            restartVirtualMachine={this.restartVirtualMachine.bind(this)}
+                                            renameVirtualMachine={this.renameVirtualMachine.bind(this)}
+                                            reprovisionVirtualMachine={this.reprovisionVirtualMachine.bind(this)}
+                                            resizeVirtualMachine={this.resizeVirtualMachine.bind(this)}
+                                            deleteVirtualMachine={this.deleteVirtualMachine.bind(this)} />
+        ) }
     ];
 
     async componentDidMount() {
         this.refreshTable();
+    }
+
+    async remoteVmCreate() {
+        await this.props.actions.remoteFormSubmit('virtualMachineCreateModal');
+    }
+
+    createVirtualMachine() {
+        this.props.actions.showCreateModal();
+    }
+
+    hideCreateModal() {
+        this.props.actions.hideCreateModal();
     }
 
     async startVirtualMachine(row:any) {
@@ -43,71 +71,66 @@ class VirtualMachineContainer extends React.Component {
         await this.props.actions.rebootVm(this.props.authSession.user.data.ownerUuid, row.original.uuid);
     }
 
-    async deleteVirtualMachine(row:any) {
-        await this.props.actions.showDeleteModal(row);
-    }
-
-    async renameVirtualMachine(row:any) {
-        await this.props.actions.showRenameModal(row);
-    }
-
-    async reprovisionVirtualMachine(row:any) {
-        await this.props.actions.showReprovisionModal(row);
-    }
-
-    async resizeVirtualMachine(row:any) {
-        await this.props.actions.showResizeModal(row);
-    }
-
-    hideRenameModal() {
-        this.props.actions.hideRenameModal();
-    }
-
-    async renameModal(form: any) {
-        await this.props.actions.renameVm(this.props.row.original.uuid, form.alias);
+    //delete vm
+    async deleteModal() {
+        await this.props.actions.deleteVm(this.props.authSession.user.data.ownerUuid, this.props.row.original.uuid);
         this.refreshTable();
+    }
+
+    deleteVirtualMachine(row:any) {
+        this.props.actions.showDeleteModal(row);
     }
 
     hideDeleteModal() {
         this.props.actions.hideDeleteModal();
     }
 
-    async resizeModal() {
-        await this.props.actions.resizeVm(this.props.authSession.user.data.ownerUuid, this.props.row.original.uuid);
-        this.refreshTable();
-    }
-    
+    //rename vm
     async remoteVmRename() {
         await this.props.actions.remoteFormSubmit('virtualMachineRenameModal');
     }
 
+    renameVirtualMachine(row:any) {
+        this.props.actions.showRenameModal(row);
+    }
+
+    hideRenameModal() {
+        this.props.actions.hideRenameModal();
+    }
+
+    //reprovision vm
     async remoteVmReprovision() {
         await this.props.actions.remoteFormSubmit('virtualMachineReprovisionModal');
+    }
+
+    reprovisionVirtualMachine(row:any) {
+        this.props.actions.showReprovisionModal(row);
     }
 
     hideReprovisionModal() {
         this.props.actions.hideReprovisionModal();
     }
 
+    //resize vm
     async remoteVmResize() {
         await this.props.actions.remoteFormSubmit('virtualMachineResizeModal');
+    }
+
+    resizeVirtualMachine(row:any) {
+        this.props.actions.showResizeModal(row);
     }
 
     hideResizeModal() {
         this.props.actions.hideResizeModal();
     }
 
-    async deleteModal() {
-        await this.props.actions.deleteVm(this.props.authSession.user.data.ownerUuid, this.props.row.original.uuid);
-        this.refreshTable();
+    //update vm nics
+    async remoteNic() {
+        await this.props.actions.remoteFormSubmit('virtualMachineEditNicsModal');
     }
 
     editNics(row: any) {
         this.props.actions.showNicModal(row);
-    }
-
-    async remoteNic() {
-        await this.props.actions.remoteFormSubmit('virtualMachineEditNicsModal');
     }
 
     hideNicModal() {
@@ -126,7 +149,7 @@ class VirtualMachineContainer extends React.Component {
                 {this.props.showingDeleteModal != undefined ?
                     <MuiThemeProvider>
                         <Dialog actions={[    
-                            <FlatButton label="No"
+                            <FlatButton label="Cancel"
                                         primary={true}
                                         onClick={this.hideDeleteModal.bind(this)}/>,
                             <FlatButton label="Yes"
@@ -135,7 +158,9 @@ class VirtualMachineContainer extends React.Component {
                                 title={'Are you sure you want to delete this Virtual Machine?'}
                                 modal={true}
                                 autoScrollBodyContent={true}
-                                open={this.props.showingDeleteModal}/>
+                                open={this.props.showingDeleteModal}>
+                                    <VirtualMachineDeleteModalContainer/>
+                                </Dialog>
                         </MuiThemeProvider>
                     : null}
 
@@ -192,9 +217,7 @@ class VirtualMachineContainer extends React.Component {
                                 modal={true}
                                 autoScrollBodyContent={true}
                                 open={this.props.showingRenameModal}> 
-                            <VirtualMachineRenameModal  errorMessages={this.props.errorMessages} 
-                                                        onSubmit={this.renameModal.bind(this)} 
-                                                        initialValues={{alias: this.props.row.original.alias}} />
+                                <VirtualMachineRenameModalContainer/>
                         </Dialog>
                     </MuiThemeProvider>
                 : null}
@@ -218,10 +241,27 @@ class VirtualMachineContainer extends React.Component {
                     </MuiThemeProvider>
                 : null}
 
+                {this.props.showingCreateModal != undefined ?
+                    <MuiThemeProvider>
+                        <Dialog actions={[    
+                            <FlatButton label="Cancel"
+                                        primary={true}
+                                        onClick={this.hideCreateModal.bind(this)}/>,
+                            <FlatButton label="Create"
+                                        primary={true}
+                                        onClick={this.remoteVmCreate.bind(this)}
+                                        type="submit"/> ]}
+                                title='Create a virtual machine'
+                                modal={true}
+                                autoScrollBodyContent={true}
+                                open={this.props.showingCreateModal}> 
+                            <VirtualMachineCreateModalContainer />
+                        </Dialog>
+                    </MuiThemeProvider>
+                : null}
+
                 <FormGroup>
-                    <LinkContainer  to="/create-virtual-machine">
-                        <Button bsStyle="primary">Create a virtual machine <span className="glyphicon glyphicon-plus-sign" aria-hidden="true"></span></Button>
-                    </LinkContainer>
+                    <Button bsStyle="primary" onClick={this.createVirtualMachine.bind(this)}>Create a virtual machine <span className="glyphicon glyphicon-plus-sign" aria-hidden="true"></span></Button>
                 </FormGroup>
                 
                 <FormGroup>
@@ -233,43 +273,10 @@ class VirtualMachineContainer extends React.Component {
                 <ReactTable data={this.props.virtualMachines.vms} 
                             columns={this.columns}
                             className="-striped -highlight"
-                            SubComponent={row => {
+                            SubComponent={(row: RowInfo) => {
                                 return(
-                                    <div className="nested-button-toolbar">
-                                        <ButtonToolbar>
-                                            {row.original.state.toLowerCase() === "stopped" ? 
-                                                <Button onClick={this.startVirtualMachine.bind(this, row)} 
-                                                        bsStyle="success" 
-                                                        className="vm-actions">Start <span className="glyphicon glyphicon-play" aria-hidden="true"></span>
-                                                </Button> : null}
-
-                                            {row.original.state.toLowerCase() === "running" ?
-                                                <Button onClick={this.endVirtualMachine.bind(this, row)} 
-                                                        bsStyle="warning" 
-                                                        className="vm-actions">Stop <span className="glyphicon glyphicon-stop" aria-hidden="true"></span>
-                                                </Button> : null}
-
-                                                {row.original.state.toLowerCase() === "running" ?
-                                                <Button onClick={this.restartVirtualMachine.bind(this, row)} 
-                                                        bsStyle="info" 
-                                                        className="vm-actions">Restart <span className="glyphicon glyphicon-refresh" aria-hidden="true"></span>
-                                                </Button> : null}
-
-                                            {row.original.brand.toLowerCase() === "lx" || row.original.brand.toLowerCase() === "os"
-                                            ? 
-                                                <DropdownButton title="Edit" id="dropdown" className="vm-actions">
-                                                    <MenuItem onClick={this.renameVirtualMachine.bind(this, row)} eventKey="1">Rename alias</MenuItem>
-                                                    <MenuItem divider />
-                                                    <MenuItem onClick={this.reprovisionVirtualMachine.bind(this, row)} eventKey="2">Reprovision</MenuItem>
-                                                    <MenuItem onClick={this.resizeVirtualMachine.bind(this, row)} eventKey="3">Resize</MenuItem>
-                                                    <MenuItem onClick={this.editNics.bind(this, row)} eventKey="3">Edit Nics</MenuItem>
-                                                </DropdownButton> : null}
-
-                                            <Button onClick={this.deleteVirtualMachine.bind(this, row)} 
-                                                    bsStyle="danger" 
-                                                    className="vm-actions">Delete <span className="glyphicon glyphicon-trash" aria-hidden="true"></span>
-                                            </Button>
-                                        </ButtonToolbar>
+                                    <div className="nested-table-container">
+                                        <VirtualMachineExtendedDetails data={row.original} />
                                     </div>
                                 );
                             }}/>
@@ -290,6 +297,7 @@ function mapStateToProps(state: any) {
         showingReprovisionModal: selector(state, 'showingReprovisionModal'),
         showingResizeModal: selector(state, 'showingResizeModal'),
         showingNicModal: selector(state, 'showingNicModal'),
+        showingCreateModal: selector(state, 'showingCreateModal'),
         row: selector(state, 'row')
     };
 }
@@ -314,7 +322,9 @@ function mapActionToProps(dispatch: any) {
             showResizeModal,
             resizeVm,
             showNicModal,
-            hideNicModal
+            hideNicModal,
+            showCreateModal,
+            hideCreateModal
         }, dispatch)
     };
 }
