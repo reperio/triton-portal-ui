@@ -4,6 +4,7 @@ import { bindActionCreators } from "redux";
 import VirtualMachineDeleteModal from "../../components/virtualMachine/virtualMachineDeleteModal";
 import { formValueSelector } from 'redux-form';
 import LoadingSpinner from '../../components/misc/loadingSpinner';
+import { State } from '../../store/initialState';
 
 class VirtualMachineDeleteModalContainer extends React.Component {
     props: any;
@@ -17,7 +18,7 @@ class VirtualMachineDeleteModalContainer extends React.Component {
     }
 }
 
-function mapStateToProps(state: any) {
+function mapStateToProps(state: State) {
     const selector = formValueSelector('virtualMachineForm');
     const selectorModal = formValueSelector('virtualMachineDeleteModal');
     return {

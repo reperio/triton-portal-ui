@@ -14,7 +14,7 @@ class VirtualMachineService {
         return await axios.get(`/triton/vms/owner/${owner_uuid}`);
     }
     
-    async createVm(owner_uuid: string, alias: string, networks: any[], brand: string, billing_id: string, image_uuid: string) {
+    async createVm(owner_uuid: string, alias: string, networks: any[], brand: string, billing_id: string, image_uuid: string, quota: number) {
 
         let newNetworksObject: nic[] = [];
 
@@ -32,7 +32,8 @@ class VirtualMachineService {
                 networks: newNetworksObject,
                 brand, 
                 billing_id, 
-                image_uuid
+                image_uuid,
+                quota
             }
         };
         return await axios.post(`/triton/vms`, payload);

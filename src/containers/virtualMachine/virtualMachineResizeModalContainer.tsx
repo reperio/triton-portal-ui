@@ -19,11 +19,11 @@ class VirtualMachineResizeModalContainer extends React.Component {
     }
 
     async resizeModal(form: any) {
-        await this.props.actions.resizeVm(this.props.authSession.user.data.ownerUuid, this.props.row.original.uuid, form.selectedPackage.uuid);
+        await this.props.actions.resizeVm(this.props.authSession.user.data.ownerUuid, this.props.row.original.uuid, form.selectedPackage);
     }
 
-    async selectPackage(selectedPackage: any) {
-        await this.props.actions.selectPackage(selectedPackage);
+    async selectPackage(e: any) {
+        await this.props.actions.selectPackage(e.target.value);
     }
 
     render() {
@@ -34,7 +34,7 @@ class VirtualMachineResizeModalContainer extends React.Component {
                                             close={this.closeResizeModal.bind(this)} 
                                             onSubmit={this.resizeModal.bind(this)}
                                             errorMessages={this.props.errorMessages}
-                                            initialValues={{billing_id: this.props.row.original.billing_id, packages: this.props.packages.packages}} />
+                                            initialValues={{package: this.props.row.original.billing_id, packages: this.props.packages.packages}} />
             </div>
         );
     }

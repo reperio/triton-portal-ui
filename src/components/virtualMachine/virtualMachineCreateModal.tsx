@@ -42,7 +42,7 @@ const VirtualMachineCreateModal = (props: any) => (
         : null}
         <FormGroup>
             <Field  className="form-control"
-                    name='image'
+                    name='image_uuid'
                     onChange={props.selectImage}
                     component="select">
                         <option>-- Select an image --</option>

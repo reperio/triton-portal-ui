@@ -3,9 +3,8 @@ import { userService } from "../services/userService";
 import { inputValidationService } from "../services/inputValidationService";
 import { history } from '../store/history';
 import { authService } from "../services/authService";
-import CreateAccountModel from "../models/createAccountModel";
-import EditAccountModel from '../models/editAccountModel';
 import { change } from 'redux-form';
+import UserModel from "../models/userModel";
 var Joi = require('joi-browser');
 
 export const accountActionTypes = {
@@ -26,7 +25,7 @@ function getErrorMessageFromStatusCode(statusCode: number) {
             return "An error occurred, please contact your system administrator"}
 }
 
-export const createAccount = (account: CreateAccountModel) => async (dispatch: Dispatch<any>) => {
+export const createAccount = (account: UserModel) => async (dispatch: Dispatch<any>) => {
 
     const schema = Joi.object().keys({
         username: Joi.string().required().label('Username'),
@@ -40,12 +39,12 @@ export const createAccount = (account: CreateAccountModel) => async (dispatch: D
     let errors = await inputValidationService.validate({
         username: account.username,
         password: account.password, 
-        firstname: account.firstname,
-        lastname: account.lastname,
+        firstname: account.firstName,
+        lastname: account.lastName,
         email: account.email,
-        ownerId: account.ownerId}, schema);
+        ownerId: account.ownerUuid}, schema);
 
-    if (account.password !== account.confirmPassword) {
+    if (account.password !== account.confirmNewPassword) {
         errors.push("Passwords do not match");
     }
 
@@ -76,7 +75,7 @@ export const createAccount = (account: CreateAccountModel) => async (dispatch: D
     }
 };
 
-export const editAccount = (user: EditAccountModel, userId: string) => async (dispatch: Dispatch<any>) => {
+export const editAccount = (user: UserModel, userId: string) => async (dispatch: Dispatch<any>) => {
     
     const schema = Joi.object().keys({
         currentPassword: Joi.string().required().label('Current password'),
@@ -103,7 +102,7 @@ export const editAccount = (user: EditAccountModel, userId: string) => async (di
     });
 
     let errors = await inputValidationService.validate({
-        currentPassword: user.currentPassword,
+        currentPassword: user.password,
         newPassword: user.newPassword,
         username: user.username,
         firstname: user.firstName,
@@ -144,7 +143,7 @@ export const getAccount = (userId: string) => async (dispatch: Dispatch<any>) =>
         type: accountActionTypes.USER_LOAD_START
     });
     try {
-        const {data: {data: user}} = await userService.getUserById(userId);
+        const user: UserModel = (await userService.getUserById(userId)).data.data;
 
         dispatch({
             type: accountActionTypes.USER_LOAD_END,

@@ -18,7 +18,7 @@ export function accountReducer(state = initialState.account, action: {type: stri
         case accountActionTypes.USER_LOAD_ERROR: {
             return {
                 isLoading: false,
-                user: []
+                user: null
             };
         }
         default: {

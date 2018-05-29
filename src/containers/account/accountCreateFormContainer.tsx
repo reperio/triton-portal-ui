@@ -4,13 +4,13 @@ import { createAccount } from "../../actions/accountActions";
 import { bindActionCreators } from "redux";
 import AccountCreateForm from "../../components/account/accountCreateForm";
 import LoadingSpinner from '../../components/misc/loadingSpinner';
-import CreateAccountModel from '../../models/createAccountModel';
 import { formValueSelector } from 'redux-form';
+import UserModel from '../../models/userModel';
 
 class AccountCreateFormContainer extends React.Component {
     props: any;
 
-    async onSubmit(values: CreateAccountModel) {
+    async onSubmit(values: UserModel) {
         await this.props.actions.createAccount(values);
     };
 

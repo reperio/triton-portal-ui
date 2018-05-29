@@ -8,6 +8,8 @@ import { history } from '../store/history';
 import { change, submit, formValueSelector } from 'redux-form';
 import { store } from "../store/store";
 import nic from '../models/nicModel';
+import VirtualMachineModel from "../models/virtualMachineModel";
+import PackageModel from "../models/packageModel";
 var Joi = require('joi-browser');
 
 export const virtualMachineActionTypes = {
@@ -59,12 +61,12 @@ export const getAllVms = () => async (dispatch: Dispatch<any>) => {
     });
 
     try {
-        const vms = await virtualMachineService.getAll();
+        const vms: VirtualMachineModel = (await virtualMachineService.getAll()).data.data;
 
         dispatch({
             type: virtualMachineActionTypes.VIRTUAL_MACHINES_GET_ALL_END,
             payload: {
-                vms: vms.data.data
+                vms: vms
             }
         });
     } catch (e) {
@@ -83,12 +85,12 @@ export const getVmsByOwner = (owner_uuid: string) => async (dispatch: Dispatch<a
     });
 
     try {
-        const vms = await virtualMachineService.getVmsByOwnerUuid(owner_uuid);
+        const vms: VirtualMachineModel = (await virtualMachineService.getVmsByOwnerUuid(owner_uuid)).data.data;
 
         dispatch({
             type: virtualMachineActionTypes.VIRTUAL_MACHINES_GET_BY_OWNER_END,
             payload: {
-                vms: vms.data.data
+                vms: vms
             }
         });
 
@@ -208,11 +210,11 @@ export const hideDeleteModal = () => async (dispatch: Dispatch<any>) => {
     dispatch(change('virtualMachineForm', 'showingDeleteModal', false));
 }
 
-export const createVm = (owner_uuid: string, alias: string, networks: nic[], brand: string, selectedPackage: any, imageUuid: string) => async (dispatch: Dispatch<any>) => {
+export const createVm = (owner_uuid: string, alias: string, networks: nic[], brand: string, selectedPackage: PackageModel, imageUuid: string) => async (dispatch: Dispatch<any>) => {
 
     const schema = Joi.object().keys({
         alias: Joi.string().required(),
-        brand: Joi.string().required(),
+        brand: Joi.string().required().invalid(['-- Select a brand --']),
         selectedPackage: Joi.string().guid().required().label('Package'),
         networks: Joi.array().items(Joi.object({
             network_uuid: Joi.string().guid().required().label('NIC network'),
@@ -251,7 +253,7 @@ export const createVm = (owner_uuid: string, alias: string, networks: nic[], bra
         });
 
         try {
-            const vm = await virtualMachineService.createVm(owner_uuid, alias, networks, brand, selectedPackage.uuid, imageUuid);
+            const vm = await virtualMachineService.createVm(owner_uuid, alias, networks, brand, selectedPackage.uuid, imageUuid, selectedPackage.quota);
     
             dispatch({
                 type: virtualMachineActionTypes.VIRTUAL_MACHINE_CREATE_END

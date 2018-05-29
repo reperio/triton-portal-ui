@@ -9,13 +9,14 @@ import VirtualMachineCreateModal from "../../components/virtualMachine/virtualMa
 import LoadingSpinner from '../../components/misc/loadingSpinner';
 import Error from "../../components/misc/error";
 import { formValueSelector } from 'redux-form';
-import VirtualMachineCreateModel from '../../models/virtualMachineCreateModel';
+import VirtualMachineModel from '../../models/virtualMachineModel';
+import { State } from '../../store/initialState';
 
 class VirtualMachineCreateModalContainer extends React.Component {
     props: any;
 
-    async onSubmit(values: VirtualMachineCreateModel) {
-        await this.props.actions.createVm(this.props.authSession.user.data.ownerUuid, values.alias, values.nics, values.brand, this.props.packages.selectedPackage, values.image);
+    async onSubmit(form: VirtualMachineModel) {
+        await this.props.actions.createVm(this.props.authSession.user.data.ownerUuid, form.alias, form.nics, form.brand, this.props.packages.selectedPackage, form.image_uuid);
     };
 
     async componentDidMount() {
@@ -47,7 +48,7 @@ class VirtualMachineCreateModalContainer extends React.Component {
     render() {
         return (
             <div>
-                {this.props.packages.isLoading || this.props.networks.isLoading || this.props.images.isLoading ? <LoadingSpinner/> : null}
+                {this.props.packages.isLoading || this.props.networks.isLoading || this.props.images.isLoading || this.props.virtualMachineCreate.isLoading ? <LoadingSpinner/> : null}
                 <VirtualMachineCreateModal  selectPrimaryNic={this.selectPrimaryNic.bind(this)}
                                             errorMessages={this.props.errorMessages} 
                                             networks={this.props.networks}
@@ -62,13 +63,14 @@ class VirtualMachineCreateModalContainer extends React.Component {
     }
 }
 
-function mapStateToProps(state: any) {
+function mapStateToProps(state: State) {
     const selector = formValueSelector('virtualMachineCreateModal');
     return {
         authSession: state.authSession,
         packages: state.packages,
         images: state.images,
         networks: state.networks,
+        virtualMachineCreate: state.virtualMachineCreate,
         errorMessages: selector(state, "errorMessages")
     };
 }

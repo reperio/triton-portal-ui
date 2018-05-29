@@ -4,13 +4,13 @@ import { editAccount, getAccount } from "../../actions/accountActions";
 import { bindActionCreators } from "redux";
 import AccountEditForm from "../../components/account/accountEditForm";
 import LoadingSpinner from '../../components/misc/loadingSpinner';
-import EditAccountModel from '../../models/editAccountModel';
 import { formValueSelector } from 'redux-form';
+import UserModel from '../../models/userModel';
 
 class AccountEditFormContainer extends React.Component {
     props: any;
 
-    async onSubmit(values: EditAccountModel) {
+    async onSubmit(values: UserModel) {
         await this.props.actions.editAccount(values, this.props.authSession.user.data.id);
     };
 

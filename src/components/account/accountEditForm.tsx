@@ -43,7 +43,7 @@ const AccountEditForm = (props: any) => (
         <h2>Edit account</h2>
         <FormGroup>
             <label>Old Password</label>
-            <Field  name="currentPassword" 
+            <Field  name="password" 
                     component="input"
                     className="form-control"
                     type="password"

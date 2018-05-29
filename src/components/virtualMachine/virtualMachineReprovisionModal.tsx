@@ -9,13 +9,15 @@ const VirtualMachineReprovisionModal = (props: any) => (
         {props.errorMessages != null && props.errorMessages.length > 0 ? <Error errors={props.errorMessages}/> : null}
         <FormGroup className="modal-window">
             <label>Select an image</label>
-            <DropdownList   defaultValue={props.initialValues.image_uuid}
-                            name="image"
-                            valueField="uuid" 
-                            textField="name"
-                            data={props.initialValues.images}
-                            onSelect={props.selectImage}
-                            placeholder="Select an image" />
+            <Field  className="form-control"
+                    name='image'
+                    onChange={props.selectImage}
+                    component="select">
+                    <option>-- Select an image --</option>
+                    {
+                        props.initialValues.images.map((images:any, i:number) => <option key={i} value={images.uuid}>{images.name}</option>)
+                    }
+            </Field>
         </FormGroup>
     </form>
 );

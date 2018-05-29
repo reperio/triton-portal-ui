@@ -2,15 +2,15 @@ import React from 'react'
 import { connect } from "react-redux";
 import { createFabricNetwork } from "../../actions/networkActions";
 import { bindActionCreators } from "redux";
-import CreateNetworkModel from '../../models/createNetworkModel';
 import { formValueSelector } from 'redux-form';
 import NetworkCreateModal from '../../components/network/networkCreateModal';
+import NetworkModel from '../../models/networkModel';
 
 class NetworkCreateModalContainer extends React.Component {
     props: any;
 
-    async onSubmit(network: CreateNetworkModel) {
-        await this.props.actions.createFabricNetwork(network, this.props.authSession.user.data.ownerUuid);
+    async onSubmit(form: NetworkModel) {
+        await this.props.actions.createFabricNetwork(form, this.props.authSession.user.data.ownerUuid);
     };
 
     render() {

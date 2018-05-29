@@ -1,0 +1,42 @@
+export default class VirtualMachineModel {
+    alias: string;
+    autoboot: boolean;
+    billing_id: string;
+    boot_timestamp: string;
+    brand: string;
+    cpu_cap: number;
+    cpu_shares: number;
+    create_timestamp: string;
+    custome_metadata: any;
+    datasets: any[];
+    destroyed: any;
+    dns_domain: string;
+    firewall_enabled: boolean;
+    image_uuid: string;
+    internal_metadata: any;
+    last_modified: string;
+    limit_priv: string;
+    max_locked_memory: number;
+    max_lwps: number;
+    max_physical_memory: number;
+    max_swap: number;
+    //change from any
+    nics: any[];
+    owner_uuid: string;
+    pid: number;
+    platform_buildstamp: string;
+    quota: number;
+    ram: number;
+    resolvers: any[];
+    server_uuid: string;
+    snapshots: any[];
+    state: string;
+    tags: any;
+    tmpfs: number;
+    uuid: string;
+    zfs_filesystem: string;
+    zfs_io_priority: number;
+    zone_state: string;
+    zonepath: string;
+    zpool: string;
+}

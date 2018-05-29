@@ -1,3 +1,8 @@
+import VirtualMachineModel from "../models/virtualMachineModel";
+import NetworkModel from "../models/networkModel";
+import UserModel from "../models/userModel";
+import PackageModel from "../models/packageModel";
+
 export class State {
     authSession: StateAuthSession;
     virtualMachines: StateVirtualMachines;
@@ -16,12 +21,12 @@ export class State {
 
 export class StateAuthSession {
     isAuthenticated: boolean;
-    user: any;
+    user: UserModel;
     isLoading: boolean;
 }
 
 export class StateVirtualMachines {
-    vms: any[];
+    vms: VirtualMachineModel[];
     isLoading: boolean;
 }
 
@@ -48,14 +53,14 @@ export class StateAccountEdit {
 
 export class StateAccount {
     isLoading: boolean;
-    user: any;
+    user: UserModel;
 }
 
 export class StatePackages {
     isLoading: boolean;
-    packages: any[];
+    packages: PackageModel[];
     showInformation: boolean;
-    selectedPackage: any;
+    selectedPackage: PackageModel;
 }
 
 export class StateImages {
@@ -71,8 +76,8 @@ export class StateSshKeys {
 
 export class StateNetworks {
     isLoading: boolean;
-    networks: any[];
-    selectedNetworks: any[];
+    networks: NetworkModel[];
+    selectedNetworks: NetworkModel[];
 }
 
 export class StateNetworkCreate {

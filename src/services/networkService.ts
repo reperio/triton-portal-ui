@@ -1,5 +1,5 @@
 import { axios } from "./axiosService";
-import CreateNetworkModel from '../models/createNetworkModel';
+import NetworkModel from '../models/networkModel';
 
 class NetworkService {
     async getFabricNetworksByOwnerAndVLanIds(ownerId: string, vlan_ids: number[]) {
@@ -10,12 +10,12 @@ class NetworkService {
         return await axios.get(`/triton/fabrics/${ownerId}/vlans`);
     }
 
-    async createFabricNetwork(network: CreateNetworkModel, ownerUuid: string, vlandId: number) {
+    async createFabricNetwork(network: NetworkModel, ownerUuid: string, vlandId: number) {
         const payload = {
             name: network.name,
             subnet: network.subnet,
-            provision_start_ip: network.provisionStartIp,
-            provision_end_ip: network.provisionEndIp,
+            provision_start_ip: network.provision_start_ip,
+            provision_end_ip: network.provision_end_ip,
             gateway: network.gateway,
             resolvers: network.resolvers,
             description: network.description

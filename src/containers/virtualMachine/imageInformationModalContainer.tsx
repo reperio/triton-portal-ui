@@ -5,6 +5,7 @@ import { bindActionCreators } from "redux";
 import ImageInformationModal from "../../components/virtualMachine/imageInformationModal";
 import { formValueSelector } from 'redux-form';
 import LoadingSpinner from '../../components/misc/loadingSpinner';
+import { State } from '../../store/initialState';
 
 class ImageInformationModalContainer extends React.Component {
     props: any;
@@ -13,23 +14,18 @@ class ImageInformationModalContainer extends React.Component {
         this.props.actions.getImageByUuid(this.props.row.original.image_uuid);
     }
 
-    hideRenameModal() {
-        this.props.actions.hideRenameModal();
-    }
-
     render() {
         return (
             <div>
                 {this.props.image == undefined ? <LoadingSpinner/> 
                     : <ImageInformationModal    errorMessages={this.props.errorMessages}
-                                                data={this.props.image} 
-                                                close={this.hideRenameModal.bind(this)} /> }
+                                                data={this.props.image}/> }
             </div>
         );
     }
 }
 
-function mapStateToProps(state: any) {
+function mapStateToProps(state: State) {
     const selector = formValueSelector('virtualMachineForm');
     const selectorModal = formValueSelector('imageInformationModal');
     return {

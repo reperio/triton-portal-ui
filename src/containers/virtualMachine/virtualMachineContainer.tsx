@@ -1,8 +1,28 @@
 import React from 'react'
 import {connect, Dispatch, ReactNode} from "react-redux";
 import { bindActionCreators } from "redux";
-import { getVmsByOwner, startVm, stopVm, rebootVm, deleteVm, showDeleteModal, hideDeleteModal, showRenameModal, hideRenameModal, showReprovisionModal, hideReprovisionModal, remoteFormSubmit, renameVm, hideResizeModal, showResizeModal, resizeVm, showNicModal, hideNicModal, showCreateModal, hideCreateModal } from "../../actions/virtualMachineActions";
+import { getVmsByOwner, 
+        startVm, 
+        stopVm, 
+        rebootVm, 
+        deleteVm, 
+        showDeleteModal, 
+        hideDeleteModal, 
+        showRenameModal, 
+        hideRenameModal, 
+        showReprovisionModal, 
+        hideReprovisionModal, 
+        remoteFormSubmit, 
+        renameVm, 
+        hideResizeModal, 
+        showResizeModal, 
+        resizeVm, 
+        showNicModal, 
+        hideNicModal, 
+        showCreateModal, 
+        hideCreateModal } from "../../actions/virtualMachineActions";
 import { showImageInformation, hideImageInformation } from '../../actions/imageActions';
+import { hidePackageInformation, showPackageInformationModal } from '../../actions/packagesActions';
 import ReactTable, { RowInfo } from 'react-table';
 import LoadingSpinner from '../../components/misc/loadingSpinner';
 import { LinkContainer } from "react-router-bootstrap";
@@ -24,6 +44,8 @@ import VirtualMachineExtendedDetails from '../../components/virtualMachine/virtu
 import VirtualMachineActionsButton from '../../components/virtualMachine/virtualMachineActionsButton';
 import VirtualMachineCreateModalContainer from './virtualMachineCreateModalContainer';
 import ImageInformationModalContainer from './imageInformationModalContainer';
+import { State } from '../../store/initialState';
+import PackageInformationModalContainer from './packageInformationModalContainer';
 
 class VirtualMachineContainer extends React.Component {
     props: any;
@@ -36,7 +58,7 @@ class VirtualMachineContainer extends React.Component {
             <VirtualMachineActionsButton    row={row} 
                                             editNics={this.editNics.bind(this)} 
                                             startVirtualMachine={this.startVirtualMachine.bind(this)}
-                                            endVirtualMachine={this.endVirtualMachine.bind(this, row)}
+                                            endVirtualMachine={this.endVirtualMachine.bind(this)}
                                             restartVirtualMachine={this.restartVirtualMachine.bind(this)}
                                             renameVirtualMachine={this.renameVirtualMachine.bind(this)}
                                             reprovisionVirtualMachine={this.reprovisionVirtualMachine.bind(this)}
@@ -145,6 +167,14 @@ class VirtualMachineContainer extends React.Component {
 
     hideImageInformationModal() {
         this.props.actions.hideImageInformation();
+    }
+
+    showPackageInformation(row: any) {
+        this.props.actions.showPackageInformationModal(row);
+    }
+
+    hidePackageInformationModal() {
+        this.props.actions.hidePackageInformation();
     }
 
     async refreshTable() {
@@ -284,6 +314,21 @@ class VirtualMachineContainer extends React.Component {
                         </Dialog>
                     </MuiThemeProvider>
                 : null}
+                
+                {this.props.showingPackageInformationModal != undefined ?
+                    <MuiThemeProvider>
+                        <Dialog actions={[    
+                            <FlatButton label="Close"
+                                        primary={true}
+                                        onClick={this.hidePackageInformationModal.bind(this)}/>]}
+                                title={`${(this.props.package !== undefined && this.props.package !== null) ? this.props.package.name : 'Package'}`}
+                                modal={true}
+                                autoScrollBodyContent={true}
+                                open={this.props.showingPackageInformationModal}> 
+                            <PackageInformationModalContainer />
+                        </Dialog>
+                    </MuiThemeProvider>
+                : null}
 
                 <FormGroup>
                     <Button bsStyle="primary" onClick={this.createVirtualMachine.bind(this)}>Create a virtual machine <span className="glyphicon glyphicon-plus-sign" aria-hidden="true"></span></Button>
@@ -301,7 +346,7 @@ class VirtualMachineContainer extends React.Component {
                             SubComponent={(row: RowInfo) => {
                                 return(
                                     <div className="nested-table-container">
-                                        <VirtualMachineExtendedDetails showImageInformation={this.showImageInformation.bind(this, row)} data={row.original} />
+                                        <VirtualMachineExtendedDetails showPackageInformation={this.showPackageInformation.bind(this, row)} showImageInformation={this.showImageInformation.bind(this, row)} data={row.original} />
                                     </div>
                                 );
                             }}/>
@@ -310,7 +355,7 @@ class VirtualMachineContainer extends React.Component {
     }
 }
 
-function mapStateToProps(state: any) {
+function mapStateToProps(state: State) {
     const selector = formValueSelector('virtualMachineForm');
     return {
         authSession: state.authSession,
@@ -324,8 +369,10 @@ function mapStateToProps(state: any) {
         showingNicModal: selector(state, 'showingNicModal'),
         showingCreateModal: selector(state, 'showingCreateModal'),
         showingImageInformationModal: selector(state, 'showingImageInformationModal'),
+        showingPackageInformationModal: selector(state, 'showingPackageInformationModal'),
         row: selector(state, 'row'),
-        image: selector(state, 'image')
+        image: selector(state, 'image'),
+        package: selector(state, 'package')
     };
 }
 
@@ -353,7 +400,9 @@ function mapActionToProps(dispatch: any) {
             showCreateModal,
             hideCreateModal,
             showImageInformation,
-            hideImageInformation
+            hideImageInformation,
+            hidePackageInformation,
+            showPackageInformationModal
         }, dispatch)
     };
 }

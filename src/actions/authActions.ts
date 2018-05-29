@@ -7,6 +7,7 @@ import { history } from '../store/history';
 var Joi = require('joi-browser');
 import { change } from 'redux-form';
 import { locationChange } from '../actions/navActions';
+import UserModel from "../models/userModel";
 
 
 export const authActionTypes = {
@@ -72,7 +73,7 @@ export const setAuthToken = (authToken: string, forceActionDispatch = false) => 
     if (parsedToken != null && !authService.hasTokenExpired(parsedToken.exp)) {
         window.localStorage.setItem("authToken", authToken);
         if (forceActionDispatch || oldParsedToken == null || oldParsedToken.currentUserId !== parsedToken.currentUserId) {
-            const {data: user} = await userService.getUserById(parsedToken.currentUserId);
+            const user:UserModel = (await userService.getUserById(parsedToken.currentUserId)).data;
             dispatch({
                 type: authActionTypes.AUTH_SET_TOKEN,
                 payload: {authToken, user}

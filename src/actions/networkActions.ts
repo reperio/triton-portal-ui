@@ -1,9 +1,9 @@
 import { Dispatch } from "react-redux";
 import { networkService } from "../services/networkService";
-import CreateNetworkModel from '../models/createNetworkModel';
 import { inputValidationService } from "../services/inputValidationService";
 import { history } from '../store/history';
 import { change, submit } from 'redux-form';
+import NetworkModel from "../models/networkModel";
 var Joi = require('joi-browser');
 
 export const networkActionTypes = {
@@ -32,7 +32,7 @@ export const getAllFabricNetworksByOwnerId = (ownerId: string) => async (dispatc
     
     try {
         const fabricVlanIds = (await networkService.getFabricLansByOwnerId(ownerId)).data.data.map((fabricVlan:any) => fabricVlan.vlan_id);
-        const fabricNetworks = (await networkService.getFabricNetworksByOwnerAndVLanIds(ownerId, fabricVlanIds)).data.data;
+        const fabricNetworks:NetworkModel = (await networkService.getFabricNetworksByOwnerAndVLanIds(ownerId, fabricVlanIds)).data.data;
 
         dispatch({
             type: networkActionTypes.NETWORKS_GET_END,
@@ -59,7 +59,7 @@ export const selectNetworks = (selectedNetworks: any[]) => async (dispatch: Disp
     });
 }
 
-export const createFabricNetwork = (network: CreateNetworkModel, ownerUuid: string) => async (dispatch: Dispatch<any>) => {
+export const createFabricNetwork = (network: NetworkModel, ownerUuid: string) => async (dispatch: Dispatch<any>) => {
     
     const schema = Joi.object().keys({
         name: Joi.string().required().label('Name'),
@@ -81,8 +81,8 @@ export const createFabricNetwork = (network: CreateNetworkModel, ownerUuid: stri
     let errors = await inputValidationService.validate({
         name: network.name,
         subnet: network.subnet, 
-        provisionStartIp: network.provisionStartIp,
-        provisionEndIp: network.provisionEndIp,
+        provisionStartIp: network.provision_start_ip,
+        provisionEndIp: network.provision_end_ip,
         gateway: network.gateway,
         //internetNat: network.internetNat,
         resolvers: network.resolvers,

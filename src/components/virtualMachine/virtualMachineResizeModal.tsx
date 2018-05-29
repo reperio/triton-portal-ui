@@ -9,13 +9,15 @@ const VirtualMachineResizeModal = (props: any) => (
         {props.errorMessages != null && props.errorMessages.length > 0 ? <Error errors={props.errorMessages}/> : null}
         <FormGroup className="modal-window">
             <label>Resize this Virtual Machines to package</label>
-            <DropdownList   defaultValue={props.initialValues.billing_id}
-                            name="package"
-                            valueField="uuid" 
-                            textField="name"
-                            data={props.initialValues.packages}
-                            onSelect={props.selectPackage}
-                            placeholder="Select a package" />
+            <Field  className="form-control"
+                    name="package"
+                    onChange={props.selectPackage}
+                    component="select">
+                    <option>-- Select a package --</option>
+                    {
+                        props.initialValues.packages.map((_package:any, i:number) => <option key={i} value={_package.uuid}>{_package.name}</option>)
+                    }
+            </Field>
         </FormGroup>
     </form>
 );

@@ -19,11 +19,11 @@ class VirtualMachineReprovisionModalContainer extends React.Component {
     }
 
     async reprovisionModal(form: any) {
-        await this.props.actions.reprovisionVm(this.props.authSession.user.data.ownerUuid, this.props.row.original.uuid, form.selectedImage.uuid);
+        await this.props.actions.reprovisionVm(this.props.authSession.user.data.ownerUuid, this.props.row.original.uuid, form.selectedImage);
     }
 
-    async selectImage(selectedImage: any) {
-        await this.props.actions.selectImage('virtualMachineReprovisionModal', selectedImage);
+    async selectImage(e: any) {
+        await this.props.actions.selectImage('virtualMachineReprovisionModal', e.target.value);
     }
 
     render() {
@@ -33,7 +33,7 @@ class VirtualMachineReprovisionModalContainer extends React.Component {
                 <VirtualMachineReprovisionModal selectImage={this.selectImage.bind(this)} 
                                                 close={this.closeReprovisionModal.bind(this)} 
                                                 onSubmit={this.reprovisionModal.bind(this)} 
-                                                initialValues={{image_uuid: this.props.row.original.image_uuid, images: this.props.images.images}}
+                                                initialValues={{image: this.props.row.original.image_uuid, images: this.props.images.images}}
                                                 errorMessages={this.props.errorMessages}/>
             </div>
         );

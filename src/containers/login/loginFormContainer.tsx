@@ -15,8 +15,8 @@ import { formValueSelector } from 'redux-form';
 class LoginFormContainer extends React.Component {
     props: any;
 
-    async onSubmit(values: LoginModel) {
-        await this.props.actions.submitAuth(values.email, values.password);
+    async onSubmit(form: LoginModel) {
+        await this.props.actions.submitAuth(form.email, form.password);
     };
 
     locationChange(location: string) {
