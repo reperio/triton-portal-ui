@@ -19,14 +19,14 @@ import { getVmsByOwner,
         resizeVm, 
         showNicModal, 
         hideNicModal, 
-        showCreateModal, 
-        hideCreateModal } from "../../actions/virtualMachineActions";
+        showProvisionModal, 
+        hideProvisionModal} from "../../actions/virtualMachineActions";
 import { showImageInformation, hideImageInformation } from '../../actions/imageActions';
 import { hidePackageInformation, showPackageInformationModal } from '../../actions/packagesActions';
 import ReactTable, { RowInfo } from 'react-table';
 import LoadingSpinner from '../../components/misc/loadingSpinner';
 import { LinkContainer } from "react-router-bootstrap";
-import { FormGroup, NavItem, Button } from "react-bootstrap";
+import { FormGroup, NavItem, Button, Label } from "react-bootstrap";
 import Error from '../../components/misc/error';
 import VirtualMachineForm from '../../components/virtualMachine/virtualMachineForm';
 import { formValueSelector, Field, submit } from 'redux-form';
@@ -42,18 +42,24 @@ import VirtualMachineDeleteModalContainer from './virtualMachineDeleteModalConta
 import VirtualMachineRenameModalContainer from './virtualMachineRenameModalContainer';
 import VirtualMachineExtendedDetails from '../../components/virtualMachine/virtualMachineExtendedDetails';
 import VirtualMachineActionsButton from '../../components/virtualMachine/virtualMachineActionsButton';
-import VirtualMachineCreateModalContainer from './virtualMachineCreateModalContainer';
+import VirtualMachineProvisionModalContainer from './virtualMachineProvisionModalContainer';
 import ImageInformationModalContainer from './imageInformationModalContainer';
 import { State } from '../../store/initialState';
 import PackageInformationModalContainer from './packageInformationModalContainer';
+import VirtualMachineModel from '../../models/virtualMachineModel';
+import ReactTableOptionsModel from '../../models/reactTableOptionsModel';
 
 class VirtualMachineContainer extends React.Component {
     props: any;
 
     columns: any[] = [
+        { Header: 'State', accessor: 'state', maxWidth: 100, Cell: (row:any) => (
+            <div style={{textAlign: 'center'}}>
+                <Label bsStyle={this.stateCellColor(row.original)}>{row.original.state}</Label>
+            </div>
+        )},
         { Header: 'Name', accessor: 'alias' },
         { Header: 'Ram', accessor: 'ram' },
-        { Header: 'State', accessor: 'state'},
         { Header: 'Actions', Cell: (row:any) => (
             <VirtualMachineActionsButton    row={row} 
                                             editNics={this.editNics.bind(this)} 
@@ -67,20 +73,37 @@ class VirtualMachineContainer extends React.Component {
         ) }
     ];
 
+    stateCellColor(vm: VirtualMachineModel) {
+        switch(vm.state) {
+            case 'running':
+                return 'success';
+            case 'destroyed':
+                return 'default black-label';
+            case 'failed':
+                return 'danger';
+            case 'stopped':
+                return 'default';
+            case 'provisioning':
+                return 'info';
+            default:
+                return 'default'
+        }
+    }
+
     async componentDidMount() {
         this.refreshTable();
     }
 
-    async remoteVmCreate() {
-        await this.props.actions.remoteFormSubmit('virtualMachineCreateModal');
+    async remoteVmProvision() {
+        await this.props.actions.remoteFormSubmit('virtualMachineProvisionModal');
     }
 
-    createVirtualMachine() {
-        this.props.actions.showCreateModal();
+    provisionVirtualMachine() {
+        this.props.actions.showProvisionModal();
     }
 
-    hideCreateModal() {
-        this.props.actions.hideCreateModal();
+    hideProvisionModal() {
+        this.props.actions.hideProvisionModal();
     }
 
     async startVirtualMachine(row:any) {
@@ -178,8 +201,13 @@ class VirtualMachineContainer extends React.Component {
     }
 
     async refreshTable() {
-        await this.props.actions.getVmsByOwner(this.props.authSession.user.data.ownerUuid);
+        await this.props.actions.getVmsByOwner(this.props.authSession.user.data.ownerUuid, null);
+        //this.fetchData(this.props.virtualMachines.tableOptions);
     }
+
+    // async fetchData(tableOptions: ReactTableOptionsModel) {
+    //     await this.props.actions.getVmsByOwner(this.props.authSession.user.data.ownerUuid, {pageSize: tableOptions.pageSize, page: tableOptions.page, sorted: tableOptions.sorted})
+    // }
 
     render() {
         return (
@@ -281,21 +309,21 @@ class VirtualMachineContainer extends React.Component {
                     </MuiThemeProvider>
                 : null}
 
-                {this.props.showingCreateModal != undefined ?
+                {this.props.showingProvisionModal != undefined ?
                     <MuiThemeProvider>
                         <Dialog actions={[    
                             <FlatButton label="Cancel"
                                         primary={true}
-                                        onClick={this.hideCreateModal.bind(this)}/>,
-                            <FlatButton label="Create"
+                                        onClick={this.hideProvisionModal.bind(this)}/>,
+                            <FlatButton label="Provision machine"
                                         primary={true}
-                                        onClick={this.remoteVmCreate.bind(this)}
+                                        onClick={this.remoteVmProvision.bind(this)}
                                         type="submit"/> ]}
-                                title='Create a virtual machine'
+                                title='Provision a virtual machine'
                                 modal={true}
                                 autoScrollBodyContent={true}
-                                open={this.props.showingCreateModal}> 
-                            <VirtualMachineCreateModalContainer />
+                                open={this.props.showingProvisionModal}> 
+                            <VirtualMachineProvisionModalContainer />
                         </Dialog>
                     </MuiThemeProvider>
                 : null}
@@ -331,7 +359,7 @@ class VirtualMachineContainer extends React.Component {
                 : null}
 
                 <FormGroup>
-                    <Button bsStyle="primary" onClick={this.createVirtualMachine.bind(this)}>Create a virtual machine <span className="glyphicon glyphicon-plus-sign" aria-hidden="true"></span></Button>
+                    <Button bsStyle="primary" onClick={this.provisionVirtualMachine.bind(this)}>Provision virtual machine <span className="glyphicon glyphicon-plus-sign" aria-hidden="true"></span></Button>
                 </FormGroup>
                 
                 <FormGroup>
@@ -340,9 +368,19 @@ class VirtualMachineContainer extends React.Component {
                     </Button>
                 </FormGroup>
                 
-                <ReactTable data={this.props.virtualMachines.vms} 
+                <ReactTable data={this.props.virtualMachines.vms}
+                            //manual
                             columns={this.columns}
                             className="-striped -highlight"
+                            // pages={this.props.virtualMachines.pages}
+                            // onFetchData={this.fetchData.bind(this)}
+                            defaultPageSize={20}
+                            defaultSorted={[
+                                {
+                                  id: "alias",
+                                  asc: true
+                                }
+                            ]}
                             SubComponent={(row: RowInfo) => {
                                 return(
                                     <div className="nested-table-container">
@@ -367,7 +405,7 @@ function mapStateToProps(state: State) {
         showingReprovisionModal: selector(state, 'showingReprovisionModal'),
         showingResizeModal: selector(state, 'showingResizeModal'),
         showingNicModal: selector(state, 'showingNicModal'),
-        showingCreateModal: selector(state, 'showingCreateModal'),
+        showingProvisionModal: selector(state, 'showingProvisionModal'),
         showingImageInformationModal: selector(state, 'showingImageInformationModal'),
         showingPackageInformationModal: selector(state, 'showingPackageInformationModal'),
         row: selector(state, 'row'),
@@ -397,8 +435,8 @@ function mapActionToProps(dispatch: any) {
             resizeVm,
             showNicModal,
             hideNicModal,
-            showCreateModal,
-            hideCreateModal,
+            showProvisionModal,
+            hideProvisionModal,
             showImageInformation,
             hideImageInformation,
             hidePackageInformation,

@@ -19,30 +19,24 @@ export const accountActionTypes = {
     USER_LOAD_ERROR: "USER_LOAD_ERROR"
 };
 
-function getErrorMessageFromStatusCode(statusCode: number) {
-    switch (statusCode) {
-        default:
-            return "An error occurred, please contact your system administrator"}
-}
-
 export const createAccount = (account: UserModel) => async (dispatch: Dispatch<any>) => {
 
     const schema = Joi.object().keys({
         username: Joi.string().required().label('Username'),
         password: Joi.string().required().label('Password'),
-        firstname: Joi.string().required().label('First name'),
-        lastname: Joi.string().required().label('Last name'),
+        firstName: Joi.string().required().label('First name'),
+        lastName: Joi.string().required().label('Last name'),
         email: Joi.string().email().required().label('Username'),
-        ownerId: Joi.string().guid().required().label('Owner uuid'),
+        ownerUuid: Joi.string().guid().required().label('Owner uuid'),
     }).options({ abortEarly: false });
 
     let errors = await inputValidationService.validate({
         username: account.username,
         password: account.password, 
-        firstname: account.firstName,
-        lastname: account.lastName,
+        firstName: account.firstName,
+        lastName: account.lastName,
         email: account.email,
-        ownerId: account.ownerUuid}, schema);
+        ownerUuid: account.ownerUuid}, schema);
 
     if (account.password !== account.confirmNewPassword) {
         errors.push("Passwords do not match");
@@ -67,7 +61,7 @@ export const createAccount = (account: UserModel) => async (dispatch: Dispatch<a
             });
             history.push('/login');
         } catch (e) {
-            dispatch(change('accountCreateForm', 'errorMessages', [getErrorMessageFromStatusCode(e.response != null ? e.response.status : null)]));
+            dispatch(change('accountCreateForm', 'errorMessages', [e.response.data.message]));
             dispatch({
                 type: accountActionTypes.USER_CREATE_ERROR
             });
@@ -129,6 +123,8 @@ export const editAccount = (user: UserModel, userId: string) => async (dispatch:
             dispatch({
                 type: accountActionTypes.USER_EDIT_END
             });
+
+            history.push('/home');
         } catch (e) {
             dispatch(change('accountEditForm', 'errorMessages', [e.response.data.message]));
             dispatch({
@@ -138,7 +134,7 @@ export const editAccount = (user: UserModel, userId: string) => async (dispatch:
     }
 };
 
-export const getAccount = (userId: string) => async (dispatch: Dispatch<any>) => {
+export const getUserById = (userId: string) => async (dispatch: Dispatch<any>) => {
     dispatch({
         type: accountActionTypes.USER_LOAD_START
     });
@@ -152,7 +148,7 @@ export const getAccount = (userId: string) => async (dispatch: Dispatch<any>) =>
             }
         });
     } catch (e) {
-        dispatch(change('accountEditForm', 'errorMessages', [getErrorMessageFromStatusCode(e.response != null ? e.response.status : null)]));
+        dispatch(change('accountEditForm', 'errorMessages', [e.response.data.message]));
         
         dispatch({
             type: accountActionTypes.USER_LOAD_ERROR

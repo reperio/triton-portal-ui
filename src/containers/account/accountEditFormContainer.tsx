@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from "react-redux";
-import { editAccount, getAccount } from "../../actions/accountActions";
+import { editAccount, getUserById } from "../../actions/accountActions";
 import { bindActionCreators } from "redux";
 import AccountEditForm from "../../components/account/accountEditForm";
 import LoadingSpinner from '../../components/misc/loadingSpinner';
@@ -15,7 +15,7 @@ class AccountEditFormContainer extends React.Component {
     };
 
     async componentDidMount () {
-        await this.props.actions.getAccount(this.props.authSession.user.data.id);
+        await this.props.actions.getUserById(this.props.authSession.user.data.id);
     };
 
     render() {
@@ -42,7 +42,7 @@ function mapStateToProps(state: any) {
 
 function mapActionToProps(dispatch: any) {
     return {
-        actions: bindActionCreators({editAccount, getAccount}, dispatch)
+        actions: bindActionCreators({editAccount, getUserById}, dispatch)
     };
 }
 

@@ -10,6 +10,7 @@ import { store } from "../store/store";
 import nic from '../models/nicModel';
 import VirtualMachineModel from "../models/virtualMachineModel";
 import PackageModel from "../models/packageModel";
+import ReactTableOptionsModel from "../models/reactTableOptionsModel";
 var Joi = require('joi-browser');
 
 export const virtualMachineActionTypes = {
@@ -31,9 +32,9 @@ export const virtualMachineActionTypes = {
     VIRTUAL_MACHINE_DELETE_START: "VIRTUAL_MACHINE_DELETE_START",
     VIRTUAL_MACHINE_DELETE_END: "VIRTUAL_MACHINE_DELETE_END",
     VIRTUAL_MACHINE_DELETE_ERROR: "VIRTUAL_MACHINE_DELETE_ERROR",
-    VIRTUAL_MACHINE_CREATE_START: "VIRTUAL_MACHINE_CREATE_START",
-    VIRTUAL_MACHINE_CREATE_END: "VIRTUAL_MACHINE_CREATE_END",
-    VIRTUAL_MACHINE_CREATE_ERROR: "VIRTUAL_MACHINE_CREATE_ERROR",
+    VIRTUAL_MACHINE_PROVISION_START: "VIRTUAL_MACHINE_PROVISION_START",
+    VIRTUAL_MACHINE_PROVISION_END: "VIRTUAL_MACHINE_PROVISION_END",
+    VIRTUAL_MACHINE_PROVISION_ERROR: "VIRTUAL_MACHINE_PROVISION_ERROR",
     VIRTUAL_MACHINE_REPROVISION_START: "VIRTUAL_MACHINE_REPROVISION_START",
     VIRTUAL_MACHINE_REPROVISION_END: "VIRTUAL_MACHINE_REPROVISION_END",
     VIRTUAL_MACHINE_REPROVISION_ERROR: "VIRTUAL_MACHINE_REPROVISION_ERROR",
@@ -47,12 +48,6 @@ export const virtualMachineActionTypes = {
     VIRTUAL_MACHINE_EDIT_NICS_END: "VIRTUAL_MACHINE_EDIT_NICS_END",
     VIRTUAL_MACHINE_EDIT_NICS_ERROR: "VIRTUAL_MACHINE_EDIT_NICS_ERROR"
 };
-
-function getErrorMessageFromStatusCode(statusCode: number) {
-    switch (statusCode) {
-        default:
-            return "An error occurred, please contact your system administrator"}
-}
 
 export const getAllVms = () => async (dispatch: Dispatch<any>) => {
 
@@ -70,7 +65,7 @@ export const getAllVms = () => async (dispatch: Dispatch<any>) => {
             }
         });
     } catch (e) {
-        dispatch(change('virtualMachineForm', 'errorMessages', [getErrorMessageFromStatusCode(e.response != null ? e.response.status : null)]));
+        dispatch(change('virtualMachineForm', 'errorMessages', [e.response.data.message]));
 
         dispatch({
             type: virtualMachineActionTypes.VIRTUAL_MACHINES_GET_ALL_ERROR
@@ -78,25 +73,29 @@ export const getAllVms = () => async (dispatch: Dispatch<any>) => {
     }
 };
 
-export const getVmsByOwner = (owner_uuid: string) => async (dispatch: Dispatch<any>) => {
+export const getVmsByOwner = (owner_uuid: string, tableOptions: ReactTableOptionsModel) => async (dispatch: Dispatch<any>) => {
 
     dispatch({
-        type: virtualMachineActionTypes.VIRTUAL_MACHINES_GET_BY_OWNER_START
+        type: virtualMachineActionTypes.VIRTUAL_MACHINES_GET_BY_OWNER_START,
+        payload: {
+            tableOptions
+        }
     });
 
     try {
-        const vms: VirtualMachineModel = (await virtualMachineService.getVmsByOwnerUuid(owner_uuid)).data.data;
-
+        const response = (await virtualMachineService.getVmsByOwnerUuid(owner_uuid, tableOptions)).data.data;
+        // const vms: VirtualMachineModel[] = response.virtualMachines;
+        // const resourceCount: number = response.resourceCount;
         dispatch({
             type: virtualMachineActionTypes.VIRTUAL_MACHINES_GET_BY_OWNER_END,
             payload: {
-                vms: vms
+                vms: response
             }
         });
 
         dispatch(change('virtualMachineForm', 'errorMessages', []));
     } catch (e) {
-        dispatch(change('virtualMachineForm', 'errorMessages', [getErrorMessageFromStatusCode(e.response != null ? e.response.status : null)]));
+        dispatch(change('virtualMachineForm', 'errorMessages', [e.response.data.message]));
 
         dispatch({
             type: virtualMachineActionTypes.VIRTUAL_MACHINES_GET_BY_OWNER_ERROR
@@ -104,7 +103,7 @@ export const getVmsByOwner = (owner_uuid: string) => async (dispatch: Dispatch<a
     }
 };
 
-export const startVm = (owner_uuid: string, uuid: string) => async (dispatch: Dispatch<any>) => {
+export const startVm = (owner_uuid: string, uuid: string, tableOptions: ReactTableOptionsModel) => async (dispatch: Dispatch<any>) => {
 
     dispatch({
         type: virtualMachineActionTypes.VIRTUAL_MACHINE_START_START
@@ -113,7 +112,7 @@ export const startVm = (owner_uuid: string, uuid: string) => async (dispatch: Di
     try {
         const vm = await virtualMachineService.startVm(owner_uuid, uuid);
 
-        getVmsByOwner(owner_uuid)(dispatch);
+        getVmsByOwner(owner_uuid, tableOptions)(dispatch);
 
         dispatch({
             type: virtualMachineActionTypes.VIRTUAL_MACHINE_START_END
@@ -127,7 +126,7 @@ export const startVm = (owner_uuid: string, uuid: string) => async (dispatch: Di
     }
 };
 
-export const stopVm = (owner_uuid: string, uuid: string) => async (dispatch: Dispatch<any>) => {
+export const stopVm = (owner_uuid: string, uuid: string, tableOptions: ReactTableOptionsModel) => async (dispatch: Dispatch<any>) => {
 
     dispatch({
         type: virtualMachineActionTypes.VIRTUAL_MACHINE_STOP_START
@@ -135,7 +134,7 @@ export const stopVm = (owner_uuid: string, uuid: string) => async (dispatch: Dis
     try {
         const vm = await virtualMachineService.stopVm(owner_uuid, uuid);
 
-        getVmsByOwner(owner_uuid)(dispatch);
+        getVmsByOwner(owner_uuid, tableOptions)(dispatch);
 
         dispatch({
             type: virtualMachineActionTypes.VIRTUAL_MACHINE_STOP_END
@@ -167,7 +166,7 @@ export const rebootVm = (owner_uuid: string, uuid: string) => async (dispatch: D
             }
         });
     } catch (e) {
-        dispatch(change('virtualMachineForm', 'errorMessages', [getErrorMessageFromStatusCode(e.response != null ? e.response.status : null)]));
+        dispatch(change('virtualMachineForm', 'errorMessages', [e.response.data.message]));
 
         dispatch({
             type: virtualMachineActionTypes.VIRTUAL_MACHINE_REBOOT_ERROR
@@ -175,7 +174,7 @@ export const rebootVm = (owner_uuid: string, uuid: string) => async (dispatch: D
     }
 };
 
-export const deleteVm = (owner_uuid: string, uuid: string) => async (dispatch: Dispatch<any>) => {
+export const deleteVm = (owner_uuid: string, uuid: string, tableOptions: ReactTableOptionsModel) => async (dispatch: Dispatch<any>) => {
 
     dispatch({
         type: virtualMachineActionTypes.VIRTUAL_MACHINE_DELETE_START
@@ -187,7 +186,7 @@ export const deleteVm = (owner_uuid: string, uuid: string) => async (dispatch: D
 
         hideDeleteModal()(dispatch);
 
-        getVmsByOwner(owner_uuid)(dispatch);
+        getVmsByOwner(owner_uuid, tableOptions)(dispatch);
 
         dispatch({
             type: virtualMachineActionTypes.VIRTUAL_MACHINE_DELETE_END
@@ -210,7 +209,7 @@ export const hideDeleteModal = () => async (dispatch: Dispatch<any>) => {
     dispatch(change('virtualMachineForm', 'showingDeleteModal', false));
 }
 
-export const createVm = (owner_uuid: string, alias: string, networks: nic[], brand: string, selectedPackage: PackageModel, imageUuid: string) => async (dispatch: Dispatch<any>) => {
+export const provisionVm = (owner_uuid: string, alias: string, networks: nic[], brand: string, selectedPackage: PackageModel, imageUuid: string, tableOptions: ReactTableOptionsModel) => async (dispatch: Dispatch<any>) => {
 
     const schema = Joi.object().keys({
         alias: Joi.string().required(),
@@ -245,46 +244,46 @@ export const createVm = (owner_uuid: string, alias: string, networks: nic[], bra
         }
     }
 
-    dispatch(change('virtualMachineCreateModal', 'errorMessages', errors));
+    dispatch(change('virtualMachineProvisionModal', 'errorMessages', errors));
     
     if (errors.length == 0) {
         dispatch({
-            type: virtualMachineActionTypes.VIRTUAL_MACHINE_CREATE_START
+            type: virtualMachineActionTypes.VIRTUAL_MACHINE_PROVISION_START
         });
 
         try {
-            const vm = await virtualMachineService.createVm(owner_uuid, alias, networks, brand, selectedPackage.uuid, imageUuid, selectedPackage.quota);
+            const vm = await virtualMachineService.provisionVm(owner_uuid, alias, networks, brand, selectedPackage.uuid, imageUuid, selectedPackage.quota);
     
             dispatch({
-                type: virtualMachineActionTypes.VIRTUAL_MACHINE_CREATE_END
+                type: virtualMachineActionTypes.VIRTUAL_MACHINE_PROVISION_END
             });
 
-            hideCreateModal()(dispatch);
+            hideProvisionModal()(dispatch);
 
-            getVmsByOwner(owner_uuid)(dispatch);
+            getVmsByOwner(owner_uuid, tableOptions)(dispatch);
 
         } catch (e) {
-            dispatch(change('virtualMachineCreateModal', 'errorMessages', [e.response.data.message]));
+            dispatch(change('virtualMachineProvisionModal', 'errorMessages', [e.response.data.message]));
             dispatch({
-                type: virtualMachineActionTypes.VIRTUAL_MACHINE_CREATE_ERROR
+                type: virtualMachineActionTypes.VIRTUAL_MACHINE_PROVISION_ERROR
             });
         }
     }
 };
 
-export const showCreateModal = () => async (dispatch: Dispatch<any>) => {
-    dispatch(change('virtualMachineForm', 'showingCreateModal', true));
+export const showProvisionModal = () => async (dispatch: Dispatch<any>) => {
+    dispatch(change('virtualMachineForm', 'showingProvisionModal', true));
 }
 
-export const hideCreateModal = () => async (dispatch: Dispatch<any>) => {
-    dispatch(change('virtualMachineForm', 'showingCreateModal', false));
+export const hideProvisionModal = () => async (dispatch: Dispatch<any>) => {
+    dispatch(change('virtualMachineForm', 'showingProvisionModal', false));
 }
 
 export const remoteFormSubmit = (formName: string) => async (dispatch: Dispatch<any>) => {
     dispatch(submit(formName));
 }
 
-export const renameVm = (owner_uuid: string, uuid: string, alias: string) => async (dispatch: Dispatch<any>) => {
+export const renameVm = (owner_uuid: string, uuid: string, alias: string, tableOptions: ReactTableOptionsModel) => async (dispatch: Dispatch<any>) => {
     const schema = Joi.object().keys({
         alias: Joi.string().required().label('Alias')
     }).options({ abortEarly: false });
@@ -303,7 +302,7 @@ export const renameVm = (owner_uuid: string, uuid: string, alias: string) => asy
 
             hideRenameModal()(dispatch);
 
-            getVmsByOwner(owner_uuid)(dispatch);
+            getVmsByOwner(owner_uuid, tableOptions)(dispatch);
     
             dispatch({
                 type: virtualMachineActionTypes.VIRTUAL_MACHINE_RENAME_END
@@ -327,7 +326,7 @@ export const hideRenameModal = () => async (dispatch: Dispatch<any>) => {
     dispatch(change('virtualMachineForm', 'showingRenameModal', false));
 }
 
-export const reprovisionVm = (owner_uuid: string, uuid: string, image_uuid: string) => async (dispatch: Dispatch<any>) => {
+export const reprovisionVm = (owner_uuid: string, uuid: string, image_uuid: string, tableOptions: ReactTableOptionsModel) => async (dispatch: Dispatch<any>) => {
     const schema = Joi.object().keys({
         image_uuid: Joi.string().guid().required().label('Image')
     }).options({ abortEarly: false });
@@ -346,7 +345,7 @@ export const reprovisionVm = (owner_uuid: string, uuid: string, image_uuid: stri
 
             hideReprovisionModal()(dispatch);
 
-            getVmsByOwner(owner_uuid)(dispatch);
+            getVmsByOwner(owner_uuid, tableOptions)(dispatch);
     
             dispatch({
                 type: virtualMachineActionTypes.VIRTUAL_MACHINE_REPROVISION_END
@@ -370,7 +369,7 @@ export const hideReprovisionModal = () => async (dispatch: Dispatch<any>) => {
     dispatch(change('virtualMachineForm', 'showingReprovisionModal', false));
 }
 
-export const resizeVm = (owner_uuid: string, uuid: string, billing_id: string) => async (dispatch: Dispatch<any>) => {
+export const resizeVm = (owner_uuid: string, uuid: string, billing_id: string, tableOptions: ReactTableOptionsModel) => async (dispatch: Dispatch<any>) => {
     const schema = Joi.object().keys({
         billing_id: Joi.string().guid().required().label('Package')
     }).options({ abortEarly: false });
@@ -389,7 +388,7 @@ export const resizeVm = (owner_uuid: string, uuid: string, billing_id: string) =
 
             hideResizeModal()(dispatch);
 
-            getVmsByOwner(owner_uuid)(dispatch);
+            getVmsByOwner(owner_uuid, tableOptions)(dispatch);
     
             dispatch({
                 type: virtualMachineActionTypes.VIRTUAL_MACHINE_RESIZE_END
@@ -434,7 +433,7 @@ export const selectPrimaryNic = (nicIndex: number, form: string) => async (dispa
     dispatch(change(form, 'nics', newNics));
 }
 
-export const editVmNics = (nics: any[], id: string, ownerUuid: string) => async (dispatch: Dispatch<any>) => {
+export const editVmNics = (nics: any[], id: string, ownerUuid: string, tableOptions: ReactTableOptionsModel) => async (dispatch: Dispatch<any>) => {
 
     let newNetworksObject: any[] = [];
 
@@ -468,7 +467,7 @@ export const editVmNics = (nics: any[], id: string, ownerUuid: string) => async 
 
             hideNicModal()(dispatch);
             
-            getVmsByOwner(ownerUuid)(dispatch);
+            getVmsByOwner(ownerUuid, tableOptions)(dispatch);
             
             dispatch({ type: virtualMachineActionTypes.VIRTUAL_MACHINE_EDIT_NICS_END });
         } catch(e) {

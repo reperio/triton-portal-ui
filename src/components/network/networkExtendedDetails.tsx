@@ -13,7 +13,7 @@ const NetworkMachineExtendedDetails = (props: any) => (
         </div>
         <div className="row col-xs-12 table-row-container">
             <div className="col-xs-4 table-row-property">VLAN ID</div>
-            <div className="col-xs-8">{props.data.vlan_id + ' ' + props.data.name}</div>
+            <div className="col-xs-8">{props.data.vlan_id}</div>
         </div>
         <div className="row col-xs-12 table-row-container">
             <div className="col-xs-4 table-row-property">Network</div>

@@ -19,12 +19,6 @@ export const networkActionTypes = {
     NETWORK_DELETE_ERROR: "NETWORK_DELETE_ERROR"
 };
 
-function getErrorMessageFromStatusCode(statusCode: number) {
-    switch (statusCode) {
-        default:
-            return "An error occurred, please contact your system administrator"}
-}
-
 export const getAllFabricNetworksByOwnerId = (ownerId: string) => async (dispatch: Dispatch<any>) => {
     dispatch({
         type: networkActionTypes.NETWORKS_GET_START
@@ -42,7 +36,7 @@ export const getAllFabricNetworksByOwnerId = (ownerId: string) => async (dispatc
         });
         dispatch(change('networkForm', 'errorMessages', []));
     } catch (e) {
-        dispatch(change('networkForm', 'errorMessages', [getErrorMessageFromStatusCode(e.response != null ? e.response.status : null)]));
+        dispatch(change('networkForm', 'errorMessages', [e.response.data.message]));
 
         dispatch({
             type: networkActionTypes.NETWORKS_ERROR
@@ -108,7 +102,7 @@ export const createFabricNetwork = (network: NetworkModel, ownerUuid: string) =>
             getAllFabricNetworksByOwnerId(ownerUuid)(dispatch);
 
         } catch (e) {
-            dispatch(change('networkCreateModal', 'errorMessages', [getErrorMessageFromStatusCode(e.response != null ? e.response.status : null)]));
+            dispatch(change('networkCreateModal', 'errorMessages', [e.response.data.message]));
             
             dispatch({
                 type: networkActionTypes.NETWORK_CREATE_ERROR

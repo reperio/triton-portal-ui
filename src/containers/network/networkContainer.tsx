@@ -22,8 +22,10 @@ class NetworkContainer extends React.Component {
 
     columns: any[] = [
         { Header: 'Name', accessor: 'name' },
-        { Header: 'Provision start IP', accessor: 'provision_start_ip' },
-        { Header: 'Provision end IP', accessor: 'provision_end_ip'},
+        { Header: 'Vlan ID', accessor: 'vlan_id' },
+        { Header: 'Gateway', accessor: 'gateway' },
+        { Header: 'Range', Cell: (row:any) => (<div>{row.original.provision_start_ip} - {row.original.provision_end_ip}</div>) },
+        { Header: 'Resolvers', Cell: (row:any) => (<div>{row.original.resolvers.map((resolver:string) => resolver).toString().replace(/,/g, ', ')}</div>) },
         { Header: 'Actions', Cell: (row:any) => (
             <NetworkActionsButton   row={row} 
                                     deleteNetwork={this.deleteNetwork.bind(this)} />
@@ -115,6 +117,12 @@ class NetworkContainer extends React.Component {
                 <ReactTable data={this.props.networks.networks} 
                             columns={this.columns}
                             className="-striped -highlight"
+                            defaultSorted={[
+                                {
+                                  id: "name",
+                                  asc: true
+                                }
+                            ]}
                             SubComponent={row => {
                                 return(
                                     <div className="nested-table-container">

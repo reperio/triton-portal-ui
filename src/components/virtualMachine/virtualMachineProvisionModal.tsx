@@ -15,7 +15,7 @@ const dropdownList = (input:any, data:any, valueField:any, textField:any) => {
                     placeholder="Select a network" />
 }
 
-const VirtualMachineCreateModal = (props: any) => (
+const VirtualMachineProvisionModal = (props: any) => (
     <form onSubmit={props.handleSubmit(props.onSubmit)}>
         {props.errorMessages != null && props.errorMessages.length > 0 ? <Error errors={props.errorMessages}/> : null}
         <FormGroup>
@@ -78,4 +78,4 @@ const VirtualMachineCreateModal = (props: any) => (
 
 
 // casted to <any> because reduxForm doesn't play nicely with other things
-export default reduxForm({ form: 'virtualMachineCreateModal' })(VirtualMachineCreateModal) as any;
+export default reduxForm({ form: 'virtualMachineProvisionModal' })(VirtualMachineProvisionModal) as any;

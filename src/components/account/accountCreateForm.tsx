@@ -22,21 +22,21 @@ const AccountCreateForm = (props: any) => (
                     placeholder="Password"/>
         </FormGroup>
         <FormGroup>
-            <Field  name="confirmPassword"
+            <Field  name="confirmNewPassword"
                     component="input"
                     className="form-control"
                     type="password"
                     placeholder="Confirm Password"/>
         </FormGroup>
         <FormGroup>
-            <Field  name="firstname" 
+            <Field  name="firstName" 
                     component="input" 
                     className="form-control" 
                     type="text" 
                     placeholder="First Name"/>
         </FormGroup>
         <FormGroup>
-            <Field  name="lastname"
+            <Field  name="lastName"
                     component="input"
                     className="form-control"
                     type="text"
@@ -50,7 +50,7 @@ const AccountCreateForm = (props: any) => (
                     placeholder="Email"/>
         </FormGroup>
         <FormGroup>
-            <Field  name="ownerId" 
+            <Field  name="ownerUuid" 
                     component="input"
                     className="form-control"
                     type="text"

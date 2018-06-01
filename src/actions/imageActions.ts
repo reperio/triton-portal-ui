@@ -12,12 +12,6 @@ export const imageActionTypes = {
     IMAGES_SELECT: "IMAGES_SELECT"
 };
 
-function getErrorMessageFromStatusCode(statusCode: number) {
-    switch (statusCode) {
-        default:
-            return "An error occurred, please contact your system administrator"}
-}
-
 export const getAllImages = (formName: string) => async (dispatch: Dispatch<any>) => {
     dispatch({
         type: imageActionTypes.IMAGES_GET_START,
@@ -35,7 +29,7 @@ export const getAllImages = (formName: string) => async (dispatch: Dispatch<any>
             }
         });
     } catch (e) {
-        dispatch(change(formName, 'errorMessages', [getErrorMessageFromStatusCode(e.response != null ? e.response.status : null)]));
+        dispatch(change(formName, 'errorMessages', [e.response.data.message]));
 
         dispatch({
             type: imageActionTypes.IMAGES_ERROR
@@ -59,7 +53,7 @@ export const getImageByUuid = (image_uuid: string) => async (dispatch: Dispatch<
             type: imageActionTypes.IMAGE_GET_END
         });
     } catch (e) {
-        dispatch(change('imageInformationModal', 'errorMessages', [getErrorMessageFromStatusCode(e.response != null ? e.response.status : null)]));
+        dispatch(change('imageInformationModal', 'errorMessages', [e.response.data.message]));
 
         dispatch({
             type: imageActionTypes.IMAGES_ERROR
@@ -90,6 +84,6 @@ export const selectImage = (formName: string, uuid: string, images: any) => (dis
                 selectedImage: image[0]
             }
         });
-        dispatch(change('virtualMachineCreateModal', 'brand', null));
+        dispatch(change('virtualMachineProvisionModal', 'brand', null));
     }
 }

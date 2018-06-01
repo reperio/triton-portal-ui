@@ -19,16 +19,6 @@ export const authActionTypes = {
     AUTH_SESSION_EXTEND: "AUTH_SESSION_EXTEND"
 };
 
-function getErrorMessageFromStatusCode(statusCode: number) {
-    switch (statusCode) {
-        case 400:
-        case 401:
-        case 403:
-            return "Invalid username or password";
-        default:
-            return "An error occurred, please contact your system administrator"}
-}
-
 export const extendSession = () => async(dispatch: Dispatch<any>) => {
     hideExpirationDialog()(dispatch);
 
@@ -56,6 +46,7 @@ export const updateTimeLeftOnToken = (showingExpirationDialog: boolean) => async
         let diff = tokenExpirationDate - time;
 
         if (diff <= 0) {
+            dispatch(change('navMenu', 'showingExpirationDialog', false));
             logout()(dispatch);
         } else if (diff < 60) {
             if (!showingExpirationDialog) {
@@ -116,7 +107,7 @@ export const submitAuth = (email: string, password: string) => async (dispatch: 
             history.push('/home');
             locationChange(history.location.pathname)(dispatch);
         } catch (e) {
-            dispatch(change('loginForm', 'errorMessages', [getErrorMessageFromStatusCode(e.response != null ? e.response.status : null)]));
+            dispatch(change('loginForm', 'errorMessages', [e.response.data.message]));
 
             dispatch({
                 type: authActionTypes.AUTH_LOGIN_ERROR

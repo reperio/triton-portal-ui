@@ -6,7 +6,7 @@ export function accountReducer(state = initialState.account, action: {type: stri
         case accountActionTypes.USER_LOAD_START: {
             return {
                 isLoading: true,
-                user: state.user
+                user: null
             };
         }
         case accountActionTypes.USER_LOAD_END: {

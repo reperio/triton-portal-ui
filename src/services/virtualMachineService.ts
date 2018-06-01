@@ -1,5 +1,6 @@
 import { axios } from "./axiosService";
 import nic from "../models/nicModel";
+import ReactTableOptionsModel from "../models/reactTableOptionsModel";
 
 class VirtualMachineService {
     async getVmByUuid(uuid: string) {
@@ -10,11 +11,11 @@ class VirtualMachineService {
         return await axios.get(`/triton/vms`);
     }
 
-    async getVmsByOwnerUuid(owner_uuid: string) {
+    async getVmsByOwnerUuid(owner_uuid: string, tableOptions: ReactTableOptionsModel) {
         return await axios.get(`/triton/vms/owner/${owner_uuid}`);
     }
     
-    async createVm(owner_uuid: string, alias: string, networks: any[], brand: string, billing_id: string, image_uuid: string, quota: number) {
+    async provisionVm(owner_uuid: string, alias: string, networks: any[], brand: string, billing_id: string, image_uuid: string, quota: number) {
 
         let newNetworksObject: nic[] = [];
 

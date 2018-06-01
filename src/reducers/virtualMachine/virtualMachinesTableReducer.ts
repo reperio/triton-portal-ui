@@ -6,37 +6,49 @@ export function virtualMachinesTableReducer(state = initialState.virtualMachines
         case virtualMachineActionTypes.VIRTUAL_MACHINES_GET_ALL_START: {
             return {
                 vms: [],
-                isLoading: true
+                isLoading: true,
+                pages: 1,
+                tableOptions: action.payload.tableOptions
             };
         }
         case virtualMachineActionTypes.VIRTUAL_MACHINES_GET_ALL_END: {
             return {
                 vms: action.payload.vms,
-                isLoading: false
+                isLoading: false,
+                pages: action.payload.pages,
+                tableOptions: state.tableOptions
             };
         }
         case virtualMachineActionTypes.VIRTUAL_MACHINES_GET_ALL_ERROR: {
             return {
                 vms: [],
-                isLoading: false
+                isLoading: false,
+                pages: 1,
+                tableOptions: state.tableOptions
             };
         }
         case virtualMachineActionTypes.VIRTUAL_MACHINES_GET_BY_OWNER_START: {
             return {
                 vms: [],
-                isLoading: true
+                isLoading: true,
+                pages: 1,
+                tableOptions: action.payload.tableOptions
             };
         }
         case virtualMachineActionTypes.VIRTUAL_MACHINES_GET_BY_OWNER_END: {
             return {
                 vms: action.payload.vms,
-                isLoading: false
+                isLoading: false,
+                pages: action.payload.pages,
+                tableOptions: state.tableOptions
             };
         }
         case virtualMachineActionTypes.VIRTUAL_MACHINES_GET_BY_OWNER_ERROR: {
             return {
                 vms: [],
-                isLoading: false
+                isLoading: false,
+                pages: 1,
+                tableOptions: state.tableOptions
             };
         }
         default: {

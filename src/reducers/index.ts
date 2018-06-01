@@ -3,7 +3,7 @@ import { reducer as formReducer } from 'redux-form'
 import { authSessionReducer } from "./authSessionReducer"
 import { virtualMachineActionsReducer } from "./virtualMachine/virtualMachineActionsReducer";
 import { virtualMachinesTableReducer } from "./virtualMachine/virtualMachinesTableReducer";
-import { virtualMachineCreateReducer } from './virtualMachine/virtualMachineCreateReducer';
+import { virtualMachineProvisionReducer } from './virtualMachine/virtualMachineProvisionReducer';
 import { accountCreateReducer } from "./account/accountCreateReducer";
 import { accountEditReducer } from "./account/accountEditReducer";
 import { accountReducer } from "./account/accountReducer";
@@ -17,7 +17,7 @@ export const rootReducer = combineReducers({
     authSession: authSessionReducer,
     virtualMachineActions: virtualMachineActionsReducer,
     virtualMachines: virtualMachinesTableReducer,
-    virtualMachineCreate: virtualMachineCreateReducer,
+    virtualMachineProvision: virtualMachineProvisionReducer,
     accountCreate: accountCreateReducer,
     accountEdit: accountEditReducer,
     account: accountReducer,

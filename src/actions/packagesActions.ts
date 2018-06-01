@@ -13,12 +13,6 @@ export const packagesActionTypes = {
     PACKAGE_ERROR: "PACKAGE_ERROR"
 };
 
-function getErrorMessageFromStatusCode(statusCode: number) {
-    switch (statusCode) {
-        default:
-            return "An error occurred, please contact your system administrator"}
-}
-
 export const getAllPackages = (formName: string) => async (dispatch: Dispatch<any>) => {
     dispatch({
         type: packagesActionTypes.PACKAGES_GET_START,
@@ -40,7 +34,7 @@ export const getAllPackages = (formName: string) => async (dispatch: Dispatch<an
             type: packagesActionTypes.PACKAGES_ERROR
         });
 
-        dispatch(change(formName, 'errorMessages', [getErrorMessageFromStatusCode(e.response != null ? e.response.status : null)]));
+        dispatch(change(formName, 'errorMessages', [e.response.data.message]));
     }
 };
 
@@ -63,11 +57,9 @@ export const getPackageByUuid = (uuid: string) => async (dispatch: Dispatch<any>
             type: packagesActionTypes.PACKAGE_ERROR
         });
 
-        dispatch(change('packageInformation', 'errorMessages', [getErrorMessageFromStatusCode(e.response != null ? e.response.status : null)]));
+        dispatch(change('packageInformation', 'errorMessages', [e.response.data.message]));
     }
 };
-
-//getPackageByUuid
 
 export const showPackageInformation = (uuid: string, packages: any[]) => async (dispatch: Dispatch<any>) => {
     const _package = packages.filter((_package:any) => {

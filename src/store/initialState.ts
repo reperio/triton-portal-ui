@@ -2,12 +2,13 @@ import VirtualMachineModel from "../models/virtualMachineModel";
 import NetworkModel from "../models/networkModel";
 import UserModel from "../models/userModel";
 import PackageModel from "../models/packageModel";
+import ReactTableOptionsModel from "../models/reactTableOptionsModel";
 
 export class State {
     authSession: StateAuthSession;
     virtualMachines: StateVirtualMachines;
     virtualMachineActions: StateVirtualMachineActions;
-    virtualMachineCreate: StateVirtualMachineCreate;
+    virtualMachineProvision: StateVirtualMachineProvision;
     virtualMachineLoad: StateVirtualMachineLoad;
     accountCreate: StateAccountCreate;
     accountEdit: StateAccountEdit;
@@ -28,13 +29,15 @@ export class StateAuthSession {
 export class StateVirtualMachines {
     vms: VirtualMachineModel[];
     isLoading: boolean;
+    pages: number;
+    tableOptions: ReactTableOptionsModel;
 }
 
 export class StateVirtualMachineActions {
     isLoading: boolean;
 }
 
-export class StateVirtualMachineCreate {
+export class StateVirtualMachineProvision {
     isLoading: boolean;
 }
 
@@ -96,12 +99,21 @@ export const initialState: State = {
     },
     virtualMachines: {
         vms: [], 
-        isLoading: false
+        isLoading: false,
+        pages: 1,
+        tableOptions: {
+            page: 1,
+            pageSize: 20,
+            sorted: [{
+                id: 'alias',
+                asc: true
+            }]
+        }
     },
     virtualMachineActions: {
         isLoading: false
     },
-    virtualMachineCreate: {
+    virtualMachineProvision: {
         isLoading: false
     },
     virtualMachineLoad: {
