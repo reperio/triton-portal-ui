@@ -1,4 +1,5 @@
 @import 'variables';
+@import '~antd/dist/antd.css';
 
 html, body {
   height: 100%;
@@ -14,16 +15,18 @@ html, body {
 
 .contentContainer {
   flex: 1 1 0px;
+  background-color: $reperio-content-background;
+  padding: 15px;
 }
 
 .reperio-bar {
   width:100%;
-  height:55px;
+  height:15px;
 }
 
 .reperio-bar-container {
   display: flex;
-  flex: 0 0 55px;
+  flex: 0 0 15px;
 }
 
 .page-container {
@@ -32,48 +35,60 @@ html, body {
 }
 
 .r-nav-menu {
-  background-color: $nav-menu-background;
-  width: 200px;
-  float: left;
-  z-index: 5;
+   flex: 0 0 60px;
+   display: flex;
+   flex-direction: column;
+}
 
-  .r-menu-header {
-    border-bottom: 2px solid $nav-menu-border;
-    padding-bottom: 10px;
-    padding-top: 5px;
+.r-menu-container {
+  display: flex;
+  flex-direction: column;
+}
 
-    .r-menu-header-text {
-      text-align: left;
-      margin-top: auto;
-      margin-bottom: auto;
+.footer-container {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  height: 30px;
+  background-color: $reperio-footer-background;
+  padding-left: 15px;
+  padding-right: 15px;
+  color: white;
+  display: flex;
+  align-items: center;
+}
 
-      span {
-        font-weight: bold;
-        font-size: 1.5em;
-        color: $primary-color;
-      }
-    }
+.footer-content {
+  height: 100%;
+}
 
-    .r-menu-header-icon {
-      width: 18%;
-      float: left;
-      margin-top: 10px;
-      margin-left: 15px;
-      margin-right: 15px;
-    }
-  }
+.navbar {
+  border: 0px;
+  display: flex;
+  margin-bottom: 0px;
+  background-color: $reperio-navbar-background;
+}
 
+.nav {
+  display: flex;
+  align-items: center;
+  
   .r-menu-item {
-    font-size: 1em;
-    color: $primary-color;
-    padding: 10px;
-    border-bottom: 1px solid #ccc;
-    width: 100%;
-
     &.r-menu-item-active {
-      background-color: #fff;
+      border-bottom: 2px solid $reperio-red;
     }
   }
+}
+
+.navbar-brand {
+  padding: 12px;
+}
+
+.container {
+  margin-left: 0px;
+  display: flex;
+  width: 100%;
+  padding-left: 27px;
 }
 
 .-pagination {

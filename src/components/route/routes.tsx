@@ -12,7 +12,7 @@ import AccountEditFormContainer from '../../containers/account/accountEditFormCo
 import NetworkContainer from '../../containers/network/networkContainer';
 
 const Routes = (props: any) => (
-    <div className="contentContainer" style={{backgroundColor: "white", padding: "15px"}}>
+    <div className="contentContainer">
         <Switch>
             <PublicRouteContainer exact path="/login" component={LoginFormContainer} />
             <PrivateRouteContainer exact path="/home" component={MainDashboardContainer} />

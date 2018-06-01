@@ -1,6 +1,5 @@
 import React from 'react'
 import {connect} from "react-redux";
-import NavMenuContainer from "../containers/navMenu/navMenuContainer";
 import Routes from "../components/route/routes";
 
 class AppContainer extends React.Component {
@@ -9,7 +8,6 @@ class AppContainer extends React.Component {
     render() {
         return (
             <div className="page-container">
-                <NavMenuContainer/>
                 <Routes/>
             </div>
         );
