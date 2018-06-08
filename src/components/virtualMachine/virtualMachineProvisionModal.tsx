@@ -16,17 +16,17 @@ const dropdownList = (input:any, data:any, valueField:any, textField:any) => {
 }
 
 const VirtualMachineProvisionModal = (props: any) => (
-    <form onSubmit={props.handleSubmit(props.onSubmit)}>
+    <form className="modal-container" onSubmit={props.handleSubmit(props.onSubmit)}>
         {props.errorMessages != null && props.errorMessages.length > 0 ? <Error errors={props.errorMessages}/> : null}
         <FormGroup>
-         <Field name="alias" 
+            <Field name="alias" 
                 component="input" 
-                className="form-control" 
+                className="reperio-form-control reperio-text-input"
                 type="text" 
                 placeholder="Virtual Machine Name" />
         </FormGroup>
         <FormGroup>
-            <Field  className="form-control"
+            <Field  className="reperio-form-control reperio-dropdown"
                     name='package'
                     onChange={props.showPackageInformation}
                     component="select">
@@ -41,7 +41,7 @@ const VirtualMachineProvisionModal = (props: any) => (
                                 style={{marginBottom: "15px"}} />
         : null}
         <FormGroup>
-            <Field  className="form-control"
+            <Field  className="reperio-form-control reperio-dropdown"
                     name='image_uuid'
                     onChange={props.selectImage}
                     component="select">
@@ -53,7 +53,7 @@ const VirtualMachineProvisionModal = (props: any) => (
         </FormGroup>
         {props.images.selectedImage !== null ?
         <FormGroup>
-            <Field  className="form-control"
+            <Field  className="reperio-form-control reperio-dropdown"
                     name='brand'
                     component="select">
                         <option> -- Select a brand -- </option>

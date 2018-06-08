@@ -48,6 +48,7 @@ import { State } from '../../store/initialState';
 import PackageInformationModalContainer from './packageInformationModalContainer';
 import VirtualMachineModel from '../../models/virtualMachineModel';
 import ReactTableOptionsModel from '../../models/reactTableOptionsModel';
+import { expandRow, clearExpandedRows } from '../../actions/reactTableActions';
 
 class VirtualMachineContainer extends React.Component {
     props: any;
@@ -60,7 +61,7 @@ class VirtualMachineContainer extends React.Component {
         )},
         { Header: 'Name', accessor: 'alias' },
         { Header: 'Ram', accessor: 'ram' },
-        { Header: 'Actions', Cell: (row:any) => (
+        { Header: 'Actions', maxWidth: 150, Cell: (row:RowInfo) => (
             <VirtualMachineActionsButton    row={row} 
                                             editNics={this.editNics.bind(this)} 
                                             startVirtualMachine={this.startVirtualMachine.bind(this)}
@@ -121,7 +122,6 @@ class VirtualMachineContainer extends React.Component {
     //delete vm
     async deleteModal() {
         await this.props.actions.deleteVm(this.props.authSession.user.data.ownerUuid, this.props.row.original.uuid);
-        this.refreshTable();
     }
 
     deleteVirtualMachine(row:any) {
@@ -202,7 +202,16 @@ class VirtualMachineContainer extends React.Component {
 
     async refreshTable() {
         await this.props.actions.getVmsByOwner(this.props.authSession.user.data.ownerUuid, null);
+        this.clearExpandedRows('virtualMachineForm');
         //this.fetchData(this.props.virtualMachines.tableOptions);
+    }
+
+    expandRow (row: RowInfo, expanded: boolean[], formName: string) {
+        this.props.actions.expandRow(row, expanded, formName);
+    }
+
+    clearExpandedRows (formName: string) {
+        this.props.actions.clearExpandedRows(formName);
     }
 
     // async fetchData(tableOptions: ReactTableOptionsModel) {
@@ -359,13 +368,15 @@ class VirtualMachineContainer extends React.Component {
                 : null}
 
                 <FormGroup>
-                    <Button bsStyle="primary" onClick={this.provisionVirtualMachine.bind(this)}>Provision virtual machine <span className="glyphicon glyphicon-plus-sign" aria-hidden="true"></span></Button>
+                    <button className="reperio-form-control reperio-btn reperio-neutral" onClick={this.provisionVirtualMachine.bind(this)}>
+                        Provision virtual machine&nbsp;<span className="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
+                    </button>
                 </FormGroup>
                 
                 <FormGroup>
-                    <Button onClick={this.refreshTable.bind(this)} bsStyle="default">
+                    <button className="reperio-form-control reperio-btn reperio-cancel" onClick={this.refreshTable.bind(this)}>
                         <span className="glyphicon glyphicon-refresh" aria-hidden="true"></span>
-                    </Button>
+                    </button>
                 </FormGroup>
                 
                 <ReactTable data={this.props.virtualMachines.vms}
@@ -375,12 +386,27 @@ class VirtualMachineContainer extends React.Component {
                             // pages={this.props.virtualMachines.pages}
                             // onFetchData={this.fetchData.bind(this)}
                             defaultPageSize={20}
+                            expanded={this.props.expandedRows}                      
                             defaultSorted={[
                                 {
                                   id: "alias",
                                   asc: true
                                 }
                             ]}
+                            onPageChange={() => {
+                                this.clearExpandedRows('virtualMachineForm');
+                            }}
+                            onSortedChange={() => {
+                                this.clearExpandedRows('virtualMachineForm');
+                            }}
+                            getTdProps={(state: any, rowInfo: RowInfo) => { 
+                                return { onClick: (e:any) => {
+                                    const classes = Array.from(e.target.classList);
+                                    if (!classes.includes('reperio-btn') && e.target.tagName !== "A" && e.target.innerHTML !== '<span>&nbsp;</span>' && e.target.innerHTML.trim() !== '') {
+                                        this.expandRow(rowInfo, state.expanded, 'virtualMachineForm');
+                                    }
+                                }} 
+                            }}
                             SubComponent={(row: RowInfo) => {
                                 return(
                                     <div className="nested-table-container">
@@ -410,7 +436,8 @@ function mapStateToProps(state: State) {
         showingPackageInformationModal: selector(state, 'showingPackageInformationModal'),
         row: selector(state, 'row'),
         image: selector(state, 'image'),
-        package: selector(state, 'package')
+        package: selector(state, 'package'),
+        expandedRows: selector(state, 'expandedRows')
     };
 }
 
@@ -440,7 +467,9 @@ function mapActionToProps(dispatch: any) {
             showImageInformation,
             hideImageInformation,
             hidePackageInformation,
-            showPackageInformationModal
+            showPackageInformationModal,
+            expandRow,
+            clearExpandedRows
         }, dispatch)
     };
 }

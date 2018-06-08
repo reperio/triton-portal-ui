@@ -5,7 +5,7 @@ import  { NicFieldArrayComponent } from '../network/nicFieldArrayComponent';
 import Error from '../../components/misc/error';
 
 const VirtualMachineEditNicsModal = (props: any) => (
-    <form onSubmit={props.handleSubmit(props.onSubmit)}>
+    <form className="modal-container" onSubmit={props.handleSubmit(props.onSubmit)}>
     {props.errorMessages != null && props.errorMessages.length > 0 ? <Error errors={props.errorMessages}/> : null}
         <FormGroup>
             <label>Edit Nics</label>

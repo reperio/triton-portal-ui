@@ -4,6 +4,7 @@ import { formValueSelector } from 'redux-form';
 import { bindActionCreators } from "redux";
 import { history } from '../../store/history';
 import Footer from "../../components/footer/footer";
+import { State } from '../../store/initialState';
 
 class FooterContainer extends React.Component {
     props: any;
@@ -13,16 +14,12 @@ class FooterContainer extends React.Component {
 
     render() {
         return (
-            <div>
-                <Footer />
-            </div>
+            <Footer />
         );
     }
 }
 
-function mapStateToProps(state: any) {
-    const selector = formValueSelector('navMenu');
-
+function mapStateToProps(state: State) {
     return {};
 }
 

@@ -6,6 +6,7 @@ const NetworkForm = (props: any) => (
     <form>
         {props.errorMessages != null && props.errorMessages.length > 0 ? <Error errors={props.errorMessages}/> : null}
         <h2>Networks</h2>
+        <hr />
     </form>
 );
 

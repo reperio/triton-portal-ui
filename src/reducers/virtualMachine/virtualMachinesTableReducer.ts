@@ -8,7 +8,7 @@ export function virtualMachinesTableReducer(state = initialState.virtualMachines
                 vms: [],
                 isLoading: true,
                 pages: 1,
-                tableOptions: action.payload.tableOptions
+                tableOptions: state.tableOptions
             };
         }
         case virtualMachineActionTypes.VIRTUAL_MACHINES_GET_ALL_END: {
@@ -32,7 +32,7 @@ export function virtualMachinesTableReducer(state = initialState.virtualMachines
                 vms: [],
                 isLoading: true,
                 pages: 1,
-                tableOptions: action.payload.tableOptions
+                tableOptions: state.tableOptions
             };
         }
         case virtualMachineActionTypes.VIRTUAL_MACHINES_GET_BY_OWNER_END: {

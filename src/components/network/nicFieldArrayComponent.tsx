@@ -9,15 +9,11 @@ export const NicFieldArrayComponent = (props: any) => (
                 <div>
                     <div className="field-array-component-item-label">NIC #{index + 1}</div>
                     <div className="field-array-component-delete-button">
-                        <Button bsStyle="danger"
-                                onClick={() => props.fields.remove(index)}>&nbsp;
-                                    <span className="glyphicon glyphicon-trash" aria-hidden="true"></span>
-                                    &nbsp;
-                        </Button>
+                        <button type='button' className="reperio-form-control reperio-btn reperio-warning" onClick={() => props.fields.remove(index)}><span className="glyphicon glyphicon-trash" aria-hidden="true"></span></button>
                     </div>
                 </div>
                 <FormGroup>
-                    <Field  className="form-control"
+                    <Field  className="reperio-form-control reperio-dropdown"
                             name={`${member}.network_uuid`}
                             component="select">
                             <option> -- Select a network -- </option>
@@ -27,18 +23,20 @@ export const NicFieldArrayComponent = (props: any) => (
                     </Field>
                 </FormGroup>
                 <FormGroup>
-                    Make this the primary NIC&nbsp;
-                    <Field  onChange={()=> props.selectPrimaryNic(index)}
-                            name={`${member}.primary`}
-                            type="checkbox"
-                            component="input" />
+                    <label className="reperio-checkbox-container">
+                        Make this the primary NIC
+                        <Field  name={`${member}.primary`}
+                                type="checkbox"
+                                id={`${index}`}
+                                onClick={()=> props.selectPrimaryNic(index)}
+                                component="input" />
+                        <span className="reperio-checkbox"></span>
+                    </label>
                 </FormGroup>
             </div>
         )}
         <div className="field-array-component">
-            <Button bsStyle="default"
-                    onClick={() => props.fields.push({})}>Attach another NIC
-            </Button>
+            <button type='button' className="reperio-form-control reperio-btn reperio-neutral" onClick={() => props.fields.push({})}>Attach another NIC</button>
         </div>
     </div>
 );

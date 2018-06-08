@@ -2,13 +2,11 @@ import React from 'react'
 import { DropdownButton, MenuItem, ButtonToolbar } from "react-bootstrap";
 
 const VirtualMachineActionsButton = (props: any) => (
-    <ButtonToolbar className="table-action-button-toolbar">
-        {/* {props.row.original.brand.toLowerCase() === "lx" || props.row.original.brand.toLowerCase() === "os" ?  */}
+    <div className="table-action-button-toolbar">
         <DropdownButton pullRight
-                        bsStyle="info"
                         title="Actions"
                         id="dropdown"
-                        className="vm-actions">
+                        className="vm-actions reperio-form-control reperio-btn reperio-success">
             {props.row.original.state.toLowerCase() !== "running" ? 
                 <MenuItem onClick={props.startVirtualMachine.bind(this, props.row)} eventKey="1">Start</MenuItem> 
             : null}
@@ -39,9 +37,8 @@ const VirtualMachineActionsButton = (props: any) => (
             <MenuItem onClick={props.editNics.bind(this, props.row)} eventKey="7">Edit Nics</MenuItem>
             <MenuItem divider />
             <MenuItem className="danger" onClick={props.deleteVirtualMachine.bind(this, props.row)} eventKey="8">Delete</MenuItem>
-        </DropdownButton> 
-        {/* : null} */}
-    </ButtonToolbar>
+        </DropdownButton>
+    </div>
 );
 
 export default VirtualMachineActionsButton;

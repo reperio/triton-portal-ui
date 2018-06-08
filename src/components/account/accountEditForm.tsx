@@ -10,29 +10,23 @@ const fieldArrayComponent = (props: any) => (
                 <div>
                     <div className="field-array-component-item-label">SSH Key #{index + 1}</div>
                     <div className="field-array-component-delete-button">
-                        <Button bsStyle="danger"
-                                onClick={() => props.fields.remove(index)}>&nbsp;
-                                    <span className="glyphicon glyphicon-trash" aria-hidden="true"></span>
-                                    &nbsp;
-                        </Button>
+                        <button type='button' className="reperio-form-control reperio-btn reperio-warning" onClick={() => props.fields.remove(index)}><span className="glyphicon glyphicon-trash" aria-hidden="true"></span></button>
                     </div>
                 </div>
                 <Field  name={`${member}.key`}
                         type="text"
                         component="input"
-                        className="form-control"
+                        className="reperio-form-control reperio-text-input"
                         placeholder="Key"/>
                 <Field  name={`${member}.description`}
                         type="text"
                         component="input"
-                        className="form-control"
+                        className="reperio-form-control reperio-text-input"
                         placeholder="Description"/>
             </div>
         )}
         <div className="field-array-component">
-            <Button bsStyle="default"
-                    onClick={() => props.fields.push({})}>Add ssh key
-            </Button>
+            <button type='button' className="reperio-form-control reperio-btn reperio-neutral" onClick={() => props.fields.push({})}>Add ssh key</button>
         </div>
     </div>
 );
@@ -41,11 +35,12 @@ const AccountEditForm = (props: any) => (
     <form onSubmit={props.handleSubmit(props.onSubmit)} className="redux-form">
         {props.errorMessages != null && props.errorMessages.length > 0 ? <Error errors={props.errorMessages}/> : null}
         <h2>Edit account</h2>
+        <hr />
         <FormGroup>
             <label>Old Password</label>
             <Field  name="password" 
                     component="input"
-                    className="form-control"
+                    className="reperio-form-control reperio-text-input"
                     type="password"
                     placeholder="Current password"/>
         </FormGroup>
@@ -53,7 +48,7 @@ const AccountEditForm = (props: any) => (
             <label>New Password</label>
             <Field  name="newPassword" 
                     component="input"
-                    className="form-control"
+                    className="reperio-form-control reperio-text-input"
                     type="password"
                     placeholder="New password"/>
         </FormGroup>
@@ -61,7 +56,7 @@ const AccountEditForm = (props: any) => (
             <label>Confirm New Password</label>
             <Field  name="confirmNewPassword" 
                     component="input"
-                    className="form-control"
+                    className="reperio-form-control reperio-text-input"
                     type="password"
                     placeholder="Confirm new password"/>
         </FormGroup>
@@ -69,7 +64,7 @@ const AccountEditForm = (props: any) => (
             <label>Username</label>
             <Field  name="username"
                     component="input"
-                    className="form-control"
+                    className="reperio-form-control reperio-text-input"
                     type="text"
                     placeholder="Username"/>
         </FormGroup>
@@ -77,7 +72,7 @@ const AccountEditForm = (props: any) => (
             <label>First Name</label>
             <Field  name="firstName" 
                     component="input"
-                    className="form-control"
+                    className="reperio-form-control reperio-text-input"
                     type="text"
                     placeholder="First name"/>
         </FormGroup>        
@@ -85,7 +80,7 @@ const AccountEditForm = (props: any) => (
             <label>Last Name</label>
             <Field  name="lastName" 
                     component="input"
-                    className="form-control"
+                    className="reperio-form-control reperio-text-input"
                     type="text"
                     placeholder="Last name"/>
         </FormGroup>
@@ -93,7 +88,7 @@ const AccountEditForm = (props: any) => (
             <label>Email</label>
             <Field  name="email" 
                     component="input"
-                    className="form-control"
+                    className="reperio-form-control reperio-text-input"
                     type="text" placeholder="Email"/>
         </FormGroup>
         <FormGroup>
@@ -103,7 +98,7 @@ const AccountEditForm = (props: any) => (
         </FormGroup>
         <FormGroup>
             <br />
-            <Button bsStyle="primary" type="submit">Save changes</Button>
+            <button type='submit' className="reperio-form-control reperio-btn reperio-success">Save changes</button>
         </FormGroup>
     </form>
 );

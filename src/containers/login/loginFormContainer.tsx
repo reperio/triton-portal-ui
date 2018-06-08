@@ -26,15 +26,15 @@ class LoginFormContainer extends React.Component {
     render() {
         return (
             !this.props.authSession.isAuthenticated ? 
-                <div>
+                <div className="login-form-container">
                     {this.props.authSession.isLoading ? <LoadingSpinner/> : null}
                     <LoginForm errorMessages={this.props.errorMessages} onSubmit={this.onSubmit.bind(this)}/>
-                    <div>
+                    <div className="create-account">
                         <div>
                             Don't have an account?
                         </div>
                         <LinkContainer to="/create-account">
-                            <Button onClick={() => this.locationChange('/create-account')} bsStyle="default">Create Account</Button>
+                            <button className="reperio-form-control reperio-btn reperio-neutral" type="submit" onClick={() => this.locationChange('/create-account')}>Create Account</button>
                         </LinkContainer>
                     </div>
                 </div>

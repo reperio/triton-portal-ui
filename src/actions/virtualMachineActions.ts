@@ -76,10 +76,7 @@ export const getAllVms = () => async (dispatch: Dispatch<any>) => {
 export const getVmsByOwner = (owner_uuid: string, tableOptions: ReactTableOptionsModel) => async (dispatch: Dispatch<any>) => {
 
     dispatch({
-        type: virtualMachineActionTypes.VIRTUAL_MACHINES_GET_BY_OWNER_START,
-        payload: {
-            tableOptions
-        }
+        type: virtualMachineActionTypes.VIRTUAL_MACHINES_GET_BY_OWNER_START
     });
 
     try {

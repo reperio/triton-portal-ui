@@ -5,11 +5,11 @@ import { DropdownList } from 'react-widgets'
 import Error from '../misc/error';
 
 const VirtualMachineReprovisionModal = (props: any) => (
-    <form onSubmit={props.handleSubmit(props.onSubmit)}>
+    <form className="modal-container" onSubmit={props.handleSubmit(props.onSubmit)}>
         {props.errorMessages != null && props.errorMessages.length > 0 ? <Error errors={props.errorMessages}/> : null}
         <FormGroup className="modal-window">
             <label>Select an image</label>
-            <Field  className="form-control"
+            <Field  className="reperio-form-control reperio-dropdown"
                     name='image'
                     onChange={props.selectImage}
                     component="select">

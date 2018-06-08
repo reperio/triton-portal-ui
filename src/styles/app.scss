@@ -6,17 +6,21 @@ html, body {
   margin: 0;
 }
 
+h2, h3 {
+  color: $reperio-blue !important;
+}
+
 .flexContainer {
-  height: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  min-height: 100%;
 }
 
 .contentContainer {
-  flex: 1 1 0px;
-  background-color: $reperio-content-background;
-  padding: 15px;
+  padding-top: 20px;
+  padding-left: 50px;
+  padding-right: 50px;
+  padding-bottom: 45px;
 }
 
 .reperio-bar {
@@ -30,14 +34,12 @@ html, body {
 }
 
 .page-container {
-  display: flex;
   flex: 1 0 0px;
+  background-color: $reperio-content-background;
 }
 
 .r-nav-menu {
    flex: 0 0 60px;
-   display: flex;
-   flex-direction: column;
 }
 
 .r-menu-container {
@@ -50,7 +52,7 @@ html, body {
   bottom: 0;
   width: 100%;
   height: 30px;
-  background-color: $reperio-footer-background;
+  background-color: $reperio-charcoal;
   padding-left: 15px;
   padding-right: 15px;
   color: white;
@@ -69,15 +71,22 @@ html, body {
   background-color: $reperio-navbar-background;
 }
 
+.navbar-nav {
+  li {
+    a {
+      padding-top: 3px;
+      padding-bottom: 3px;
+    }
+  }
+  .active > a {
+    background-color: transparent !important;
+    border-bottom: 2px solid $reperio-red;
+  }
+}
+
 .nav {
   display: flex;
   align-items: center;
-  
-  .r-menu-item {
-    &.r-menu-item-active {
-      border-bottom: 2px solid $reperio-red;
-    }
-  }
 }
 
 .navbar-brand {
@@ -91,12 +100,45 @@ html, body {
   padding-left: 27px;
 }
 
+.redux-form {
+  max-width: 280px;
+}
+
+.login-form-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 560px;
+  min-height: 350px;
+  //(min-height/2) + (navbar/2)
+  margin-top: -205px;
+  margin-left: -280px;
+  box-shadow: 0px 0px 10px 5px rgba($reperio-charcoal, 0.2);
+  background-color: white;
+
+  .login-form {
+    padding: 25px 25px 1px 25px;
+  }
+  
+  .create-account {
+    border-width: 4px 0px 0px 0px;
+    border-color: rgba(98, 98, 98, 0.2);
+    border-style: solid;
+    padding: 25px;
+  }
+}
+
+.modal-container {
+  margin-top: 2px;
+}
+
 .-pagination {
   height: 40px;
 }
 
 .vm-actions {
-  margin:5px;
+  margin-top: 0px;
+  height: 100% !important;
 }
 
 .field-array-component-item-label {
@@ -109,7 +151,7 @@ html, body {
 }
 
 .field-array-component {
-  padding: 10px;
+  padding: 18px;
   border-width: 1px;
   border-color: #e6e6e6;
   border-style: solid;
@@ -123,12 +165,8 @@ html, body {
   right: 10px
 }
 
-.redux-form {
-  max-width: 280px;
-}
-
 //loading spinner container
-.sweet-loading {
+.sweet-loading-container {
   background: rgba(0,0,0,0.1);
   position: fixed;
   left: 0px;
@@ -143,6 +181,7 @@ html, body {
   position: relative;
   left: 50%;
   top: 50%;
+  margin: -35px;
 }
 
 .row {
@@ -176,12 +215,8 @@ html, body {
   color: red !important;
 }
 
-h2, h3 {
-  color: $primary-color !important;
-}
-
 .rt-thead {
-  background-color: $primary-color;
+  background-color: $reperio-blue;
 }
 
 .rt-resizable-header-content {
@@ -193,17 +228,27 @@ h2, h3 {
   height: 45px;
   position: relative;
   line-height: 30px;
+  cursor: pointer;
 }
 
 .-even{
   height: 45px;
   position: relative;
   line-height: 30px;
+  cursor: pointer;
+}
+
+.-padRow {
+  cursor: default !important;
 }
 
 .table-action-button-toolbar {
+  position: relative;
+  display: inline-block;
   top: 0;
   position: absolute;
+  height: 100%;
+  padding: 2px;
 
   button {
     ul {
@@ -218,4 +263,235 @@ h2, h3 {
 
 .label {
   line-height: 30px;
+}
+
+hr {
+  border-width: 2px;
+  border-color: $reperio-blue;
+  margin-top: -5px;
+  margin-bottom: 25px;
+}
+
+.reperio-form-control {
+  background-color: white;
+  padding: 6px 16px;
+  border-radius: 4px;
+  border-width: 0 0 5 0 !important;
+  box-shadow: 0px 0px 2px 0px rgba(0,0,0, 0.4);
+  min-height: 45px;
+  transition: 0.25s;
+}
+
+.reperio-neutral {
+  color: $reperio-blue !important;
+  border: solid $reperio-blue !important;
+  border-width: 0 0 5 0 !important;
+  box-shadow: 0px 0px 1px 1px rgba($reperio-blue, 0.5);
+  &:hover {
+    color: white !important;
+    background-color: $reperio-blue !important;
+    border-color: $reperio-blue !important;
+    border-width: 0 0 5 0 !important;
+  }
+  &:active {
+    color: white !important;
+    background-color: $reperio-dark-blue !important;
+    border: solid $reperio-dark-blue !important;
+    border-width: 0 0 5 0 !important;
+  }
+  &:focus{
+    outline-color: transparent;
+    background-color: $reperio-dark-blue !important;
+    border: solid $reperio-dark-blue !important;
+    color: white !important;
+    border-width: 0 0 5 0 !important;
+  }
+}
+
+.reperio-warning {
+  color: $reperio-red !important;
+  border: solid $reperio-red !important;
+  border-width: 0 0 5 0 !important;
+  box-shadow: 0px 0px 1px 1px rgba($reperio-red, 0.5);
+  &:hover {
+    color: white !important;
+    background-color: $reperio-red !important;
+    border-color: $reperio-red !important;
+    border-width: 0 0 5 0 !important;
+  }
+  &:active {
+    color: white !important;
+    background-color: $reperio-dark-red !important;
+    border: solid $reperio-dark-red !important;
+    border-width: 0 0 5 0 !important;
+  }
+  &:focus{
+    outline-color: transparent;
+    background-color: $reperio-dark-red !important;
+    border: solid $reperio-dark-red !important;
+    color: white !important;
+    border-width: 0 0 5 0 !important;
+  }
+}
+
+.reperio-success {
+  color: $reperio-teal !important;
+  border: solid $reperio-teal !important;
+  border-width: 0 0 5 0 !important;
+  box-shadow: 0px 0px 1px 1px rgba($reperio-teal, 0.5);
+  &:hover {
+    color: white !important;
+    background-color: $reperio-teal !important;
+    border-color: $reperio-teal !important;
+    border-width: 0 0 5 0 !important;
+  }
+  &:active {
+    color: white !important;
+    background-color: $reperio-dark-teal !important;
+    border: solid $reperio-dark-teal !important;
+    border-width: 0 0 5 0 !important;
+  }
+  &:focus{
+    outline-color: transparent;
+    background-color: $reperio-dark-teal !important;
+    border: solid $reperio-dark-teal !important;
+    color: white !important;
+    border-width: 0 0 5 0 !important;
+  }
+}
+
+.reperio-cancel {
+  color: $reperio-charcoal !important;
+  border: solid $reperio-charcoal !important;
+  border-width: 0 0 5 0 !important;
+  box-shadow: 0px 0px 1px 1px rgba($reperio-charcoal, 0.5);
+  &:hover {
+    color: white !important;
+    background-color: $reperio-charcoal !important;
+    border-color: $reperio-charcoal !important;
+    border-width: 0 0 5 0 !important;
+  }
+  &:active {
+    color: white !important;
+    background-color: $reperio-dark-charcoal !important;
+    border: solid $reperio-dark-charcoal !important;
+    border-width: 0 0 5 0 !important;
+  }
+  &:focus{
+    outline-color: transparent;
+    background-color: $reperio-dark-charcoal !important;
+    border: solid $reperio-dark-charcoal !important;
+    color: white !important;
+    border-width: 0 0 5 0 !important;
+  }
+}
+
+.reperio-text-input {
+  width: 100%;
+  border-color: white;
+  padding-bottom: 0px;
+  &:focus-within {
+    color: $reperio-blue;
+    border: solid $reperio-blue;
+    box-shadow: 0px 0px 5px 0px rgba($reperio-blue, 0.7);
+    outline-color: transparent !important;
+  }
+}
+
+.reperio-dropdown {
+  width: 100%;
+  border-color: white;
+  padding-bottom: 0px;
+  cursor: pointer;
+  &:focus-within {
+    color: $reperio-blue;
+    border: solid $reperio-blue;
+    box-shadow: 0px 0px 5px 0px rgba($reperio-blue, 0.7);
+    outline-color: transparent !important;
+  }
+  
+  > option {
+    color:black !important;
+  }
+}
+
+.reperio-checkbox-container {
+  position: relative;
+  padding-left: 30px;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  font-weight: normal;
+}
+
+/* Hide the browser's default checkbox */
+.reperio-checkbox-container input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+}
+
+/* Create a custom checkbox */
+.reperio-checkbox {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 22px;
+  width: 21px;
+  border-width: 3 !important;
+  border-color: $reperio-blue !important;
+  background-color: transparent !important;
+  border-style: solid;
+  border-radius: 4px;
+}
+
+/* Create the checkmark/indicator (hidden when not checked) */
+.reperio-checkbox:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+/* Show the checkmark when checked */
+.reperio-checkbox-container input:checked ~ .reperio-checkbox:after {
+  display: block;
+  transition: 0.2s;
+}
+
+.reperio-checkbox-container input:disabled + .reperio-checkbox {
+  border-width: 3 !important;
+  border-color: $reperio-disabled-blue !important;
+  background-color: transparent !important;
+  border-style: solid;
+  border-radius: 4px;
+}
+
+/* Style the checkmark/indicator */
+.reperio-checkbox-container .reperio-checkbox:after {
+  left: 5px;
+  width: 6px;
+  height: 13px;
+  border: solid $reperio-blue;
+  border-width: 0 3px 3px 0;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+}
+
+::-webkit-input-placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+  color: $reperio-placeholder-gray;
+  font-style: italic;
+  opacity: 1; /* Firefox */
+}
+
+:-ms-input-placeholder { /* Internet Explorer 10-11 */
+    color: $reperio-placeholder-gray;
+    font-style: italic;
+}
+
+::-ms-input-placeholder { /* Microsoft Edge */
+    color: $reperio-placeholder-gray;
+    font-style: italic;
 }
