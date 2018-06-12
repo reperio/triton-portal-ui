@@ -5,35 +5,40 @@ import { bindActionCreators } from "redux";
 import { formValueSelector } from 'redux-form';
 import NetworkCreateModal from '../../components/network/networkCreateModal';
 import NetworkModel from '../../models/networkModel';
+import { toggleLoadingBar } from "../../actions/navActions";
 
 class NetworkCreateModalContainer extends React.Component {
     props: any;
 
     async onSubmit(form: NetworkModel) {
+        this.props.actions.toggleLoadingBar(true);
         await this.props.actions.createFabricNetwork(form, this.props.authSession.user.data.ownerUuid);
+        this.props.actions.toggleLoadingBar(false);
     };
 
     render() {
         return (
-            <div>
+            <fieldset disabled={this.props.isLoading}>
                 <NetworkCreateModal errorMessages={this.props.errorMessages} 
                                     onSubmit={this.onSubmit.bind(this)} />
-            </div>
+            </fieldset>
         );
     }
 }
 
 function mapStateToProps(state: any) {
     const selector = formValueSelector('networkCreateModal');
+    const selectorLoading = formValueSelector('reperioBar');
     return {
         authSession: state.authSession,
-        errorMessages: selector(state, 'errorMessages')
+        errorMessages: selector(state, 'errorMessages'),
+        isLoading: selectorLoading(state, 'isLoading')
     };
 }
 
 function mapActionToProps(dispatch: any) {
     return {
-        actions: bindActionCreators({createFabricNetwork}, dispatch)
+        actions: bindActionCreators({createFabricNetwork, toggleLoadingBar}, dispatch)
     };
 }
 

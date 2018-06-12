@@ -3,7 +3,6 @@ import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { getAllFabricNetworksByOwnerId, deleteFabricNetwork, showDeleteModal, hideDeleteModal, hideCreateModal, showCreateModal, remoteFormSubmit } from "../../actions/networkActions";
 import ReactTable, { RowInfo } from 'react-table';
-import LoadingSpinner from '../../components/misc/loadingSpinner';
 import { FormGroup } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import { Button }  from "react-bootstrap";
@@ -17,6 +16,7 @@ import NetworkMachineExtendedDetails from '../../components/network/networkExten
 import NetworkActionsButton from '../../components/network/networkActionsButton';
 import NetworkCreateModalContainer from './networkCreateModalContainer';
 import { expandRow, clearExpandedRows } from '../../actions/reactTableActions';
+import { toggleLoadingBar } from "../../actions/navActions";
 
 class NetworkContainer extends React.Component {
     props: any;
@@ -38,7 +38,9 @@ class NetworkContainer extends React.Component {
     }
 
     async deleteModal() {
+        this.props.actions.toggleLoadingBar(true);
         await this.props.actions.deleteFabricNetwork(this.props.authSession.user.data.ownerUuid, this.props.row.original.vlan_id, this.props.row.original.uuid);
+        this.props.actions.toggleLoadingBar(false);
     }
 
     deleteNetwork(row:any) {
@@ -62,7 +64,9 @@ class NetworkContainer extends React.Component {
     }
 
     async refreshTable() {
+        this.props.actions.toggleLoadingBar(true);
         await this.props.actions.getAllFabricNetworksByOwnerId(this.props.authSession.user.data.ownerUuid);
+        this.props.actions.toggleLoadingBar(false);
     }
 
     expandRow (row: RowInfo, expanded: boolean[], formName: string) {
@@ -75,8 +79,7 @@ class NetworkContainer extends React.Component {
 
     render() {
         return (
-            <div>
-                {this.props.networks.isLoading || this.props.networkActions.isLoading ? <LoadingSpinner/> : null}
+            <fieldset disabled={this.props.isLoading}>
                 <NetworkForm errorMessages={this.props.errorMessages} />
 
                 {this.props.showingDeleteModal != undefined ?
@@ -147,7 +150,7 @@ class NetworkContainer extends React.Component {
                             getTdProps={(state: any, rowInfo: RowInfo) => { 
                                 return { onClick: (e:any) => {
                                     const classes = Array.from(e.target.classList);
-                                    if (!classes.includes('btn') && e.target.innerHTML !== '<span>&nbsp;</span>' && (e.target.innerHTML.includes('table-action-button-toolbar') || e.target.innerHTML !== '')) {
+                                    if (!classes.includes('reperio-btn') && e.target.innerHTML !== '<span>&nbsp;</span>' && (e.target.innerHTML.includes('table-action-button-toolbar') || e.target.innerHTML !== '')) {
                                         this.expandRow(rowInfo, state.expanded, 'networkForm');
                                     }
                                 }} 
@@ -159,13 +162,14 @@ class NetworkContainer extends React.Component {
                                     </div>
                                 );
                             }}/>
-            </div>
+            </fieldset>
         );
     }
 }
 
 function mapStateToProps(state: any) {
     const selector = formValueSelector('networkForm');
+    const selectorLoading = formValueSelector('reperioBar');
     return {
         authSession: state.authSession,
         networks: state.networks,
@@ -174,7 +178,8 @@ function mapStateToProps(state: any) {
         showingDeleteModal: selector(state, 'showingDeleteModal'),
         showingCreateModal: selector(state, 'showingCreateModal'),
         row: selector(state, 'row'),
-        expandedRows: selector(state, 'expandedRows')
+        expandedRows: selector(state, 'expandedRows'),
+        isLoading: selectorLoading(state, 'isLoading')
     };
 }
 
@@ -189,7 +194,8 @@ function mapActionToProps(dispatch: any) {
             showCreateModal,
             remoteFormSubmit, 
             expandRow, 
-            clearExpandedRows
+            clearExpandedRows,
+            toggleLoadingBar
         }, dispatch)
     };
 }

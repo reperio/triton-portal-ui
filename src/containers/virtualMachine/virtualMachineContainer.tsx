@@ -24,7 +24,6 @@ import { getVmsByOwner,
 import { showImageInformation, hideImageInformation } from '../../actions/imageActions';
 import { hidePackageInformation, showPackageInformationModal } from '../../actions/packagesActions';
 import ReactTable, { RowInfo } from 'react-table';
-import LoadingSpinner from '../../components/misc/loadingSpinner';
 import { LinkContainer } from "react-router-bootstrap";
 import { FormGroup, NavItem, Button, Label } from "react-bootstrap";
 import Error from '../../components/misc/error';
@@ -49,6 +48,7 @@ import PackageInformationModalContainer from './packageInformationModalContainer
 import VirtualMachineModel from '../../models/virtualMachineModel';
 import ReactTableOptionsModel from '../../models/reactTableOptionsModel';
 import { expandRow, clearExpandedRows } from '../../actions/reactTableActions';
+import { toggleLoadingBar } from "../../actions/navActions";
 
 class VirtualMachineContainer extends React.Component {
     props: any;
@@ -108,20 +108,28 @@ class VirtualMachineContainer extends React.Component {
     }
 
     async startVirtualMachine(row:any) {
+        this.props.actions.toggleLoadingBar(true);
         await this.props.actions.startVm(this.props.authSession.user.data.ownerUuid, row.original.uuid);
+        this.props.actions.toggleLoadingBar(false);
     }
 
     async endVirtualMachine(row:any) {
+        this.props.actions.toggleLoadingBar(true);
         await this.props.actions.stopVm(this.props.authSession.user.data.ownerUuid, row.original.uuid);
+        this.props.actions.toggleLoadingBar(false);
     }
 
     async restartVirtualMachine(row:any) {
+        this.props.actions.toggleLoadingBar(true);
         await this.props.actions.rebootVm(this.props.authSession.user.data.ownerUuid, row.original.uuid);
+        this.props.actions.toggleLoadingBar(false);
     }
 
     //delete vm
     async deleteModal() {
+        this.props.actions.toggleLoadingBar(true);
         await this.props.actions.deleteVm(this.props.authSession.user.data.ownerUuid, this.props.row.original.uuid);
+        this.props.actions.toggleLoadingBar(false);
     }
 
     deleteVirtualMachine(row:any) {
@@ -201,8 +209,10 @@ class VirtualMachineContainer extends React.Component {
     }
 
     async refreshTable() {
+        this.props.actions.toggleLoadingBar(true);
         await this.props.actions.getVmsByOwner(this.props.authSession.user.data.ownerUuid, null);
         this.clearExpandedRows('virtualMachineForm');
+        this.props.actions.toggleLoadingBar(false);
         //this.fetchData(this.props.virtualMachines.tableOptions);
     }
 
@@ -221,199 +231,201 @@ class VirtualMachineContainer extends React.Component {
     render() {
         return (
             <div>
-                {this.props.virtualMachines.isLoading || this.props.virtualMachineActions.isLoading ? <LoadingSpinner/> : null}
-                <VirtualMachineForm errorMessages={this.props.errorMessages} />
-                {this.props.showingDeleteModal != undefined ?
-                    <MuiThemeProvider>
-                        <Dialog actions={[    
-                            <FlatButton label="Cancel"
-                                        primary={true}
-                                        onClick={this.hideDeleteModal.bind(this)}/>,
-                            <FlatButton label="Yes"
-                                        primary={true}
-                                        onClick={this.deleteModal.bind(this)}/> ]}
-                                title={'Are you sure you want to delete this Virtual Machine?'}
-                                modal={true}
-                                autoScrollBodyContent={true}
-                                open={this.props.showingDeleteModal}>
-                                    <VirtualMachineDeleteModalContainer/>
-                                </Dialog>
+                <fieldset disabled={this.props.isLoading}>
+                    {/* {this.props.virtualMachines.isLoading || this.props.virtualMachineActions.isLoading ? <LoadingSpinner/> : null} */}
+                    <VirtualMachineForm errorMessages={this.props.errorMessages} />
+                    {this.props.showingDeleteModal != undefined ?
+                        <MuiThemeProvider>
+                            <Dialog actions={[    
+                                <FlatButton label="Cancel"
+                                            primary={true}
+                                            onClick={this.hideDeleteModal.bind(this)}/>,
+                                <FlatButton label="Yes"
+                                            primary={true}
+                                            onClick={this.deleteModal.bind(this)}/> ]}
+                                    title={'Are you sure you want to delete this Virtual Machine?'}
+                                    modal={true}
+                                    autoScrollBodyContent={true}
+                                    open={this.props.showingDeleteModal}>
+                                        <VirtualMachineDeleteModalContainer/>
+                                    </Dialog>
+                            </MuiThemeProvider>
+                        : null}
+
+                    {this.props.showingReprovisionModal != undefined ?
+                        <MuiThemeProvider>
+                            <Dialog actions={[
+                                <FlatButton label="Cancel"
+                                            primary={true}
+                                            onClick={this.hideReprovisionModal.bind(this)}/>,
+                                <FlatButton onClick={this.remoteVmReprovision.bind(this)}
+                                            label="Update"
+                                            primary={true}
+                                            type="submit"/> ]}
+                                    title={'Repovision Virtual Machine'}
+                                    modal={true}
+                                    autoDetectWindowHeight={true}
+                                    autoScrollBodyContent={true}
+                                    open={this.props.showingReprovisionModal}>
+                                <VirtualMachineReprovisionModalContainer />
+                            </Dialog>
                         </MuiThemeProvider>
                     : null}
 
-                {this.props.showingReprovisionModal != undefined ?
-                    <MuiThemeProvider>
-                        <Dialog actions={[
-                            <FlatButton label="Cancel"
-                                        primary={true}
-                                        onClick={this.hideReprovisionModal.bind(this)}/>,
-                            <FlatButton onClick={this.remoteVmReprovision.bind(this)}
-                                        label="Update"
-                                        primary={true}
-                                        type="submit"/> ]}
-                                title={'Repovision Virtual Machine'}
-                                modal={true}
-                                autoDetectWindowHeight={true}
-                                autoScrollBodyContent={true}
-                                open={this.props.showingReprovisionModal}>
-                            <VirtualMachineReprovisionModalContainer />
-                        </Dialog>
-                    </MuiThemeProvider>
-                : null}
+                    {this.props.showingResizeModal != undefined ?
+                        <MuiThemeProvider>
+                            <Dialog actions={[
+                                <FlatButton label="Cancel"
+                                            primary={true}
+                                            onClick={this.hideResizeModal.bind(this)}/>,
+                                <FlatButton onClick={this.remoteVmResize.bind(this)}
+                                            label="Update"
+                                            primary={true}
+                                            type="submit"/> ]}
+                                    title={'Resize Virtual Machine'}
+                                    modal={true}
+                                    autoScrollBodyContent={true}
+                                    open={this.props.showingResizeModal}>
+                                <VirtualMachineResizeModalContainer />
+                            </Dialog>
+                        </MuiThemeProvider>
+                    : null}
 
-                {this.props.showingResizeModal != undefined ?
-                    <MuiThemeProvider>
-                        <Dialog actions={[
-                            <FlatButton label="Cancel"
-                                        primary={true}
-                                        onClick={this.hideResizeModal.bind(this)}/>,
-                            <FlatButton onClick={this.remoteVmResize.bind(this)}
-                                        label="Update"
-                                        primary={true}
-                                        type="submit"/> ]}
-                                title={'Resize Virtual Machine'}
-                                modal={true}
-                                autoScrollBodyContent={true}
-                                open={this.props.showingResizeModal}>
-                            <VirtualMachineResizeModalContainer />
-                        </Dialog>
-                    </MuiThemeProvider>
-                : null}
+                    {this.props.showingRenameModal != undefined ?
+                        <MuiThemeProvider>
+                            <Dialog actions={[    
+                                <FlatButton label="Cancel"
+                                            primary={true}
+                                            onClick={this.hideRenameModal.bind(this)}/>,
+                                <FlatButton label="Update"
+                                            primary={true}
+                                            onClick={this.remoteVmRename.bind(this)}
+                                            type="submit"/> ]}
+                                    title={'Rename Virtual Machine Alias'}
+                                    modal={true}
+                                    autoScrollBodyContent={true}
+                                    open={this.props.showingRenameModal}> 
+                                    <VirtualMachineRenameModalContainer/>
+                            </Dialog>
+                        </MuiThemeProvider>
+                    : null}
 
-                {this.props.showingRenameModal != undefined ?
-                    <MuiThemeProvider>
-                        <Dialog actions={[    
-                            <FlatButton label="Cancel"
-                                        primary={true}
-                                        onClick={this.hideRenameModal.bind(this)}/>,
-                            <FlatButton label="Update"
-                                        primary={true}
-                                        onClick={this.remoteVmRename.bind(this)}
-                                        type="submit"/> ]}
-                                title={'Rename Virtual Machine Alias'}
-                                modal={true}
-                                autoScrollBodyContent={true}
-                                open={this.props.showingRenameModal}> 
-                                <VirtualMachineRenameModalContainer/>
-                        </Dialog>
-                    </MuiThemeProvider>
-                : null}
+                    {this.props.showingNicModal != undefined ?
+                        <MuiThemeProvider>
+                            <Dialog actions={[    
+                                <FlatButton label="Cancel"
+                                            primary={true}
+                                            onClick={this.hideNicModal.bind(this)}/>,
+                                <FlatButton label="Update"
+                                            primary={true}
+                                            onClick={this.remoteNic.bind(this)}
+                                            type="submit"/> ]}
+                                    title='Edit Nics'
+                                    modal={true}
+                                    autoScrollBodyContent={true}
+                                    open={this.props.showingNicModal}> 
+                                <VirtualMachineEditNicsModalContainer />
+                            </Dialog>
+                        </MuiThemeProvider>
+                    : null}
 
-                {this.props.showingNicModal != undefined ?
-                    <MuiThemeProvider>
-                        <Dialog actions={[    
-                            <FlatButton label="Cancel"
-                                        primary={true}
-                                        onClick={this.hideNicModal.bind(this)}/>,
-                            <FlatButton label="Update"
-                                        primary={true}
-                                        onClick={this.remoteNic.bind(this)}
-                                        type="submit"/> ]}
-                                title='Edit Nics'
-                                modal={true}
-                                autoScrollBodyContent={true}
-                                open={this.props.showingNicModal}> 
-                            <VirtualMachineEditNicsModalContainer />
-                        </Dialog>
-                    </MuiThemeProvider>
-                : null}
+                    {this.props.showingProvisionModal != undefined ?
+                        <MuiThemeProvider>
+                            <Dialog actions={[    
+                                <FlatButton label="Cancel"
+                                            primary={true}
+                                            onClick={this.hideProvisionModal.bind(this)}/>,
+                                <FlatButton label="Provision machine"
+                                            primary={true}
+                                            onClick={this.remoteVmProvision.bind(this)}
+                                            type="submit"/> ]}
+                                    title='Provision a virtual machine'
+                                    modal={true}
+                                    autoScrollBodyContent={true}
+                                    open={this.props.showingProvisionModal}> 
+                                <VirtualMachineProvisionModalContainer />
+                            </Dialog>
+                        </MuiThemeProvider>
+                    : null}
 
-                {this.props.showingProvisionModal != undefined ?
-                    <MuiThemeProvider>
-                        <Dialog actions={[    
-                            <FlatButton label="Cancel"
-                                        primary={true}
-                                        onClick={this.hideProvisionModal.bind(this)}/>,
-                            <FlatButton label="Provision machine"
-                                        primary={true}
-                                        onClick={this.remoteVmProvision.bind(this)}
-                                        type="submit"/> ]}
-                                title='Provision a virtual machine'
-                                modal={true}
-                                autoScrollBodyContent={true}
-                                open={this.props.showingProvisionModal}> 
-                            <VirtualMachineProvisionModalContainer />
-                        </Dialog>
-                    </MuiThemeProvider>
-                : null}
+                    {this.props.showingImageInformationModal != undefined ?
+                        <MuiThemeProvider>
+                            <Dialog actions={[    
+                                <FlatButton label="Close"
+                                            primary={true}
+                                            onClick={this.hideImageInformationModal.bind(this)}/>]}
+                                    title={`${(this.props.image !== undefined && this.props.image !== null) ? this.props.image.name : 'Image'}`}
+                                    modal={true}
+                                    autoScrollBodyContent={true}
+                                    open={this.props.showingImageInformationModal}> 
+                                <ImageInformationModalContainer />
+                            </Dialog>
+                        </MuiThemeProvider>
+                    : null}
+                    
+                    {this.props.showingPackageInformationModal != undefined ?
+                        <MuiThemeProvider>
+                            <Dialog actions={[    
+                                <FlatButton label="Close"
+                                            primary={true}
+                                            onClick={this.hidePackageInformationModal.bind(this)}/>]}
+                                    title={`${(this.props.package !== undefined && this.props.package !== null) ? this.props.package.name : 'Package'}`}
+                                    modal={true}
+                                    autoScrollBodyContent={true}
+                                    open={this.props.showingPackageInformationModal}> 
+                                <PackageInformationModalContainer />
+                            </Dialog>
+                        </MuiThemeProvider>
+                    : null}
 
-                {this.props.showingImageInformationModal != undefined ?
-                    <MuiThemeProvider>
-                        <Dialog actions={[    
-                            <FlatButton label="Close"
-                                        primary={true}
-                                        onClick={this.hideImageInformationModal.bind(this)}/>]}
-                                title={`${(this.props.image !== undefined && this.props.image !== null) ? this.props.image.name : 'Image'}`}
-                                modal={true}
-                                autoScrollBodyContent={true}
-                                open={this.props.showingImageInformationModal}> 
-                            <ImageInformationModalContainer />
-                        </Dialog>
-                    </MuiThemeProvider>
-                : null}
-                
-                {this.props.showingPackageInformationModal != undefined ?
-                    <MuiThemeProvider>
-                        <Dialog actions={[    
-                            <FlatButton label="Close"
-                                        primary={true}
-                                        onClick={this.hidePackageInformationModal.bind(this)}/>]}
-                                title={`${(this.props.package !== undefined && this.props.package !== null) ? this.props.package.name : 'Package'}`}
-                                modal={true}
-                                autoScrollBodyContent={true}
-                                open={this.props.showingPackageInformationModal}> 
-                            <PackageInformationModalContainer />
-                        </Dialog>
-                    </MuiThemeProvider>
-                : null}
-
-                <FormGroup>
-                    <button className="reperio-form-control reperio-btn reperio-neutral" onClick={this.provisionVirtualMachine.bind(this)}>
-                        Provision virtual machine&nbsp;<span className="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
-                    </button>
-                </FormGroup>
-                
-                <FormGroup>
-                    <button className="reperio-form-control reperio-btn reperio-cancel" onClick={this.refreshTable.bind(this)}>
-                        <span className="glyphicon glyphicon-refresh" aria-hidden="true"></span>
-                    </button>
-                </FormGroup>
-                
-                <ReactTable data={this.props.virtualMachines.vms}
-                            //manual
-                            columns={this.columns}
-                            className="-striped -highlight"
-                            // pages={this.props.virtualMachines.pages}
-                            // onFetchData={this.fetchData.bind(this)}
-                            defaultPageSize={20}
-                            expanded={this.props.expandedRows}                      
-                            defaultSorted={[
-                                {
-                                  id: "alias",
-                                  asc: true
-                                }
-                            ]}
-                            onPageChange={() => {
-                                this.clearExpandedRows('virtualMachineForm');
-                            }}
-                            onSortedChange={() => {
-                                this.clearExpandedRows('virtualMachineForm');
-                            }}
-                            getTdProps={(state: any, rowInfo: RowInfo) => { 
-                                return { onClick: (e:any) => {
-                                    const classes = Array.from(e.target.classList);
-                                    if (!classes.includes('reperio-btn') && e.target.tagName !== "A" && e.target.innerHTML !== '<span>&nbsp;</span>' && e.target.innerHTML.trim() !== '') {
-                                        this.expandRow(rowInfo, state.expanded, 'virtualMachineForm');
+                    <FormGroup>
+                        <button className="reperio-form-control reperio-btn reperio-neutral" onClick={this.provisionVirtualMachine.bind(this)}>
+                            Provision virtual machine&nbsp;<span className="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
+                        </button>
+                    </FormGroup>
+                    
+                    <FormGroup>
+                        <button className="reperio-form-control reperio-btn reperio-cancel" onClick={this.refreshTable.bind(this)}>
+                            <span className="glyphicon glyphicon-refresh" aria-hidden="true"></span>
+                        </button>
+                    </FormGroup>
+                    
+                    <ReactTable data={this.props.virtualMachines.vms}
+                                //manual
+                                columns={this.columns}
+                                className="-striped -highlight"
+                                // pages={this.props.virtualMachines.pages}
+                                // onFetchData={this.fetchData.bind(this)}
+                                defaultPageSize={20}
+                                expanded={this.props.expandedRows}                      
+                                defaultSorted={[
+                                    {
+                                    id: "alias",
+                                    asc: true
                                     }
-                                }} 
-                            }}
-                            SubComponent={(row: RowInfo) => {
-                                return(
-                                    <div className="nested-table-container">
-                                        <VirtualMachineExtendedDetails showPackageInformation={this.showPackageInformation.bind(this, row)} showImageInformation={this.showImageInformation.bind(this, row)} data={row.original} />
-                                    </div>
-                                );
-                            }}/>
+                                ]}
+                                onPageChange={() => {
+                                    this.clearExpandedRows('virtualMachineForm');
+                                }}
+                                onSortedChange={() => {
+                                    this.clearExpandedRows('virtualMachineForm');
+                                }}
+                                getTdProps={(state: any, rowInfo: RowInfo) => { 
+                                    return { onClick: (e:any) => {
+                                        const classes = Array.from(e.target.classList);
+                                        if (!classes.includes('reperio-btn') && !classes.includes('dropdown-item') && !classes.includes('dropdown-content') && e.target.innerHTML !== '<span>&nbsp;</span>' && e.target.innerHTML.trim() !== '') {
+                                            this.expandRow(rowInfo, state.expanded, 'virtualMachineForm');
+                                        }
+                                    }} 
+                                }}
+                                SubComponent={(row: RowInfo) => {
+                                    return(
+                                        <div className="nested-table-container">
+                                            <VirtualMachineExtendedDetails showPackageInformation={this.showPackageInformation.bind(this, row)} showImageInformation={this.showImageInformation.bind(this, row)} data={row.original} />
+                                        </div>
+                                    );
+                                }}/>
+                </fieldset>
             </div>
         );
     }
@@ -421,6 +433,7 @@ class VirtualMachineContainer extends React.Component {
 
 function mapStateToProps(state: State) {
     const selector = formValueSelector('virtualMachineForm');
+    const selectorLoading = formValueSelector('reperioBar');
     return {
         authSession: state.authSession,
         virtualMachines: state.virtualMachines,
@@ -437,7 +450,8 @@ function mapStateToProps(state: State) {
         row: selector(state, 'row'),
         image: selector(state, 'image'),
         package: selector(state, 'package'),
-        expandedRows: selector(state, 'expandedRows')
+        expandedRows: selector(state, 'expandedRows'),
+        isLoading: selectorLoading(state, 'isLoading')
     };
 }
 
@@ -469,7 +483,8 @@ function mapActionToProps(dispatch: any) {
             hidePackageInformation,
             showPackageInformationModal,
             expandRow,
-            clearExpandedRows
+            clearExpandedRows,
+            toggleLoadingBar
         }, dispatch)
     };
 }

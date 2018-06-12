@@ -20,17 +20,47 @@ h2, h3 {
   padding-top: 20px;
   padding-left: 50px;
   padding-right: 50px;
-  padding-bottom: 45px;
+  padding-bottom: 40px;
 }
 
 .reperio-bar {
   width:100%;
-  height:15px;
+  height: 100%;
 }
 
 .reperio-bar-container {
-  display: flex;
-  flex: 0 0 15px;
+  height: 15px;
+}
+
+.reperio-bar-animated-container {
+  height: 15px;
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+}
+
+.reperio-bar-animated-inner-container {
+  display: block;
+  width: 200%;
+  position: absolute;
+  animation: slide 5s linear infinite;
+}
+
+.reperio-bar-animated-span {
+  float: left;
+  width: 50%;
+}
+
+.reperio-animated-bar {
+  background: url('../assets/rio-slider-colorband1.png') repeat-x;
+  background-size: 100% 100%;
+  height: 15px;
+  display:block;
+}
+
+@keyframes slide{
+  0% { left: 0; }
+  100% { left: -100%; }
 }
 
 .page-container {
@@ -62,6 +92,13 @@ h2, h3 {
 
 .footer-content {
   height: 100%;
+}
+
+.nav-menu-container {
+  position: fixed;
+  right: 0;
+  left: 0;
+  z-index: 1030;
 }
 
 .navbar {
@@ -242,18 +279,17 @@ h2, h3 {
   cursor: default !important;
 }
 
-.table-action-button-toolbar {
-  position: relative;
-  display: inline-block;
-  top: 0;
-  position: absolute;
-  height: 100%;
-  padding: 2px;
+.dropdown-menu {
+  background-color: $reperio-navbar-background;
+  height: auto;
+  margin: 0px;
+  padding: 0px;
+}
 
-  button {
-    ul {
-      position: relative;
-    }
+.dropdown-menu {
+  .divider {
+    margin: 5px 0px 5px 0px;
+    background-color: $reperio-placeholder-gray;
   }
 }
 
@@ -299,10 +335,17 @@ hr {
     border: solid $reperio-dark-blue !important;
     border-width: 0 0 5 0 !important;
   }
-  &:focus{
+  &:focus {
     outline-color: transparent;
     background-color: $reperio-dark-blue !important;
     border: solid $reperio-dark-blue !important;
+    color: white !important;
+    border-width: 0 0 5 0 !important;
+  }
+  &:disabled {
+    outline-color: transparent;
+    background-color: $reperio-disabled-blue !important;
+    border: solid $reperio-disabled-blue !important;
     color: white !important;
     border-width: 0 0 5 0 !important;
   }
@@ -332,6 +375,13 @@ hr {
     color: white !important;
     border-width: 0 0 5 0 !important;
   }
+  &:disabled {
+    outline-color: transparent;
+    background-color: $reperio-disabled-red !important;
+    border: solid $reperio-disabled-red !important;
+    color: white !important;
+    border-width: 0 0 5 0 !important;
+  }
 }
 
 .reperio-success {
@@ -355,6 +405,13 @@ hr {
     outline-color: transparent;
     background-color: $reperio-dark-teal !important;
     border: solid $reperio-dark-teal !important;
+    color: white !important;
+    border-width: 0 0 5 0 !important;
+  }
+  &:disabled {
+    outline-color: transparent;
+    background-color: $reperio-disabled-teal !important;
+    border: solid $reperio-disabled-teal !important;
     color: white !important;
     border-width: 0 0 5 0 !important;
   }
@@ -384,6 +441,13 @@ hr {
     color: white !important;
     border-width: 0 0 5 0 !important;
   }
+  &:disabled {
+    outline-color: transparent;
+    background-color: $reperio-disabled-charcoal !important;
+    border: solid $reperio-disabled-charcoal !important;
+    color: white !important;
+    border-width: 0 0 5 0 !important;
+  }
 }
 
 .reperio-text-input {
@@ -395,6 +459,15 @@ hr {
     border: solid $reperio-blue;
     box-shadow: 0px 0px 5px 0px rgba($reperio-blue, 0.7);
     outline-color: transparent !important;
+  }
+
+  &:disabled {
+    color: $reperio-charcoal;
+    box-shadow: 0px 0px 5px 0px rgba($reperio-charcoal, 0.4);
+    background-color: $reperio-navbar-background;
+    outline-color: transparent !important;
+    border: solid rgba(0,0,0,0.2) 1px !important;
+    padding: 0px 16px;
   }
 }
 
@@ -412,6 +485,15 @@ hr {
   
   > option {
     color:black !important;
+  }
+
+  &:disabled {
+    color: $reperio-charcoal;
+    box-shadow: 0px 0px 5px 0px rgba($reperio-charcoal, 0.4);
+    background-color: $reperio-navbar-background;
+    outline-color: transparent !important;
+    border: solid rgba(0,0,0,0.2) 1px !important;
+    padding: 0px 16px;
   }
 }
 
@@ -457,12 +539,11 @@ hr {
 /* Show the checkmark when checked */
 .reperio-checkbox-container input:checked ~ .reperio-checkbox:after {
   display: block;
-  transition: 0.2s;
 }
 
 .reperio-checkbox-container input:disabled + .reperio-checkbox {
   border-width: 3 !important;
-  border-color: $reperio-disabled-blue !important;
+  border-color: $reperio-disabled-checkbox-blue !important;
   background-color: transparent !important;
   border-style: solid;
   border-radius: 4px;
@@ -495,3 +576,42 @@ hr {
     color: $reperio-placeholder-gray;
     font-style: italic;
 }
+
+/* The container <div> - needed to position the dropdown content */
+.dropdown {
+  top: 0;
+  position: absolute;
+}
+
+/* Dropdown Content (Hidden by Default) */
+.dropdown-content-container {
+  min-width: 140px;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  z-index: 5;
+}
+
+.dropdown-content {
+  text-align: center;
+}
+
+.dropdown-content-bottom {
+  max-height:8px;
+}
+
+/* Links inside the dropdown */
+.dropdown-content .dropdown-item {
+  color: black;
+  padding: 3px 4px;
+  text-decoration: none;
+}
+
+/* Change color of dropdown links on hover */
+.dropdown-content .dropdown-item:hover {
+  background-color: $reperio-menu-highlight;
+}
+
+.dropdown-content .dropdown-item:active {
+  background-color: $reperio-menu-highlight;
+}
+
+

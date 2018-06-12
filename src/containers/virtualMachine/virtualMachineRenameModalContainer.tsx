@@ -4,13 +4,15 @@ import { hideRenameModal, renameVm } from "../../actions/virtualMachineActions";
 import { bindActionCreators } from "redux";
 import VirtualMachineRenameModal from "../../components/virtualMachine/virtualMachineRenameModal";
 import { formValueSelector } from 'redux-form';
-import LoadingSpinner from '../../components/misc/loadingSpinner';
+import { toggleLoadingBar } from "../../actions/navActions";
 
 class VirtualMachineRenameModalContainer extends React.Component {
     props: any;
 
     async renameModal(form: any) {
+        this.props.actions.toggleLoadingBar(true);
         await this.props.actions.renameVm(this.props.authSession.user.data.ownerUuid, this.props.row.original.uuid, form.alias);
+        this.props.actions.toggleLoadingBar(false);
     }
 
     hideRenameModal() {
@@ -19,12 +21,12 @@ class VirtualMachineRenameModalContainer extends React.Component {
 
     render() {
         return (
-            <div>
+            <fieldset disabled={this.props.isLoading}>
                 <VirtualMachineRenameModal  errorMessages={this.props.errorMessages} 
                                             close={this.hideRenameModal.bind(this)} 
                                             onSubmit={this.renameModal.bind(this)}
                                             initialValues={{alias: this.props.row.original.alias}} />
-            </div>
+            </fieldset>
         );
     }
 }
@@ -32,16 +34,18 @@ class VirtualMachineRenameModalContainer extends React.Component {
 function mapStateToProps(state: any) {
     const selector = formValueSelector('virtualMachineForm');
     const selectorModal = formValueSelector('virtualMachineRenameModal');
+    const selectorLoading = formValueSelector('reperioBar');
     return {
         authSession: state.authSession,
         errorMessages: selectorModal(state, 'errorMessages'),
-        row: selector(state, 'row')
+        row: selector(state, 'row'),
+        isLoading: selectorLoading(state, 'isLoading')
     };
 }
 
 function mapActionToProps(dispatch: any) {
     return {
-        actions: bindActionCreators({renameVm, hideRenameModal}, dispatch)
+        actions: bindActionCreators({renameVm, hideRenameModal, toggleLoadingBar}, dispatch)
     };
 }
 

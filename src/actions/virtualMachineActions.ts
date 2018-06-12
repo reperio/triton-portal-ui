@@ -109,7 +109,7 @@ export const startVm = (owner_uuid: string, uuid: string, tableOptions: ReactTab
     try {
         const vm = await virtualMachineService.startVm(owner_uuid, uuid);
 
-        getVmsByOwner(owner_uuid, tableOptions)(dispatch);
+        await getVmsByOwner(owner_uuid, tableOptions)(dispatch);
 
         dispatch({
             type: virtualMachineActionTypes.VIRTUAL_MACHINE_START_END
@@ -131,7 +131,7 @@ export const stopVm = (owner_uuid: string, uuid: string, tableOptions: ReactTabl
     try {
         const vm = await virtualMachineService.stopVm(owner_uuid, uuid);
 
-        getVmsByOwner(owner_uuid, tableOptions)(dispatch);
+        await getVmsByOwner(owner_uuid, tableOptions)(dispatch);
 
         dispatch({
             type: virtualMachineActionTypes.VIRTUAL_MACHINE_STOP_END
@@ -183,7 +183,7 @@ export const deleteVm = (owner_uuid: string, uuid: string, tableOptions: ReactTa
 
         hideDeleteModal()(dispatch);
 
-        getVmsByOwner(owner_uuid, tableOptions)(dispatch);
+        await getVmsByOwner(owner_uuid, tableOptions)(dispatch);
 
         dispatch({
             type: virtualMachineActionTypes.VIRTUAL_MACHINE_DELETE_END
@@ -257,7 +257,7 @@ export const provisionVm = (owner_uuid: string, alias: string, networks: nic[], 
 
             hideProvisionModal()(dispatch);
 
-            getVmsByOwner(owner_uuid, tableOptions)(dispatch);
+            await getVmsByOwner(owner_uuid, tableOptions)(dispatch);
 
         } catch (e) {
             dispatch(change('virtualMachineProvisionModal', 'errorMessages', [e.response.data.message]));
@@ -299,7 +299,7 @@ export const renameVm = (owner_uuid: string, uuid: string, alias: string, tableO
 
             hideRenameModal()(dispatch);
 
-            getVmsByOwner(owner_uuid, tableOptions)(dispatch);
+            await getVmsByOwner(owner_uuid, tableOptions)(dispatch);
     
             dispatch({
                 type: virtualMachineActionTypes.VIRTUAL_MACHINE_RENAME_END
@@ -342,7 +342,7 @@ export const reprovisionVm = (owner_uuid: string, uuid: string, image_uuid: stri
 
             hideReprovisionModal()(dispatch);
 
-            getVmsByOwner(owner_uuid, tableOptions)(dispatch);
+            await getVmsByOwner(owner_uuid, tableOptions)(dispatch);
     
             dispatch({
                 type: virtualMachineActionTypes.VIRTUAL_MACHINE_REPROVISION_END
@@ -385,7 +385,7 @@ export const resizeVm = (owner_uuid: string, uuid: string, billing_id: string, t
 
             hideResizeModal()(dispatch);
 
-            getVmsByOwner(owner_uuid, tableOptions)(dispatch);
+            await getVmsByOwner(owner_uuid, tableOptions)(dispatch);
     
             dispatch({
                 type: virtualMachineActionTypes.VIRTUAL_MACHINE_RESIZE_END

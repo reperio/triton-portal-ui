@@ -6,23 +6,27 @@ import { getAllImages, selectImage } from "../../actions/imageActions";
 import { getAllFabricNetworksByOwnerId, selectNetworks } from "../../actions/networkActions";
 import { bindActionCreators } from "redux";
 import VirtualMachineProvisionModal from "../../components/virtualMachine/virtualMachineProvisionModal";
-import LoadingSpinner from '../../components/misc/loadingSpinner';
 import Error from "../../components/misc/error";
 import { formValueSelector } from 'redux-form';
 import VirtualMachineModel from '../../models/virtualMachineModel';
 import { State } from '../../store/initialState';
+import { toggleLoadingBar } from "../../actions/navActions";
 
 class VirtualMachineProvisionModalContainer extends React.Component {
     props: any;
 
     async onSubmit(form: VirtualMachineModel) {
+        this.props.actions.toggleLoadingBar(true);
         await this.props.actions.provisionVm(this.props.authSession.user.data.ownerUuid, form.alias, form.nics, form.brand, this.props.packages.selectedPackage, form.image_uuid);
+        this.props.actions.toggleLoadingBar(false);
     };
 
     async componentDidMount() {
+        this.props.actions.toggleLoadingBar(true);
         await this.props.actions.getAllPackages('virtualMachineProvisionModal');
         await this.props.actions.getAllImages('virtualMachineProvisionModal');
         await this.props.actions.getAllFabricNetworksByOwnerId(this.props.authSession.user.data.ownerUuid);
+        this.props.actions.toggleLoadingBar(false);
     }
 
     async showPackageInformation(e: any) {
@@ -47,8 +51,7 @@ class VirtualMachineProvisionModalContainer extends React.Component {
 
     render() {
         return (
-            <div>
-                {this.props.packages.isLoading || this.props.networks.isLoading || this.props.images.isLoading || this.props.virtualMachineProvision.isLoading ? <LoadingSpinner/> : null}
+            <fieldset disabled={this.props.isLoading}>
                 <VirtualMachineProvisionModal   selectPrimaryNic={this.selectPrimaryNic.bind(this)}
                                                 errorMessages={this.props.errorMessages} 
                                                 networks={this.props.networks}
@@ -58,26 +61,28 @@ class VirtualMachineProvisionModalContainer extends React.Component {
                                                 showPackageInformation={this.showPackageInformation.bind(this)} 
                                                 selectNetworks={this.selectNetworks.bind(this)} 
                                                 onSubmit={this.onSubmit.bind(this)} />
-            </div>
+            </fieldset>
         );
     }
 }
 
 function mapStateToProps(state: State) {
     const selector = formValueSelector('virtualMachineProvisionModal');
+    const selectorLoading = formValueSelector('reperioBar');
     return {
         authSession: state.authSession,
         packages: state.packages,
         images: state.images,
         networks: state.networks,
         virtualMachineProvision: state.virtualMachineProvision,
-        errorMessages: selector(state, "errorMessages")
+        errorMessages: selector(state, "errorMessages"),
+        isLoading: selectorLoading(state, 'isLoading')
     };
 }
 
 function mapActionToProps(dispatch: any) {
     return {
-        actions: bindActionCreators({provisionVm, getAllPackages, showPackageInformation, getAllFabricNetworksByOwnerId, selectNetworks, selectPrimaryNic, hideProvisionModal, getAllImages, selectImage}, dispatch)
+        actions: bindActionCreators({provisionVm, getAllPackages, showPackageInformation, getAllFabricNetworksByOwnerId, selectNetworks, selectPrimaryNic, hideProvisionModal, getAllImages, selectImage, toggleLoadingBar}, dispatch)
     };
 }
 

@@ -5,13 +5,15 @@ import { getAllFabricNetworksByOwnerId, selectNetworks } from "../../actions/net
 import { bindActionCreators } from "redux";
 import VirtualMachineEditNicsModal from "../../components/virtualMachine/virtualMachineEditNicsModal";
 import { formValueSelector } from 'redux-form';
-import LoadingSpinner from '../../components/misc/loadingSpinner';
+import { toggleLoadingBar } from "../../actions/navActions";
 
 class VirtualMachineEditNicsModalContainer extends React.Component {
     props: any;
 
     async componentDidMount() {
+        this.props.actions.toggleLoadingBar(true);
         await this.props.actions.getAllFabricNetworksByOwnerId(this.props.authSession.user.data.ownerUuid);
+        this.props.actions.toggleLoadingBar(false);
     }
 
     async closeEditNicModal() {
@@ -19,7 +21,9 @@ class VirtualMachineEditNicsModalContainer extends React.Component {
     }
 
     async editNicModal(form: any) {
+        this.props.actions.toggleLoadingBar(true);
         await this.props.actions.editVmNics(form.nics, this.props.row.original.uuid, this.props.authSession.user.data.ownerUuid);
+        this.props.actions.toggleLoadingBar(false);
     }
 
     async selectNetworks(selectedNetworks: any[]) {
@@ -32,8 +36,7 @@ class VirtualMachineEditNicsModalContainer extends React.Component {
 
     render() {
         return (
-            <div>
-                {this.props.networks.isLoading ? <LoadingSpinner/> : null}
+            <fieldset disabled={this.props.isLoading}>
                 <VirtualMachineEditNicsModal    close={this.closeEditNicModal.bind(this)} 
                                                 onSubmit={this.editNicModal.bind(this)} 
                                                 networks={this.props.networks} 
@@ -41,7 +44,7 @@ class VirtualMachineEditNicsModalContainer extends React.Component {
                                                 initialValues={{nics: this.props.row.original.nics}}
                                                 selectPrimaryNic={this.selectPrimaryNic.bind(this)}
                                                 errorMessages={this.props.errorMessages}/>
-            </div>
+            </fieldset>
         );
     }
 }
@@ -49,17 +52,19 @@ class VirtualMachineEditNicsModalContainer extends React.Component {
 function mapStateToProps(state: any) {
     const selector = formValueSelector('virtualMachineForm');
     const selectorModal = formValueSelector('virtualMachineEditNicsModal');
+    const selectorLoading = formValueSelector('reperioBar');
     return {
         authSession: state.authSession,
         networks: state.networks,
         errorMessages: selectorModal(state, 'errorMessages'),
-        row: selector(state, 'row')
+        row: selector(state, 'row'),
+        isLoading: selectorLoading(state, 'isLoading')
     };
 }
 
 function mapActionToProps(dispatch: any) {
     return {
-        actions: bindActionCreators({editVmNics, hideNicModal, getAllFabricNetworksByOwnerId, selectNetworks, selectPrimaryNic, getVmsByOwner}, dispatch)
+        actions: bindActionCreators({editVmNics, hideNicModal, getAllFabricNetworksByOwnerId, selectNetworks, selectPrimaryNic, getVmsByOwner, toggleLoadingBar}, dispatch)
     };
 }
 

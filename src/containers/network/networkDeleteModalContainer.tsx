@@ -3,7 +3,6 @@ import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import NetworkDeleteModal from "../../components/network/networkDeleteModal";
 import { formValueSelector } from 'redux-form';
-import LoadingSpinner from '../../components/misc/loadingSpinner';
 
 class NetworkDeleteModalContainer extends React.Component {
     props: any;

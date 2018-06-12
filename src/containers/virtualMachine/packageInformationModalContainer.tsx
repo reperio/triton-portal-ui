@@ -4,23 +4,23 @@ import { hidePackageInformation, getPackageByUuid } from "../../actions/packages
 import { bindActionCreators } from "redux";
 import ImageInformationModal from "../../components/virtualMachine/imageInformationModal";
 import { formValueSelector } from 'redux-form';
-import LoadingSpinner from '../../components/misc/loadingSpinner';
 import { State } from '../../store/initialState';
 import PackageInformation from '../../components/virtualMachine/packageInformation';
+import { toggleLoadingBar } from "../../actions/navActions";
 
 class PackageInformationModalContainer extends React.Component {
     props: any;
 
     async componentDidMount() {
+        this.props.actions.toggleLoadingBar(true);
         this.props.actions.getPackageByUuid(this.props.row.original.billing_id);
+        this.props.actions.toggleLoadingBar(false);
     }
 
     render() {
         return (
             <div>
-                {this.props.package == undefined ? <LoadingSpinner/> 
-                    : <PackageInformation   errorMessages={this.props.errorMessages}
-                                            data={this.props.package}/> }
+                {this.props.package != null ? <PackageInformation errorMessages={this.props.errorMessages} data={this.props.package}/> : null }
             </div>
         );
     }
@@ -38,7 +38,7 @@ function mapStateToProps(state: State) {
 
 function mapActionToProps(dispatch: any) {
     return {
-        actions: bindActionCreators({getPackageByUuid, hidePackageInformation}, dispatch)
+        actions: bindActionCreators({getPackageByUuid, hidePackageInformation, toggleLoadingBar}, dispatch)
     };
 }
 

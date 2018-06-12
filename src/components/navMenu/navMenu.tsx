@@ -2,10 +2,11 @@ import React from 'react'
 import { Navbar, Nav, NavItem } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import ReperioBar from '../misc/reperioBar';
+import ReperioBarContainer from '../../containers/misc/reperioBarContainer';
 const reperio = require('../../assets/reperio-rAsset-31.png');
 
 const NavMenu = (props: any) => (
-    <div className="nav-menu-container navbar-fixed-top">
+    <div className="nav-menu-container">
         <Navbar>
             <Navbar.Header>
                 <Navbar.Brand>
@@ -46,7 +47,7 @@ const NavMenu = (props: any) => (
                 }
             </Nav>
         </Navbar>
-        <ReperioBar />
+        <ReperioBarContainer />
     </div>
     
 );

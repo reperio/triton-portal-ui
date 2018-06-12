@@ -3,7 +3,6 @@ import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import VirtualMachineDeleteModal from "../../components/virtualMachine/virtualMachineDeleteModal";
 import { formValueSelector } from 'redux-form';
-import LoadingSpinner from '../../components/misc/loadingSpinner';
 import { State } from '../../store/initialState';
 
 class VirtualMachineDeleteModalContainer extends React.Component {

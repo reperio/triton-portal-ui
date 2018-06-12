@@ -4,22 +4,22 @@ import { hideImageInformation, getImageByUuid } from "../../actions/imageActions
 import { bindActionCreators } from "redux";
 import ImageInformationModal from "../../components/virtualMachine/imageInformationModal";
 import { formValueSelector } from 'redux-form';
-import LoadingSpinner from '../../components/misc/loadingSpinner';
 import { State } from '../../store/initialState';
+import { toggleLoadingBar } from "../../actions/navActions";
 
 class ImageInformationModalContainer extends React.Component {
     props: any;
 
     async componentDidMount() {
+        this.props.actions.toggleLoadingBar(true);
         this.props.actions.getImageByUuid(this.props.row.original.image_uuid);
+        this.props.actions.toggleLoadingBar(false);
     }
 
     render() {
         return (
             <div>
-                {this.props.image == undefined ? <LoadingSpinner/> 
-                    : <ImageInformationModal    errorMessages={this.props.errorMessages}
-                                                data={this.props.image}/> }
+                {this.props.image != null ? <ImageInformationModal errorMessages={this.props.errorMessages} data={this.props.image}/> : null }
             </div>
         );
     }
@@ -37,7 +37,7 @@ function mapStateToProps(state: State) {
 
 function mapActionToProps(dispatch: any) {
     return {
-        actions: bindActionCreators({getImageByUuid, hideImageInformation}, dispatch)
+        actions: bindActionCreators({getImageByUuid, hideImageInformation, toggleLoadingBar}, dispatch)
     };
 }
 
