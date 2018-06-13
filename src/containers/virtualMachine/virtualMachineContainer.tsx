@@ -49,6 +49,7 @@ import VirtualMachineModel from '../../models/virtualMachineModel';
 import ReactTableOptionsModel from '../../models/reactTableOptionsModel';
 import { expandRow, clearExpandedRows } from '../../actions/reactTableActions';
 import { toggleLoadingBar } from "../../actions/navActions";
+import ModalWindow from '../../components/misc/modalWindow';
 
 class VirtualMachineContainer extends React.Component {
     props: any;
@@ -232,151 +233,77 @@ class VirtualMachineContainer extends React.Component {
         return (
             <div>
                 <fieldset disabled={this.props.isLoading}>
-                    {/* {this.props.virtualMachines.isLoading || this.props.virtualMachineActions.isLoading ? <LoadingSpinner/> : null} */}
                     <VirtualMachineForm errorMessages={this.props.errorMessages} />
-                    {this.props.showingDeleteModal != undefined ?
-                        <MuiThemeProvider>
-                            <Dialog actions={[    
-                                <FlatButton label="Cancel"
-                                            primary={true}
-                                            onClick={this.hideDeleteModal.bind(this)}/>,
-                                <FlatButton label="Yes"
-                                            primary={true}
-                                            onClick={this.deleteModal.bind(this)}/> ]}
+
+                    <ModalWindow    open={this.props.showingDeleteModal} 
                                     title={'Are you sure you want to delete this Virtual Machine?'}
-                                    modal={true}
-                                    autoScrollBodyContent={true}
-                                    open={this.props.showingDeleteModal}>
-                                        <VirtualMachineDeleteModalContainer/>
-                                    </Dialog>
-                            </MuiThemeProvider>
-                        : null}
+                                    close={this.hideDeleteModal.bind(this)}
+                                    actions={[
+                                        <button className="reperio-form-control reperio-btn reperio-cancel" onClick={this.hideDeleteModal.bind(this)}>Cancel</button>,
+                                        <button className="reperio-form-control reperio-btn reperio-warning" onClick={this.deleteModal.bind(this)}>Delete</button>]}>
+                             <VirtualMachineDeleteModalContainer/>
+                    </ModalWindow>
 
-                    {this.props.showingReprovisionModal != undefined ?
-                        <MuiThemeProvider>
-                            <Dialog actions={[
-                                <FlatButton label="Cancel"
-                                            primary={true}
-                                            onClick={this.hideReprovisionModal.bind(this)}/>,
-                                <FlatButton onClick={this.remoteVmReprovision.bind(this)}
-                                            label="Update"
-                                            primary={true}
-                                            type="submit"/> ]}
+                    <ModalWindow    open={this.props.showingReprovisionModal} 
                                     title={'Repovision Virtual Machine'}
-                                    modal={true}
-                                    autoDetectWindowHeight={true}
-                                    autoScrollBodyContent={true}
-                                    open={this.props.showingReprovisionModal}>
-                                <VirtualMachineReprovisionModalContainer />
-                            </Dialog>
-                        </MuiThemeProvider>
-                    : null}
+                                    close={this.hideReprovisionModal.bind(this)}
+                                    actions={[
+                                        <button className="reperio-form-control reperio-btn reperio-cancel" onClick={this.hideReprovisionModal.bind(this)}>Cancel</button>,
+                                        <button className="reperio-form-control reperio-btn reperio-success" onClick={this.remoteVmReprovision.bind(this)}>Reprovision machine</button>]}>
+                        <VirtualMachineReprovisionModalContainer />
+                    </ModalWindow>
 
-                    {this.props.showingResizeModal != undefined ?
-                        <MuiThemeProvider>
-                            <Dialog actions={[
-                                <FlatButton label="Cancel"
-                                            primary={true}
-                                            onClick={this.hideResizeModal.bind(this)}/>,
-                                <FlatButton onClick={this.remoteVmResize.bind(this)}
-                                            label="Update"
-                                            primary={true}
-                                            type="submit"/> ]}
+                    <ModalWindow    open={this.props.showingResizeModal} 
                                     title={'Resize Virtual Machine'}
-                                    modal={true}
-                                    autoScrollBodyContent={true}
-                                    open={this.props.showingResizeModal}>
-                                <VirtualMachineResizeModalContainer />
-                            </Dialog>
-                        </MuiThemeProvider>
-                    : null}
+                                    close={this.hideResizeModal.bind(this)}
+                                    actions={[
+                                        <button className="reperio-form-control reperio-btn reperio-cancel" onClick={this.hideResizeModal.bind(this)}>Cancel</button>,
+                                        <button className="reperio-form-control reperio-btn reperio-success" onClick={this.remoteVmResize.bind(this)}>Resize</button>]}>
+                             <VirtualMachineResizeModalContainer/>
+                    </ModalWindow>
 
-                    {this.props.showingRenameModal != undefined ?
-                        <MuiThemeProvider>
-                            <Dialog actions={[    
-                                <FlatButton label="Cancel"
-                                            primary={true}
-                                            onClick={this.hideRenameModal.bind(this)}/>,
-                                <FlatButton label="Update"
-                                            primary={true}
-                                            onClick={this.remoteVmRename.bind(this)}
-                                            type="submit"/> ]}
+                    <ModalWindow    open={this.props.showingRenameModal} 
                                     title={'Rename Virtual Machine Alias'}
-                                    modal={true}
-                                    autoScrollBodyContent={true}
-                                    open={this.props.showingRenameModal}> 
-                                    <VirtualMachineRenameModalContainer/>
-                            </Dialog>
-                        </MuiThemeProvider>
-                    : null}
+                                    close={this.hideRenameModal.bind(this)}
+                                    actions={[
+                                        <button className="reperio-form-control reperio-btn reperio-cancel" onClick={this.hideRenameModal.bind(this)}>Cancel</button>,
+                                        <button className="reperio-form-control reperio-btn reperio-success" onClick={this.remoteVmRename.bind(this)}>Rename</button>]}>
+                             <VirtualMachineRenameModalContainer/>
+                    </ModalWindow>
 
-                    {this.props.showingNicModal != undefined ?
-                        <MuiThemeProvider>
-                            <Dialog actions={[    
-                                <FlatButton label="Cancel"
-                                            primary={true}
-                                            onClick={this.hideNicModal.bind(this)}/>,
-                                <FlatButton label="Update"
-                                            primary={true}
-                                            onClick={this.remoteNic.bind(this)}
-                                            type="submit"/> ]}
-                                    title='Edit Nics'
-                                    modal={true}
-                                    autoScrollBodyContent={true}
-                                    open={this.props.showingNicModal}> 
-                                <VirtualMachineEditNicsModalContainer />
-                            </Dialog>
-                        </MuiThemeProvider>
-                    : null}
+                    <ModalWindow    open={this.props.showingNicModal} 
+                                    title={'Edit Nics'}
+                                    close={this.hideNicModal.bind(this)}
+                                    actions={[
+                                        <button className="reperio-form-control reperio-btn reperio-cancel" onClick={this.hideNicModal.bind(this)}>Cancel</button>,
+                                        <button className="reperio-form-control reperio-btn reperio-success" onClick={this.remoteNic.bind(this)}>Update</button>]}>
+                             <VirtualMachineEditNicsModalContainer/>
+                    </ModalWindow>
 
-                    {this.props.showingProvisionModal != undefined ?
-                        <MuiThemeProvider>
-                            <Dialog actions={[    
-                                <FlatButton label="Cancel"
-                                            primary={true}
-                                            onClick={this.hideProvisionModal.bind(this)}/>,
-                                <FlatButton label="Provision machine"
-                                            primary={true}
-                                            onClick={this.remoteVmProvision.bind(this)}
-                                            type="submit"/> ]}
-                                    title='Provision a virtual machine'
-                                    modal={true}
-                                    autoScrollBodyContent={true}
-                                    open={this.props.showingProvisionModal}> 
-                                <VirtualMachineProvisionModalContainer />
-                            </Dialog>
-                        </MuiThemeProvider>
-                    : null}
+                    <ModalWindow    open={this.props.showingProvisionModal} 
+                                    title={'Provision Machine'}
+                                    close={this.hideProvisionModal.bind(this)}
+                                    actions={[
+                                        <button className="reperio-form-control reperio-btn reperio-cancel" onClick={this.hideProvisionModal.bind(this)}>Cancel</button>,
+                                        <button className="reperio-form-control reperio-btn reperio-success" onClick={this.remoteVmProvision.bind(this)}>Provision machine</button>]}>
+                             <VirtualMachineProvisionModalContainer/>
+                    </ModalWindow>
 
-                    {this.props.showingImageInformationModal != undefined ?
-                        <MuiThemeProvider>
-                            <Dialog actions={[    
-                                <FlatButton label="Close"
-                                            primary={true}
-                                            onClick={this.hideImageInformationModal.bind(this)}/>]}
-                                    title={`${(this.props.image !== undefined && this.props.image !== null) ? this.props.image.name : 'Image'}`}
-                                    modal={true}
-                                    autoScrollBodyContent={true}
-                                    open={this.props.showingImageInformationModal}> 
-                                <ImageInformationModalContainer />
-                            </Dialog>
-                        </MuiThemeProvider>
-                    : null}
-                    
-                    {this.props.showingPackageInformationModal != undefined ?
-                        <MuiThemeProvider>
-                            <Dialog actions={[    
-                                <FlatButton label="Close"
-                                            primary={true}
-                                            onClick={this.hidePackageInformationModal.bind(this)}/>]}
-                                    title={`${(this.props.package !== undefined && this.props.package !== null) ? this.props.package.name : 'Package'}`}
-                                    modal={true}
-                                    autoScrollBodyContent={true}
-                                    open={this.props.showingPackageInformationModal}> 
-                                <PackageInformationModalContainer />
-                            </Dialog>
-                        </MuiThemeProvider>
-                    : null}
+                    <ModalWindow    open={this.props.showingImageInformationModal} 
+                                    title={'Image Information'}
+                                    close={this.hideImageInformationModal.bind(this)}
+                                    actions={[
+                                        <button className="reperio-form-control reperio-btn reperio-cancel" onClick={this.hideImageInformationModal.bind(this)}>Close</button>]}>
+                             <ImageInformationModalContainer/>
+                    </ModalWindow>
+
+                    <ModalWindow    open={this.props.showingPackageInformationModal} 
+                                    title={'Package Information'}
+                                    close={this.hidePackageInformationModal.bind(this)}
+                                    actions={[
+                                        <button className="reperio-form-control reperio-btn reperio-cancel" onClick={this.hidePackageInformationModal.bind(this)}>Close</button>]}>
+                             <PackageInformationModalContainer/>
+                    </ModalWindow>
 
                     <FormGroup>
                         <button className="reperio-form-control reperio-btn reperio-neutral" onClick={this.provisionVirtualMachine.bind(this)}>

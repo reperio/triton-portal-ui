@@ -4,7 +4,7 @@ import { FormGroup } from "react-bootstrap";
 import Error from '../misc/error';
 
 const VirtualMachineRenameModal = (props: any) => (
-    <form className="modal-container" onSubmit={props.handleSubmit(props.onSubmit)}>
+    <form onSubmit={props.handleSubmit(props.onSubmit)}>
         {props.errorMessages != null && props.errorMessages.length > 0 ? <Error errors={props.errorMessages}/> : null}
         <FormGroup>
             <label>Alias</label>

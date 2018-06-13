@@ -43,7 +43,7 @@ h2, h3 {
   display: block;
   width: 200%;
   position: absolute;
-  animation: slide 5s linear infinite;
+  animation: slide 3s linear infinite;
 }
 
 .reperio-bar-animated-span {
@@ -165,10 +165,6 @@ h2, h3 {
   }
 }
 
-.modal-container {
-  margin-top: 2px;
-}
-
 .-pagination {
   height: 40px;
 }
@@ -203,8 +199,8 @@ h2, h3 {
 }
 
 //loading spinner container
-.sweet-loading-container {
-  background: rgba(0,0,0,0.1);
+.modal-container {
+  background: rgba(0,0,0,0.4);
   position: fixed;
   left: 0px;
   top: 0px;
@@ -213,12 +209,68 @@ h2, h3 {
   z-index: 9999;
 }
 
+.modal-window-header {
+  font-size: 28px;
+  min-height: 50px;
+}
+
+.modal-window-header-close {
+  width: 25px;
+  color: #b10000;
+  position: absolute;
+  font-family: initial;
+  font-size: 25px;
+  top: 0;
+  right: 0;
+}
+
+.modal-window-header-close-span {
+  cursor: pointer;
+}
+
+.modal-window-body {
+  overflow-y: auto;
+  min-height: 190px;
+  max-height: calc(50vh - 150px);
+  padding-top: 2px;
+}
+
+.modal-window {
+  height:100%;
+}
+
+.modal-window-footer {
+  width: 100%;
+  min-height: 60px;
+}
+
+.modal-window-footer-button-container {
+  right: 0;
+  position: absolute;
+  margin-right: 15px;
+  margin-bottom: 15px;
+  bottom: 0;
+  display: inline-block;
+
+  button {
+    margin:10px;
+  }
+}
+
 //loading spinner
-.css-18zexoh {
-  position: relative;
-  left: 50%;
+.modal-window-container {
+  position: absolute;
   top: 50%;
-  margin: -35px;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 50%;
+  max-height: 50%;
+  min-width: 300px;
+  min-height: 300px;
+  background-color: #f7f7f7;
+  border-width: 1px;
+  border-style: solid;
+  padding: 25px;
 }
 
 .row {
@@ -561,6 +613,14 @@ hr {
   transform: rotate(45deg);
 }
 
+.reperio-checkbox-container input:disabled + .reperio-checkbox:after {
+  border: solid $reperio-disabled-checkbox-blue;
+  border-width: 0 3px 3px 0;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+}
+
 ::-webkit-input-placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
   color: $reperio-placeholder-gray;
   font-style: italic;
@@ -613,5 +673,3 @@ hr {
 .dropdown-content .dropdown-item:active {
   background-color: $reperio-menu-highlight;
 }
-
-
