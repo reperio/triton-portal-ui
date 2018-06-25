@@ -3,17 +3,15 @@ import { connect } from "react-redux";
 import { authService } from '../../services/authService';
 import { extendSession, logout, hideExpirationDialog, updateTimeLeftOnToken } from '../../actions/authActions';
 import { locationChange } from '../../actions/navActions';
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import { FlatButton, Dialog } from 'material-ui';
 import { formValueSelector } from 'redux-form';
 import { bindActionCreators } from "redux";
 import { history } from '../../store/history';
-
 import NavMenu from "../../components/navMenu/navMenu";
+import ModalWindow from '../../components/misc/modalWindow';
+import { StateAccount, State } from '../../store/initialState';
 
 class NavMenuContainer extends React.Component {
     props: any;
-    location: any;
 
     async componentDidMount() {
         this.props.actions.locationChange(history.location.pathname);
@@ -39,28 +37,21 @@ class NavMenuContainer extends React.Component {
     render() {
         return (
             <div className="r-nav-menu">
-                <MuiThemeProvider>
-                    <Dialog actions={[    
-                        <FlatButton label="Log out"
-                                    primary={true}
-                                    onClick={this.logout.bind(this)}/>,
-                        <FlatButton label="Extend session"
-                                    primary={true}
-                                    onClick={this.extendSession.bind(this)}
-                                    type="submit"/> ]}
-                            title={`Your session will expire in ${this.props.timeLeftOnToken}`}
-                            modal={true}
-                            open={this.props.showingExpirationDialog === undefined? false : this.props.showingExpirationDialog}> 
-                    </Dialog>
-                </MuiThemeProvider>
-
+                <ModalWindow    open={this.props.showingExpirationDialog} 
+                                title={`Your session will expire in ${this.props.timeLeftOnToken}`}
+                                close={this.logout.bind(this)}
+                                priority={true}
+                                actions={[
+                                    <button className="reperio-form-control reperio-btn reperio-cancel" onClick={this.logout.bind(this)}>Log out</button>,
+                                    <button className="reperio-form-control reperio-btn reperio-neutral" onClick={this.extendSession.bind(this)}>Extend session</button>]}>
+                </ModalWindow>
                 <NavMenu logout={this.logout.bind(this)} navigateTo={this.navigateTo.bind(this)} location={this.props.location} authSession={this.props.authSession} />
             </div>
         );
     }
 }
 
-function mapStateToProps(state: any) {
+function mapStateToProps(state: State) {
     const selector = formValueSelector('navMenu');
 
     return {

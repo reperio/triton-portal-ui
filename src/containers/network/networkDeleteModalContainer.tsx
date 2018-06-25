@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import NetworkDeleteModal from "../../components/network/networkDeleteModal";
 import { formValueSelector } from 'redux-form';
+import { State } from '../../store/initialState';
 
 class NetworkDeleteModalContainer extends React.Component {
     props: any;
@@ -16,7 +17,7 @@ class NetworkDeleteModalContainer extends React.Component {
     }
 }
 
-function mapStateToProps(state: any) {
+function mapStateToProps(state: State) {
     const selector = formValueSelector('networkForm');
     const selectorModal = formValueSelector('networkDeleteModal');
     return {

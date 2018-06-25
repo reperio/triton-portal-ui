@@ -2,7 +2,7 @@ import React from 'react'
 import Moment from 'moment'
 
 const NetworkMachineExtendedDetails = (props: any) => (
-    <div className="nested-table-details col-xs-12" style={{minWidth: "500px"}}>
+    <div className="nested-table-details col-xs-12">
         <div className="row col-xs-12 table-row-container">
             <div className="col-xs-4 table-row-property">UUID</div>
             <div className="col-xs-8">{props.data.uuid}</div>

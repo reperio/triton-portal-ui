@@ -91,6 +91,10 @@ export class StateNetworkActions {
     isLoading: boolean;
 }
 
+export class StateFirewallRules {
+    rules: any[];
+}
+
 export const initialState: State = {
     authSession: {
         isAuthenticated: false,

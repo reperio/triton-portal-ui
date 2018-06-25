@@ -11,6 +11,7 @@ import LoginModel from '../../models/loginModel';
 import { Redirect } from "react-router";
 import { formValueSelector } from 'redux-form';
 import { toggleLoadingBar } from "../../actions/navActions";
+import { State } from '../../store/initialState';
 
 class LoginFormContainer extends React.Component {
     props: any;
@@ -44,7 +45,7 @@ class LoginFormContainer extends React.Component {
     }
 }
 
-function mapStateToProps(state: any) {
+function mapStateToProps(state: State) {
     const selector = formValueSelector('loginForm');
     const selectorLoading = formValueSelector('reperioBar');
     return {

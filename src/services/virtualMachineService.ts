@@ -86,6 +86,14 @@ class VirtualMachineService {
     async editNics(nics: any[], id: string) {
         return await axios.post(`triton/vms/${id}/nics`, {nics});
     }
+
+    async addTags(tag: any) {
+        return await axios.post(`triton/vms/addTag`, {tag});
+    }
+
+    async editTags(tags: any[], id: string) {
+        return await axios.post(`triton/vms/${id}/updateTags`, {tags});
+    }
 }
 
 export const virtualMachineService = new VirtualMachineService();

@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import { Redirect } from "react-router";
 
 import MainDashboard from "../../components/main/mainDashboard";
+import { State } from '../../store/initialState';
 
 class MainDashboardContainer extends React.Component {
     props: any;
@@ -16,7 +17,7 @@ class MainDashboardContainer extends React.Component {
     }
 }
 
-function mapStateToProps(state: any) {
+function mapStateToProps(state: State) {
     return {
         authSession: state.authSession
     };

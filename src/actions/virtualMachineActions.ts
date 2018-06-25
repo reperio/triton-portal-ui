@@ -46,7 +46,13 @@ export const virtualMachineActionTypes = {
     VIRTUAL_MACHINE_RESIZE_ERROR: "VIRTUAL_MACHINE_RESIZE_ERROR",
     VIRTUAL_MACHINE_EDIT_NICS_START: "VIRTUAL_MACHINE_EDIT_NICS_START",
     VIRTUAL_MACHINE_EDIT_NICS_END: "VIRTUAL_MACHINE_EDIT_NICS_END",
-    VIRTUAL_MACHINE_EDIT_NICS_ERROR: "VIRTUAL_MACHINE_EDIT_NICS_ERROR"
+    VIRTUAL_MACHINE_EDIT_NICS_ERROR: "VIRTUAL_MACHINE_EDIT_NICS_ERROR",
+    VIRTUAL_MACHINE_ADD_TAG_START: "VIRTUAL_MACHINE_ADD_TAG_START",
+    VIRTUAL_MACHINE_ADD_TAG_END: "VIRTUAL_MACHINE_ADD_TAG_END",
+    VIRTUAL_MACHINE_ADD_TAG_ERROR: "VIRTUAL_MACHINE_ADD_TAG_ERROR",
+    VIRTUAL_MACHINE_EDIT_TAGS_START: "VIRTUAL_MACHINE_EDIT_TAGS_START",
+    VIRTUAL_MACHINE_EDIT_TAGS_END: "VIRTUAL_MACHINE_EDIT_TAGS_END",
+    VIRTUAL_MACHINE_EDIT_TAGS_ERROR: "VIRTUAL_MACHINE_EDIT_TAGS_ERROR"
 };
 
 export const getAllVms = () => async (dispatch: Dispatch<any>) => {
@@ -89,6 +95,8 @@ export const getVmsByOwner = (owner_uuid: string, tableOptions: ReactTableOption
                 vms: response
             }
         });
+
+        clearSelectedVirtualMachines()(dispatch);
 
         dispatch(change('virtualMachineForm', 'errorMessages', []));
     } catch (e) {
@@ -276,7 +284,7 @@ export const hideProvisionModal = () => async (dispatch: Dispatch<any>) => {
     dispatch(change('virtualMachineForm', 'showingProvisionModal', false));
 }
 
-export const remoteFormSubmit = (formName: string) => async (dispatch: Dispatch<any>) => {
+export const remoteFormSubmit = (formName: string) => (dispatch: Dispatch<any>) => {
     dispatch(submit(formName));
 }
 
@@ -482,4 +490,109 @@ export const showNicModal = (row: any) => async (dispatch: Dispatch<any>) => {
 
 export const hideNicModal = () => async (dispatch: Dispatch<any>) => {
     dispatch(change('virtualMachineForm', 'showingNicModal', false));
+}
+
+export const selectVirtualMachine = (uuid: string, currentSelectedVirtualMachines: string[]) => (dispatch: Dispatch<any>) => {
+    let selectedVirtualMachines: string[] = [];
+
+    if (currentSelectedVirtualMachines === undefined) {
+        selectedVirtualMachines.push(uuid);
+    }
+    else {
+        selectedVirtualMachines = currentSelectedVirtualMachines.slice();
+
+        if (selectedVirtualMachines.includes(uuid)) {
+            selectedVirtualMachines = selectedVirtualMachines.filter((selectedUuid:string) => selectedUuid !== uuid);
+        }
+        else {
+            selectedVirtualMachines.push(uuid);
+        }
+    }
+    dispatch(change('virtualMachineForm', 'selectedVirtualMachines', selectedVirtualMachines));
+}
+
+export const clearSelectedVirtualMachines = () => (dispatch: Dispatch<any>) => {
+    dispatch(change('virtualMachineForm', 'selectedVirtualMachines', []));
+}
+
+export const showAddTagModal = (row: any) => async (dispatch: Dispatch<any>) => {
+    dispatch(change('virtualMachineForm', 'row', row));
+    dispatch(change('virtualMachineForm', 'showingAddTagModal', true));
+}
+
+export const hideAddTagModal = () => async (dispatch: Dispatch<any>) => {
+    dispatch(change('virtualMachineForm', 'showingAddTagModal', false));
+}
+
+export const showEditTagsModal = (row: any) => async (dispatch: Dispatch<any>) => {
+    dispatch(change('virtualMachineForm', 'row', row));
+    dispatch(change('virtualMachineForm', 'showingEditTagsModal', true));
+}
+
+export const hideEditTagsModal = () => async (dispatch: Dispatch<any>) => {
+    dispatch(change('virtualMachineForm', 'showingEditTagsModal', false));
+}
+
+export const addTag = (uuids: string[], name: string, value: string, owner_uuid: string, tableOptions: ReactTableOptionsModel) => async (dispatch: Dispatch<any>) => {
+
+    const schema = Joi.object().keys({
+        uuids: Joi.array().items(
+            Joi.string().guid()
+        ).required().min(1),
+        name: Joi.string().required(),
+        value: Joi.string().required()
+    }).options({ abortEarly: false });
+
+    let errors = await inputValidationService.validate(
+        {uuids, name, value}, schema);
+
+    if (errors.length == 0) {
+        try {
+            dispatch({ type: virtualMachineActionTypes.VIRTUAL_MACHINE_ADD_TAG_START });
+
+            await virtualMachineService.addTags({uuids, name, value});
+
+            dispatch({ type: virtualMachineActionTypes.VIRTUAL_MACHINE_ADD_TAG_END });
+
+            hideAddTagModal()(dispatch);
+            
+            getVmsByOwner(owner_uuid, tableOptions)(dispatch);
+        }
+        catch (e) {
+            dispatch(change('virtualMachineAddTagModal', 'errorMessages', [e.response.data.message]));
+
+            dispatch({ type: virtualMachineActionTypes.VIRTUAL_MACHINE_ADD_TAG_ERROR });
+        }
+    }
+}
+
+export const editTags = (tags: any[], uuid: string, owner_uuid: string, tableOptions: ReactTableOptionsModel) => async (dispatch: Dispatch<any>) => {
+    const schema = Joi.object().keys({
+        tags: Joi.array().items(Joi.object({
+            name: Joi.string().required(),
+            value: Joi.string().required()
+        }))
+    }).options({ abortEarly: false });
+
+    let errors = await inputValidationService.validate(
+        {tags}, schema);
+
+    if (errors.length == 0) {
+        try {
+            dispatch({ type: virtualMachineActionTypes.VIRTUAL_MACHINE_EDIT_TAGS_START });
+
+            await virtualMachineService.editTags(tags, uuid);
+
+            dispatch({ type: virtualMachineActionTypes.VIRTUAL_MACHINE_EDIT_TAGS_END });
+
+            hideEditTagsModal()(dispatch);
+            
+            getVmsByOwner(owner_uuid, tableOptions)(dispatch);
+        }
+        catch (e) {
+            dispatch(change('virtualMachineEditTagsModal', 'errorMessages', [e.response.data.message]));
+
+            dispatch({ type: virtualMachineActionTypes.VIRTUAL_MACHINE_EDIT_TAGS_ERROR });
+        }
+    }
 }

@@ -5,18 +5,17 @@ import { getAllFabricNetworksByOwnerId, deleteFabricNetwork, showDeleteModal, hi
 import ReactTable, { RowInfo } from 'react-table';
 import { FormGroup } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
-import { Button }  from "react-bootstrap";
 import NetworkForm from '../../components/network/networkForm';
 import { formValueSelector } from 'redux-form';
 import 'react-table/react-table.css';
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import { FlatButton, Dialog } from 'material-ui';
 import NetworkDeleteModalContainer from './networkDeleteModalContainer';
 import NetworkMachineExtendedDetails from '../../components/network/networkExtendedDetails';
 import NetworkActionsButton from '../../components/network/networkActionsButton';
 import NetworkCreateModalContainer from './networkCreateModalContainer';
 import { expandRow, clearExpandedRows } from '../../actions/reactTableActions';
 import { toggleLoadingBar } from "../../actions/navActions";
+import ModalWindow from '../../components/misc/modalWindow';
+import { State } from '../../store/initialState';
 
 class NetworkContainer extends React.Component {
     props: any;
@@ -39,7 +38,7 @@ class NetworkContainer extends React.Component {
 
     async deleteModal() {
         this.props.actions.toggleLoadingBar(true);
-        await this.props.actions.deleteFabricNetwork(this.props.authSession.user.data.ownerUuid, this.props.row.original.vlan_id, this.props.row.original.uuid);
+        await this.props.actions.deleteFabricNetwork(this.props.authSession.user.ownerUuid, this.props.row.original.vlan_id, this.props.row.original.uuid);
         this.props.actions.toggleLoadingBar(false);
     }
 
@@ -65,7 +64,7 @@ class NetworkContainer extends React.Component {
 
     async refreshTable() {
         this.props.actions.toggleLoadingBar(true);
-        await this.props.actions.getAllFabricNetworksByOwnerId(this.props.authSession.user.data.ownerUuid);
+        await this.props.actions.getAllFabricNetworksByOwnerId(this.props.authSession.user.ownerUuid);
         this.props.actions.toggleLoadingBar(false);
     }
 
@@ -83,39 +82,25 @@ class NetworkContainer extends React.Component {
                 <NetworkForm errorMessages={this.props.errorMessages} />
 
                 {this.props.showingDeleteModal != undefined ?
-                    <MuiThemeProvider>
-                        <Dialog actions={[    
-                            <FlatButton label="Cancel"
-                                        primary={true}
-                                        onClick={this.hideDeleteModal.bind(this)}/>,
-                            <FlatButton label="Yes"
-                                        primary={true}
-                                        onClick={this.deleteModal.bind(this)}/> ]}
-                                title={'Are you sure you want to delete this network?'}
-                                modal={true}
-                                autoScrollBodyContent={true}
-                                open={this.props.showingDeleteModal}>
-                                    <NetworkDeleteModalContainer />
-                        </Dialog>
-                    </MuiThemeProvider>
+                    <ModalWindow    open={this.props.showingDeleteModal} 
+                                    title={'Are you sure you want to delete this network?'}
+                                    close={this.hideDeleteModal.bind(this)}
+                                    actions={[
+                                        <button className="reperio-form-control reperio-btn reperio-cancel" onClick={this.hideDeleteModal.bind(this)}>Cancel</button>,
+                                        <button className="reperio-form-control reperio-btn reperio-success" onClick={this.deleteModal.bind(this)}>Yes</button>]}>
+                        <NetworkDeleteModalContainer/>
+                    </ModalWindow>
                 : null}
 
                 {this.props.showingCreateModal != undefined ?
-                    <MuiThemeProvider>
-                        <Dialog actions={[    
-                            <FlatButton label="Cancel"
-                                        primary={true}
-                                        onClick={this.hideCreateModal.bind(this)}/>,
-                            <FlatButton label="Create"
-                                        primary={true}
-                                        onClick={this.remoteCreate.bind(this)}/> ]}
-                                title={'Create a fabric network'}
-                                modal={true}
-                                autoScrollBodyContent={true}
-                                open={this.props.showingCreateModal}>
-                                    <NetworkCreateModalContainer />
-                        </Dialog>
-                    </MuiThemeProvider>
+                    <ModalWindow    open={this.props.showingCreateModal} 
+                                    title={'Create a fabric network'}
+                                    close={this.hideDeleteModal.bind(this)}
+                                    actions={[
+                                        <button className="reperio-form-control reperio-btn reperio-cancel" onClick={this.hideCreateModal.bind(this)}>Cancel</button>,
+                                        <button className="reperio-form-control reperio-btn reperio-success" onClick={this.remoteCreate.bind(this)}>Create</button>]}>
+                        <NetworkCreateModalContainer/>
+                    </ModalWindow>
                 : null}
 
                 <FormGroup>
@@ -167,7 +152,7 @@ class NetworkContainer extends React.Component {
     }
 }
 
-function mapStateToProps(state: any) {
+function mapStateToProps(state: State) {
     const selector = formValueSelector('networkForm');
     const selectorLoading = formValueSelector('reperioBar');
     return {

@@ -12,7 +12,7 @@ class ImageInformationModalContainer extends React.Component {
 
     async componentDidMount() {
         this.props.actions.toggleLoadingBar(true);
-        this.props.actions.getImageByUuid(this.props.row.original.image_uuid);
+        await this.props.actions.getImageByUuid(this.props.row.original.image_uuid);
         this.props.actions.toggleLoadingBar(false);
     }
 

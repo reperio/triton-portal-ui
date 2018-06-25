@@ -139,7 +139,7 @@ export const getUserById = (userId: string) => async (dispatch: Dispatch<any>) =
         type: accountActionTypes.USER_LOAD_START
     });
     try {
-        const user: UserModel = (await userService.getUserById(userId)).data.data;
+        const user: UserModel = (await userService.getUserById(userId)).data;
 
         dispatch({
             type: accountActionTypes.USER_LOAD_END,

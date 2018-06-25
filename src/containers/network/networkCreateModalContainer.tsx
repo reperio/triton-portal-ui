@@ -6,13 +6,14 @@ import { formValueSelector } from 'redux-form';
 import NetworkCreateModal from '../../components/network/networkCreateModal';
 import NetworkModel from '../../models/networkModel';
 import { toggleLoadingBar } from "../../actions/navActions";
+import { State } from '../../store/initialState';
 
 class NetworkCreateModalContainer extends React.Component {
     props: any;
 
     async onSubmit(form: NetworkModel) {
         this.props.actions.toggleLoadingBar(true);
-        await this.props.actions.createFabricNetwork(form, this.props.authSession.user.data.ownerUuid);
+        await this.props.actions.createFabricNetwork(form, this.props.authSession.user.ownerUuid);
         this.props.actions.toggleLoadingBar(false);
     };
 
@@ -26,7 +27,7 @@ class NetworkCreateModalContainer extends React.Component {
     }
 }
 
-function mapStateToProps(state: any) {
+function mapStateToProps(state: State) {
     const selector = formValueSelector('networkCreateModal');
     const selectorLoading = formValueSelector('reperioBar');
     return {

@@ -2,7 +2,7 @@ import React from 'react'
 import Error from '../misc/error';
 
 const PackageInformation = (props: any) => (
-    <div style={{marginBottom: "15px"}}>
+    <div className="package-information">
         {props.errorMessages != null && props.errorMessages.length > 0 ? <Error errors={props.errorMessages}/> : null}
         <div className="row table-row-container">
             <div className="col-md-6"><b>{props.data.name}</b></div>

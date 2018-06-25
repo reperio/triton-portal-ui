@@ -6,19 +6,20 @@ import AccountEditForm from "../../components/account/accountEditForm";
 import { formValueSelector } from 'redux-form';
 import UserModel from '../../models/userModel';
 import { toggleLoadingBar } from "../../actions/navActions";
+import { State } from '../../store/initialState';
 
 class AccountEditFormContainer extends React.Component {
     props: any;
 
     async onSubmit(values: UserModel) {
         this.props.actions.toggleLoadingBar(true);
-        await this.props.actions.editAccount(values, this.props.authSession.user.data.id);
+        await this.props.actions.editAccount(values, this.props.authSession.user.id);
         this.props.actions.toggleLoadingBar(false);
     };
 
     async componentDidMount () {
         this.props.actions.toggleLoadingBar(true);
-        await this.props.actions.getUserById(this.props.authSession.user.data.id);
+        await this.props.actions.getUserById(this.props.authSession.user.id);
         this.props.actions.toggleLoadingBar(false);
     };
 
@@ -33,7 +34,7 @@ class AccountEditFormContainer extends React.Component {
     }
 }
 
-function mapStateToProps(state: any) {
+function mapStateToProps(state: State) {
     const selector = formValueSelector('accountEditForm');
     const selectorLoading = formValueSelector('reperioBar');
     return {

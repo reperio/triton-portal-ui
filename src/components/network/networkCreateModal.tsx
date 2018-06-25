@@ -8,7 +8,7 @@ import 'react-widgets/dist/css/react-widgets.css';
 const fieldArrayComponent = (props: any) => (
     <div>
         {props.fields.map((member:string, index:number) =>
-            <div key={index} className="field-array-component" style={{position: "relative"}}>
+            <div key={index} className="field-array-component">
                 <div>
                     <div className="field-array-component-item-label">Resolver IP #{index + 1}</div>
                     <div className="field-array-component-delete-button">
@@ -31,7 +31,7 @@ const fieldArrayComponent = (props: any) => (
 );
 
 const NetworkCreateModal = (props: any) => (
-    <form className="modal-container" onSubmit={props.handleSubmit(props.onSubmit)}>
+    <form onSubmit={props.handleSubmit(props.onSubmit)}>
         {props.errorMessages != null && props.errorMessages.length > 0 ? <Error errors={props.errorMessages}/> : null}
         <FormGroup>
         <Field  name="name" 

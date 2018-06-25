@@ -38,6 +38,8 @@ const VirtualMachineActionsButton = (props: any) => (
                     : null}
 
                     <div className="dropdown-item" onClick={props.editNics.bind(this, props.row)}>Edit Nics</div>
+                    <div className="dropdown-item" onClick={props.editFirewallRules.bind(this, props.row)}>Edit Firewall Rules</div>
+                    <div className="dropdown-item" onClick={props.editTags.bind(this, props.row)}>Edit Tags</div>
                     <MenuItem divider />
                     <div className="dropdown-item" onClick={props.deleteVirtualMachine.bind(this, props.row)}>Delete</div>
                 </div>

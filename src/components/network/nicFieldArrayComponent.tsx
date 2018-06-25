@@ -5,7 +5,7 @@ import { FormGroup, Button } from "react-bootstrap";
 export const NicFieldArrayComponent = (props: any) => (
     <div>
         {props.fields.map((member:string, index:number) =>
-            <div key={index} className="field-array-component" style={{position: "relative"}}>
+            <div key={index} className="field-array-component">
                 <div>
                     <div className="field-array-component-item-label">NIC #{index + 1}</div>
                     <div className="field-array-component-delete-button">

@@ -36,10 +36,9 @@ const VirtualMachineProvisionModal = (props: any) => (
                         }
             </Field>
         </FormGroup>
-        {props.packages.showInformation
-        ? <PackageInformation   data={props.packages.selectedPackage} 
-                                style={{marginBottom: "15px"}} />
-        : null}
+        
+        {props.packages.showInformation ? <PackageInformation data={props.packages.selectedPackage} /> : null}
+        
         <FormGroup>
             <Field  className="reperio-form-control reperio-dropdown"
                     name='image_uuid'

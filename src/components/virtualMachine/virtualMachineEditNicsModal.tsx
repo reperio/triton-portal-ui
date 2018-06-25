@@ -8,7 +8,6 @@ const VirtualMachineEditNicsModal = (props: any) => (
     <form onSubmit={props.handleSubmit(props.onSubmit)}>
     {props.errorMessages != null && props.errorMessages.length > 0 ? <Error errors={props.errorMessages}/> : null}
         <FormGroup>
-            <label>Edit Nics</label>
             <FieldArray name="nics"
                         selectNetworks={props.selectNetworks} 
                         selectPrimaryNic={props.selectPrimaryNic} 

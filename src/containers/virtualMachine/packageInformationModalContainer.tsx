@@ -13,7 +13,7 @@ class PackageInformationModalContainer extends React.Component {
 
     async componentDidMount() {
         this.props.actions.toggleLoadingBar(true);
-        this.props.actions.getPackageByUuid(this.props.row.original.billing_id);
+        await this.props.actions.getPackageByUuid(this.props.row.original.billing_id);
         this.props.actions.toggleLoadingBar(false);
     }
 

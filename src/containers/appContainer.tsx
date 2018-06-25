@@ -1,6 +1,7 @@
 import React from 'react'
 import {connect} from "react-redux";
 import Routes from "../components/route/routes";
+import { State } from '../store/initialState';
 
 class AppContainer extends React.Component {
     props: any;
@@ -14,7 +15,7 @@ class AppContainer extends React.Component {
     }
 }
 
-function mapStateToProps(state: any) {
+function mapStateToProps(state: State) {
     return { };
 }
 

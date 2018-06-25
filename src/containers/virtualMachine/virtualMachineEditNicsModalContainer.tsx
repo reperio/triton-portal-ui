@@ -6,13 +6,14 @@ import { bindActionCreators } from "redux";
 import VirtualMachineEditNicsModal from "../../components/virtualMachine/virtualMachineEditNicsModal";
 import { formValueSelector } from 'redux-form';
 import { toggleLoadingBar } from "../../actions/navActions";
+import { State } from '../../store/initialState';
 
 class VirtualMachineEditNicsModalContainer extends React.Component {
     props: any;
 
     async componentDidMount() {
         this.props.actions.toggleLoadingBar(true);
-        await this.props.actions.getAllFabricNetworksByOwnerId(this.props.authSession.user.data.ownerUuid);
+        await this.props.actions.getAllFabricNetworksByOwnerId(this.props.authSession.user.ownerUuid);
         this.props.actions.toggleLoadingBar(false);
     }
 
@@ -22,7 +23,7 @@ class VirtualMachineEditNicsModalContainer extends React.Component {
 
     async editNicModal(form: any) {
         this.props.actions.toggleLoadingBar(true);
-        await this.props.actions.editVmNics(form.nics, this.props.row.original.uuid, this.props.authSession.user.data.ownerUuid);
+        await this.props.actions.editVmNics(form.nics, this.props.row.original.uuid, this.props.authSession.user.ownerUuid);
         this.props.actions.toggleLoadingBar(false);
     }
 
@@ -49,7 +50,7 @@ class VirtualMachineEditNicsModalContainer extends React.Component {
     }
 }
 
-function mapStateToProps(state: any) {
+function mapStateToProps(state: State) {
     const selector = formValueSelector('virtualMachineForm');
     const selectorModal = formValueSelector('virtualMachineEditNicsModal');
     const selectorLoading = formValueSelector('reperioBar');

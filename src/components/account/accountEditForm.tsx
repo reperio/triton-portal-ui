@@ -6,18 +6,20 @@ import Error from '../../components/misc/error';
 const fieldArrayComponent = (props: any) => (
     <div>
         {props.fields.map((member:string, index:number) =>
-            <div key={index} className="field-array-component" style={{position: "relative"}}>
+            <div key={index} className="field-array-component">
                 <div>
                     <div className="field-array-component-item-label">SSH Key #{index + 1}</div>
                     <div className="field-array-component-delete-button">
                         <button type='button' className="reperio-form-control reperio-btn reperio-warning" onClick={() => props.fields.remove(index)}><span className="glyphicon glyphicon-trash" aria-hidden="true"></span></button>
                     </div>
                 </div>
-                <Field  name={`${member}.key`}
-                        type="text"
-                        component="input"
-                        className="reperio-form-control reperio-text-input"
-                        placeholder="Key"/>
+                <FormGroup>
+                    <Field  name={`${member}.key`}
+                            type="text"
+                            component="input"
+                            className="reperio-form-control reperio-text-input"
+                            placeholder="Key"/>
+                </FormGroup>
                 <Field  name={`${member}.description`}
                         type="text"
                         component="input"

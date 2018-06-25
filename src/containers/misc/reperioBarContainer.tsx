@@ -4,6 +4,7 @@ import { formValueSelector } from 'redux-form';
 import { bindActionCreators } from "redux";
 import ReperioBar from '../../components/misc/reperioBar';
 import ReperioBarAnimated from '../../components/misc/reperioBarAnimated';
+import { State } from '../../store/initialState';
 
 
 class ReperioBarContainer extends React.Component {
@@ -21,7 +22,7 @@ class ReperioBarContainer extends React.Component {
     }
 }
 
-function mapStateToProps(state: any) {
+function mapStateToProps(state: State) {
     const selector = formValueSelector('reperioBar');
 
     return {

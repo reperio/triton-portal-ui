@@ -1,6 +1,7 @@
 import React from 'react';
 import {connect} from "react-redux";
 import PublicRoute from "../../components/route/routeHelperComponents/publicRoute";
+import { State } from '../../store/initialState';
 
 class PublicRouteContainer extends React.Component {
     props: any;
@@ -12,7 +13,7 @@ class PublicRouteContainer extends React.Component {
     }
 }
 
-function mapStateToProps(state: any) {
+function mapStateToProps(state: State) {
     return {
         authSession: state.authSession
     };

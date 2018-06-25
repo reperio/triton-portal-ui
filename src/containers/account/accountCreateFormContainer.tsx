@@ -6,6 +6,7 @@ import AccountCreateForm from "../../components/account/accountCreateForm";
 import { formValueSelector } from 'redux-form';
 import UserModel from '../../models/userModel';
 import { toggleLoadingBar } from "../../actions/navActions";
+import { StateAccount, State } from '../../store/initialState';
 
 class AccountCreateFormContainer extends React.Component {
     props: any;
@@ -26,7 +27,7 @@ class AccountCreateFormContainer extends React.Component {
     }
 }
 
-function mapStateToProps(state: any) {
+function mapStateToProps(state: State) {
     const selector = formValueSelector('accountCreateForm');
     const selectorLoading = formValueSelector('reperioBar');
     return {

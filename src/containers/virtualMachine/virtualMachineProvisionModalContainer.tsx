@@ -17,7 +17,7 @@ class VirtualMachineProvisionModalContainer extends React.Component {
 
     async onSubmit(form: VirtualMachineModel) {
         this.props.actions.toggleLoadingBar(true);
-        await this.props.actions.provisionVm(this.props.authSession.user.data.ownerUuid, form.alias, form.nics, form.brand, this.props.packages.selectedPackage, form.image_uuid);
+        await this.props.actions.provisionVm(this.props.authSession.user.ownerUuid, form.alias, form.nics, form.brand, this.props.packages.selectedPackage, form.image_uuid);
         this.props.actions.toggleLoadingBar(false);
     };
 
@@ -25,7 +25,7 @@ class VirtualMachineProvisionModalContainer extends React.Component {
         this.props.actions.toggleLoadingBar(true);
         await this.props.actions.getAllPackages('virtualMachineProvisionModal');
         await this.props.actions.getAllImages('virtualMachineProvisionModal');
-        await this.props.actions.getAllFabricNetworksByOwnerId(this.props.authSession.user.data.ownerUuid);
+        await this.props.actions.getAllFabricNetworksByOwnerId(this.props.authSession.user.ownerUuid);
         this.props.actions.toggleLoadingBar(false);
     }
 

@@ -6,6 +6,7 @@ import { bindActionCreators } from "redux";
 import VirtualMachineReprovisionModal from "../../components/virtualMachine/virtualMachineReprovisionModal";
 import { formValueSelector } from 'redux-form';
 import { toggleLoadingBar } from "../../actions/navActions";
+import { State } from '../../store/initialState';
 
 class VirtualMachineReprovisionModalContainer extends React.Component {
     props: any;
@@ -22,7 +23,7 @@ class VirtualMachineReprovisionModalContainer extends React.Component {
 
     async reprovisionModal(form: any) {
         this.props.actions.toggleLoadingBar(true);
-        await this.props.actions.reprovisionVm(this.props.authSession.user.data.ownerUuid, this.props.row.original.uuid, form.selectedImage);
+        await this.props.actions.reprovisionVm(this.props.authSession.user.ownerUuid, this.props.row.original.uuid, form.selectedImage);
         this.props.actions.toggleLoadingBar(false);
     }
 
@@ -43,7 +44,7 @@ class VirtualMachineReprovisionModalContainer extends React.Component {
     }
 }
 
-function mapStateToProps(state: any) {
+function mapStateToProps(state: State) {
     const selector = formValueSelector('virtualMachineForm');
     const selectorModal = formValueSelector('virtualMachineReprovisionModal');
     const selectorLoading = formValueSelector('reperioBar');

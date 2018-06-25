@@ -20,7 +20,10 @@ import { getVmsByOwner,
         showNicModal, 
         hideNicModal, 
         showProvisionModal, 
-        hideProvisionModal} from "../../actions/virtualMachineActions";
+        hideProvisionModal,
+        selectVirtualMachine,
+        hideEditTagsModal,
+        showEditTagsModal} from "../../actions/virtualMachineActions";
 import { showImageInformation, hideImageInformation } from '../../actions/imageActions';
 import { hidePackageInformation, showPackageInformationModal } from '../../actions/packagesActions';
 import ReactTable, { RowInfo } from 'react-table';
@@ -33,8 +36,6 @@ import VirtualMachineRenameModal from '../../components/virtualMachine/virtualMa
 import VirtualMachineEditNicsModalContainer from './virtualMachineEditNicsModalContainer';
 import VirtualMachineReprovisionModalContainer from './virtualMachineReprovisionModalContainer';
 import VirtualMachineResizeModalContainer from './virtualMachineResizeModalContainer';
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import { FlatButton, Dialog } from 'material-ui';
 import 'react-table/react-table.css';
 import VirtualMachineDeleteModal from '../../components/virtualMachine/virtualMachineDeleteModal';
 import VirtualMachineDeleteModalContainer from './virtualMachineDeleteModalContainer';
@@ -46,22 +47,36 @@ import ImageInformationModalContainer from './imageInformationModalContainer';
 import { State } from '../../store/initialState';
 import PackageInformationModalContainer from './packageInformationModalContainer';
 import VirtualMachineModel from '../../models/virtualMachineModel';
-import ReactTableOptionsModel from '../../models/reactTableOptionsModel';
 import { expandRow, clearExpandedRows } from '../../actions/reactTableActions';
 import { toggleLoadingBar } from "../../actions/navActions";
 import ModalWindow from '../../components/misc/modalWindow';
+import VirtualMachineEditFirewallRulesModalContainer from './virtualMachineEditFirewallRulesModalContainer';
+import { showFirewallRulesModal, hideFirewallRulesModal } from '../../actions/firewallActions';
+import VirtualMachineEditTagsModalContainer from './virtualMachineEditTagsModalContainer';
 
 class VirtualMachineContainer extends React.Component {
     props: any;
 
     columns: any[] = [
-        { Header: 'State', accessor: 'state', maxWidth: 100, Cell: (row:any) => (
-            <div style={{textAlign: 'center'}}>
+        { maxWidth: 50, Cell: (row:RowInfo) => (
+            <FormGroup>
+                <label className="reperio-checkbox-container">
+                    <input type='checkbox'
+                            name={`${row.original.uuid}.select`}
+                            id={`${row.original.uuid}`}
+                            checked={this.props.selectedVirtualMachines != null ? this.props.selectedVirtualMachines.includes(row.original.uuid) : false}
+                            onClick={()=> this.selectVirtualMachine(row.original.uuid)}/>
+                    <span className="reperio-checkbox"></span>
+                </label>
+            </FormGroup>
+        )},
+        { Header: 'State', accessor: 'state', maxWidth: 100, Cell: (row:RowInfo) => (
+            <div className="vm-state-label">
                 <Label bsStyle={this.stateCellColor(row.original)}>{row.original.state}</Label>
             </div>
         )},
         { Header: 'Name', accessor: 'alias' },
-        { Header: 'Ram', accessor: 'ram' },
+        { Header: 'Ram', accessor: 'ram', maxWidth: 150 },
         { Header: 'Actions', maxWidth: 150, Cell: (row:RowInfo) => (
             <VirtualMachineActionsButton    row={row} 
                                             editNics={this.editNics.bind(this)} 
@@ -71,7 +86,9 @@ class VirtualMachineContainer extends React.Component {
                                             renameVirtualMachine={this.renameVirtualMachine.bind(this)}
                                             reprovisionVirtualMachine={this.reprovisionVirtualMachine.bind(this)}
                                             resizeVirtualMachine={this.resizeVirtualMachine.bind(this)}
-                                            deleteVirtualMachine={this.deleteVirtualMachine.bind(this)} />
+                                            deleteVirtualMachine={this.deleteVirtualMachine.bind(this)}
+                                            editFirewallRules={this.editFirewallRules.bind(this)}
+                                            editTags={this.editTags.bind(this)} />
         ) }
     ];
 
@@ -110,26 +127,26 @@ class VirtualMachineContainer extends React.Component {
 
     async startVirtualMachine(row:any) {
         this.props.actions.toggleLoadingBar(true);
-        await this.props.actions.startVm(this.props.authSession.user.data.ownerUuid, row.original.uuid);
+        await this.props.actions.startVm(this.props.authSession.user.ownerUuid, row.original.uuid);
         this.props.actions.toggleLoadingBar(false);
     }
 
     async endVirtualMachine(row:any) {
         this.props.actions.toggleLoadingBar(true);
-        await this.props.actions.stopVm(this.props.authSession.user.data.ownerUuid, row.original.uuid);
+        await this.props.actions.stopVm(this.props.authSession.user.ownerUuid, row.original.uuid);
         this.props.actions.toggleLoadingBar(false);
     }
 
     async restartVirtualMachine(row:any) {
         this.props.actions.toggleLoadingBar(true);
-        await this.props.actions.rebootVm(this.props.authSession.user.data.ownerUuid, row.original.uuid);
+        await this.props.actions.rebootVm(this.props.authSession.user.ownerUuid, row.original.uuid);
         this.props.actions.toggleLoadingBar(false);
     }
 
     //delete vm
     async deleteModal() {
         this.props.actions.toggleLoadingBar(true);
-        await this.props.actions.deleteVm(this.props.authSession.user.data.ownerUuid, this.props.row.original.uuid);
+        await this.props.actions.deleteVm(this.props.authSession.user.ownerUuid, this.props.row.original.uuid);
         this.props.actions.toggleLoadingBar(false);
     }
 
@@ -209,9 +226,21 @@ class VirtualMachineContainer extends React.Component {
         this.props.actions.hidePackageInformation();
     }
 
+    hideFirewallRulesModal() {
+        this.props.actions.hideFirewallRulesModal();
+    }
+
+    editFirewallRules(row: any) {
+        this.props.actions.showFirewallRulesModal(row);
+    }
+
+    async remoteFirewallRulesEdit() {
+        await this.props.actions.remoteFormSubmit('virtualMachineEditFirewallRulesModal');
+    }
+
     async refreshTable() {
         this.props.actions.toggleLoadingBar(true);
-        await this.props.actions.getVmsByOwner(this.props.authSession.user.data.ownerUuid, null);
+        await this.props.actions.getVmsByOwner(this.props.authSession.user.ownerUuid, null);
         this.clearExpandedRows('virtualMachineForm');
         this.props.actions.toggleLoadingBar(false);
         //this.fetchData(this.props.virtualMachines.tableOptions);
@@ -225,15 +254,31 @@ class VirtualMachineContainer extends React.Component {
         this.props.actions.clearExpandedRows(formName);
     }
 
+    selectVirtualMachine (uuid: string) {
+        this.props.actions.selectVirtualMachine(uuid, this.props.selectedVirtualMachines);
+    }
+
+    editTags(row: any) {
+        this.props.actions.showEditTagsModal(row);
+    }
+
+    async remoteEditTags() {
+        await this.props.actions.remoteFormSubmit('virtualMachineEditTagsModal');
+    }
+
+    hideEditTagsModal() {
+        this.props.actions.hideEditTagsModal();
+    }
+
     // async fetchData(tableOptions: ReactTableOptionsModel) {
-    //     await this.props.actions.getVmsByOwner(this.props.authSession.user.data.ownerUuid, {pageSize: tableOptions.pageSize, page: tableOptions.page, sorted: tableOptions.sorted})
+    //     await this.props.actions.getVmsByOwner(this.props.authSession.user.ownerUuid, {pageSize: tableOptions.pageSize, page: tableOptions.page, sorted: tableOptions.sorted})
     // }
 
     render() {
         return (
             <div>
                 <fieldset disabled={this.props.isLoading}>
-                    <VirtualMachineForm errorMessages={this.props.errorMessages} />
+                    <VirtualMachineForm errorMessages={this.props.errorMessages} selectedVirtualMachines={this.props.selectedVirtualMachines} />
 
                     <ModalWindow    open={this.props.showingDeleteModal} 
                                     title={'Are you sure you want to delete this Virtual Machine?'}
@@ -241,7 +286,7 @@ class VirtualMachineContainer extends React.Component {
                                     actions={[
                                         <button className="reperio-form-control reperio-btn reperio-cancel" onClick={this.hideDeleteModal.bind(this)}>Cancel</button>,
                                         <button className="reperio-form-control reperio-btn reperio-warning" onClick={this.deleteModal.bind(this)}>Delete</button>]}>
-                             <VirtualMachineDeleteModalContainer/>
+                        <VirtualMachineDeleteModalContainer/>
                     </ModalWindow>
 
                     <ModalWindow    open={this.props.showingReprovisionModal} 
@@ -259,7 +304,7 @@ class VirtualMachineContainer extends React.Component {
                                     actions={[
                                         <button className="reperio-form-control reperio-btn reperio-cancel" onClick={this.hideResizeModal.bind(this)}>Cancel</button>,
                                         <button className="reperio-form-control reperio-btn reperio-success" onClick={this.remoteVmResize.bind(this)}>Resize</button>]}>
-                             <VirtualMachineResizeModalContainer/>
+                        <VirtualMachineResizeModalContainer/>
                     </ModalWindow>
 
                     <ModalWindow    open={this.props.showingRenameModal} 
@@ -268,7 +313,7 @@ class VirtualMachineContainer extends React.Component {
                                     actions={[
                                         <button className="reperio-form-control reperio-btn reperio-cancel" onClick={this.hideRenameModal.bind(this)}>Cancel</button>,
                                         <button className="reperio-form-control reperio-btn reperio-success" onClick={this.remoteVmRename.bind(this)}>Rename</button>]}>
-                             <VirtualMachineRenameModalContainer/>
+                        <VirtualMachineRenameModalContainer/>
                     </ModalWindow>
 
                     <ModalWindow    open={this.props.showingNicModal} 
@@ -277,7 +322,7 @@ class VirtualMachineContainer extends React.Component {
                                     actions={[
                                         <button className="reperio-form-control reperio-btn reperio-cancel" onClick={this.hideNicModal.bind(this)}>Cancel</button>,
                                         <button className="reperio-form-control reperio-btn reperio-success" onClick={this.remoteNic.bind(this)}>Update</button>]}>
-                             <VirtualMachineEditNicsModalContainer/>
+                        <VirtualMachineEditNicsModalContainer/>
                     </ModalWindow>
 
                     <ModalWindow    open={this.props.showingProvisionModal} 
@@ -286,7 +331,7 @@ class VirtualMachineContainer extends React.Component {
                                     actions={[
                                         <button className="reperio-form-control reperio-btn reperio-cancel" onClick={this.hideProvisionModal.bind(this)}>Cancel</button>,
                                         <button className="reperio-form-control reperio-btn reperio-success" onClick={this.remoteVmProvision.bind(this)}>Provision machine</button>]}>
-                             <VirtualMachineProvisionModalContainer/>
+                        <VirtualMachineProvisionModalContainer/>
                     </ModalWindow>
 
                     <ModalWindow    open={this.props.showingImageInformationModal} 
@@ -294,7 +339,7 @@ class VirtualMachineContainer extends React.Component {
                                     close={this.hideImageInformationModal.bind(this)}
                                     actions={[
                                         <button className="reperio-form-control reperio-btn reperio-cancel" onClick={this.hideImageInformationModal.bind(this)}>Close</button>]}>
-                             <ImageInformationModalContainer/>
+                        <ImageInformationModalContainer/>
                     </ModalWindow>
 
                     <ModalWindow    open={this.props.showingPackageInformationModal} 
@@ -302,7 +347,25 @@ class VirtualMachineContainer extends React.Component {
                                     close={this.hidePackageInformationModal.bind(this)}
                                     actions={[
                                         <button className="reperio-form-control reperio-btn reperio-cancel" onClick={this.hidePackageInformationModal.bind(this)}>Close</button>]}>
-                             <PackageInformationModalContainer/>
+                        <PackageInformationModalContainer/>
+                    </ModalWindow>
+
+                    <ModalWindow    open={this.props.showingFirewallRulesModal} 
+                                    title={'Firewall Rules'}
+                                    close={this.hideFirewallRulesModal.bind(this)}
+                                    actions={[
+                                        <button className="reperio-form-control reperio-btn reperio-cancel" onClick={this.hideFirewallRulesModal.bind(this)}>Close</button>,
+                                        <button className="reperio-form-control reperio-btn reperio-success" onClick={this.remoteFirewallRulesEdit.bind(this)}>Update</button>]}>
+                        <VirtualMachineEditFirewallRulesModalContainer/>
+                    </ModalWindow>
+
+                    <ModalWindow    open={this.props.showingEditTagsModal} 
+                                    title={'Edit Tags'}
+                                    close={this.hideEditTagsModal.bind(this)}
+                                    actions={[
+                                        <button className="reperio-form-control reperio-btn reperio-cancel" onClick={this.hideEditTagsModal.bind(this)}>Cancel</button>,
+                                        <button className="reperio-form-control reperio-btn reperio-success" onClick={this.remoteEditTags.bind(this)}>Update</button>]}>
+                        <VirtualMachineEditTagsModalContainer/>
                     </ModalWindow>
 
                     <FormGroup>
@@ -374,11 +437,14 @@ function mapStateToProps(state: State) {
         showingProvisionModal: selector(state, 'showingProvisionModal'),
         showingImageInformationModal: selector(state, 'showingImageInformationModal'),
         showingPackageInformationModal: selector(state, 'showingPackageInformationModal'),
+        showingFirewallRulesModal: selector(state, 'showingFirewallRulesModal'),
+        showingEditTagsModal: selector(state, 'showingEditTagsModal'),
         row: selector(state, 'row'),
         image: selector(state, 'image'),
         package: selector(state, 'package'),
         expandedRows: selector(state, 'expandedRows'),
-        isLoading: selectorLoading(state, 'isLoading')
+        isLoading: selectorLoading(state, 'isLoading'),
+        selectedVirtualMachines: selector(state, 'selectedVirtualMachines')
     };
 }
 
@@ -411,7 +477,12 @@ function mapActionToProps(dispatch: any) {
             showPackageInformationModal,
             expandRow,
             clearExpandedRows,
-            toggleLoadingBar
+            toggleLoadingBar,
+            showFirewallRulesModal,
+            hideFirewallRulesModal,
+            selectVirtualMachine,
+            hideEditTagsModal,
+            showEditTagsModal
         }, dispatch)
     };
 }

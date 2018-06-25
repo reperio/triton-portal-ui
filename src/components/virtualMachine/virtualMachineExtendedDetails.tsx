@@ -3,7 +3,7 @@ import Moment from 'moment'
 import { Button } from 'react-bootstrap';
 
 const VirtualMachineExtendedDetails = (props: any) => (
-    <div className="nested-details-details col-xs-12" style={{minWidth: "500px"}}>
+    <div className="nested-table-details col-xs-12">
         <div className="row col-xs-12 table-row-container">
             <div className="col-xs-4 table-row-property">Name</div>
             <div className="col-xs-8">{props.data.alias}</div>
@@ -22,8 +22,10 @@ const VirtualMachineExtendedDetails = (props: any) => (
         </div>
         <div className="row col-xs-12 table-row-container">
             <div className="col-xs-4 table-row-property">Image</div>
-            <div className="col-xs-8" style={{padding: "0"}}>
-                <Button onClick={props.showImageInformation.bind(this)} bsStyle="link">{props.data.image_uuid}</Button>
+            <div className="col-xs-8">
+                <a onClick={props.showImageInformation.bind(this)}>
+                    {props.data.image_uuid}
+                </a>
             </div>
         </div>
         <div className="row col-xs-12 table-row-container">
@@ -32,8 +34,10 @@ const VirtualMachineExtendedDetails = (props: any) => (
         </div>
         <div className="row col-xs-12 table-row-container">
             <div className="col-xs-4 table-row-property">Package</div>
-            <div className="col-xs-8" style={{padding: "0"}}>
-                <Button onClick={props.showPackageInformation.bind(this)} bsStyle="link">{props.data.billing_id}</Button>
+            <div className="col-xs-8">
+                <a onClick={props.showPackageInformation.bind(this)}>
+                    {props.data.billing_id}
+                </a>
             </div>
         </div>
         <div className="row col-xs-12 table-row-container">

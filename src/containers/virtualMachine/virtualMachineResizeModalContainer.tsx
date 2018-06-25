@@ -6,6 +6,7 @@ import { toggleLoadingBar } from "../../actions/navActions";
 import { bindActionCreators } from "redux";
 import VirtualMachineResizeModal from "../../components/virtualMachine/virtualMachineResizeModal";
 import { formValueSelector } from 'redux-form';
+import { State } from '../../store/initialState';
 
 class VirtualMachineResizeModalContainer extends React.Component {
     props: any;
@@ -22,7 +23,7 @@ class VirtualMachineResizeModalContainer extends React.Component {
 
     async resizeModal(form: any) {
         this.props.actions.toggleLoadingBar(true);
-        await this.props.actions.resizeVm(this.props.authSession.user.data.ownerUuid, this.props.row.original.uuid, form.selectedPackage);
+        await this.props.actions.resizeVm(this.props.authSession.user.ownerUuid, this.props.row.original.uuid, form.selectedPackage);
         this.props.actions.toggleLoadingBar(false);
     }
 
@@ -43,7 +44,7 @@ class VirtualMachineResizeModalContainer extends React.Component {
     }
 }
 
-function mapStateToProps(state: any) {
+function mapStateToProps(state: State) {
     const selector = formValueSelector('virtualMachineForm');
     const selectorModal = formValueSelector('virtualMachineResizeModal');
     const selectorLoading = formValueSelector('reperioBar');

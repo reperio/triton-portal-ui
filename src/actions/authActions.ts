@@ -64,7 +64,7 @@ export const setAuthToken = (authToken: string, forceActionDispatch = false) => 
     if (parsedToken != null && !authService.hasTokenExpired(parsedToken.exp)) {
         window.localStorage.setItem("authToken", authToken);
         if (forceActionDispatch || oldParsedToken == null || oldParsedToken.currentUserId !== parsedToken.currentUserId) {
-            const user:UserModel = (await userService.getUserById(parsedToken.currentUserId)).data;
+            const user: UserModel = (await userService.getUserById(parsedToken.currentUserId)).data;
             dispatch({
                 type: authActionTypes.AUTH_SET_TOKEN,
                 payload: {authToken, user}
