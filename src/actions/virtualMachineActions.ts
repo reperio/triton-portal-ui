@@ -546,6 +546,8 @@ export const addTag = (uuids: string[], name: string, value: string, owner_uuid:
     let errors = await inputValidationService.validate(
         {uuids, name, value}, schema);
 
+    dispatch(change('virtualMachineAddTagModal', 'errorMessages', errors));
+
     if (errors.length == 0) {
         try {
             dispatch({ type: virtualMachineActionTypes.VIRTUAL_MACHINE_ADD_TAG_START });
@@ -576,6 +578,8 @@ export const editTags = (tags: any[], uuid: string, owner_uuid: string, tableOpt
 
     let errors = await inputValidationService.validate(
         {tags}, schema);
+
+    dispatch(change('virtualMachineEditTagsModal', 'errorMessages', errors));
 
     if (errors.length == 0) {
         try {
