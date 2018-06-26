@@ -5,8 +5,8 @@ import { FormGroup, Label } from "react-bootstrap";
 export const FirewallFieldArrayComponent = (props: any) => (
     <div>
         {props.fields.map((member:string, index:number) =>
-            <fieldset disabled={props.firewallRules != null ? props.firewallRules[index].global : false}>
-                <div key={index} className="field-array-component">
+            <fieldset key={index} disabled={props.firewallRules != null ? props.firewallRules[index].global : false}>
+                <div className="field-array-component">
                     <div>
                         <div className="field-array-component-item-label">Rule #{index + 1}</div>
                         <div className="field-array-component-delete-button">
