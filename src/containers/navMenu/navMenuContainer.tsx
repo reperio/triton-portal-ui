@@ -1,6 +1,5 @@
 import React from 'react'
 import { connect } from "react-redux";
-import { authService } from '../../services/authService';
 import { extendSession, logout, hideExpirationDialog, updateTimeLeftOnToken } from '../../actions/authActions';
 import { locationChange } from '../../actions/navActions';
 import { formValueSelector } from 'redux-form';
@@ -8,14 +7,14 @@ import { bindActionCreators } from "redux";
 import { history } from '../../store/history';
 import NavMenu from "../../components/navMenu/navMenu";
 import ModalWindow from '../../components/misc/modalWindow';
-import { StateAccount, State } from '../../store/initialState';
+import { State } from '../../store/initialState';
 
 class NavMenuContainer extends React.Component {
     props: any;
 
     async componentDidMount() {
         this.props.actions.locationChange(history.location.pathname);
-        let interval: number = window.setInterval(() => {
+        window.setInterval(() => {
             this.props.actions.updateTimeLeftOnToken(this.props.showingExpirationDialog);
          }, 1000);
     }

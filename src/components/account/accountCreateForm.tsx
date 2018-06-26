@@ -1,5 +1,5 @@
 import React from 'react'
-import { Field, reduxForm, FieldArray } from 'redux-form'
+import { Field, reduxForm } from 'redux-form'
 import { FormGroup, Button } from "react-bootstrap";
 import Error from '../../components/misc/error';
 

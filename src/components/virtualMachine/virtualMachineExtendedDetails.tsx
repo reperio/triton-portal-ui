@@ -1,6 +1,5 @@
 import React from 'react'
 import Moment from 'moment'
-import { Button } from 'react-bootstrap';
 
 const VirtualMachineExtendedDetails = (props: any) => (
     <div className="nested-table-details col-xs-12">

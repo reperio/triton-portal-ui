@@ -6,7 +6,6 @@ import { getAllImages, selectImage } from "../../actions/imageActions";
 import { getAllFabricNetworksByOwnerId, selectNetworks } from "../../actions/networkActions";
 import { bindActionCreators } from "redux";
 import VirtualMachineProvisionModal from "../../components/virtualMachine/virtualMachineProvisionModal";
-import Error from "../../components/misc/error";
 import { formValueSelector } from 'redux-form';
 import VirtualMachineModel from '../../models/virtualMachineModel';
 import { State } from '../../store/initialState';

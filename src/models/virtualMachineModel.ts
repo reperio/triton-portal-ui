@@ -20,7 +20,6 @@ export default class VirtualMachineModel {
     max_lwps: number;
     max_physical_memory: number;
     max_swap: number;
-    //change from any
     nics: any[];
     owner_uuid: string;
     pid: number;

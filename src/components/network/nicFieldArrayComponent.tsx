@@ -1,6 +1,6 @@
 import React from 'react';
-import { Field, reduxForm } from 'redux-form'
-import { FormGroup, Button } from "react-bootstrap";
+import { Field } from 'redux-form'
+import { FormGroup } from "react-bootstrap";
 
 export const NicFieldArrayComponent = (props: any) => (
     <div>

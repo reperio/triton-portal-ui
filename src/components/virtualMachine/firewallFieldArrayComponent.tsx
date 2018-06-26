@@ -1,5 +1,5 @@
 import React from 'react';
-import { Field, reduxForm } from 'redux-form'
+import { Field } from 'redux-form'
 import { FormGroup, Label } from "react-bootstrap";
 
 export const FirewallFieldArrayComponent = (props: any) => (

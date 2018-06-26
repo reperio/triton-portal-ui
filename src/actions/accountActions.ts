@@ -2,7 +2,6 @@ import { Dispatch } from "react-redux";
 import { userService } from "../services/userService";
 import { inputValidationService } from "../services/inputValidationService";
 import { history } from '../store/history';
-import { authService } from "../services/authService";
 import { change } from 'redux-form';
 import UserModel from "../models/userModel";
 var Joi = require('joi-browser');

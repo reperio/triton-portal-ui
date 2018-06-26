@@ -2,7 +2,6 @@ import React from 'react'
 import { connect } from "react-redux";
 import { hidePackageInformation, getPackageByUuid } from "../../actions/packagesActions";
 import { bindActionCreators } from "redux";
-import ImageInformationModal from "../../components/virtualMachine/imageInformationModal";
 import { formValueSelector } from 'redux-form';
 import { State } from '../../store/initialState';
 import PackageInformation from '../../components/virtualMachine/packageInformation';

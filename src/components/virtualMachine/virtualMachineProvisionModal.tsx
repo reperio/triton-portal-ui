@@ -1,19 +1,9 @@
 import React from 'react'
 import { Field, reduxForm, FieldArray } from 'redux-form'
-import { FormGroup, Button } from "react-bootstrap";
-import { DropdownList } from 'react-widgets'
+import { FormGroup } from "react-bootstrap";
 import PackageInformation from './packageInformation';
 import Error from "../misc/error";
 import { NicFieldArrayComponent } from '../network/nicFieldArrayComponent';
-import 'react-widgets/dist/css/react-widgets.css';
-
-const dropdownList = (input:any, data:any, valueField:any, textField:any) => {
-    <DropdownList   {...input}
-                    valueField={valueField}
-                    textField={textField}
-                    data={data}
-                    placeholder="Select a network" />
-}
 
 const VirtualMachineProvisionModal = (props: any) => (
     <form onSubmit={props.handleSubmit(props.onSubmit)}>

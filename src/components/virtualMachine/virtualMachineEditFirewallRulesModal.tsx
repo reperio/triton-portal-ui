@@ -9,10 +9,7 @@ const VirtualMachineEditFirewallRulesModal = (props: any) => (
     {props.errorMessages != null && props.errorMessages.length > 0 ? <Error errors={props.errorMessages}/> : null}
         <FormGroup>
             <FieldArray name="firewallRules"
-                        //selectNetworks={props.selectNetworks} 
-                        //selectPrimaryNic={props.selectPrimaryNic} 
                         firewallRules={props.initialValues.firewallRules} 
-                        //networks={props.networks.networks} 
                         component={FirewallFieldArrayComponent}/>
         </FormGroup>
     </form>

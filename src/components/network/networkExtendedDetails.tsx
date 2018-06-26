@@ -1,5 +1,4 @@
 import React from 'react'
-import Moment from 'moment'
 
 const NetworkMachineExtendedDetails = (props: any) => (
     <div className="nested-table-details col-xs-12">

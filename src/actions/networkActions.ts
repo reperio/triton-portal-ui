@@ -1,7 +1,6 @@
 import { Dispatch } from "react-redux";
 import { networkService } from "../services/networkService";
 import { inputValidationService } from "../services/inputValidationService";
-import { history } from '../store/history';
 import { change, submit } from 'redux-form';
 import NetworkModel from "../models/networkModel";
 var Joi = require('joi-browser');

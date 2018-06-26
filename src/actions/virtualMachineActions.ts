@@ -1,10 +1,6 @@
 import {Dispatch} from "react-redux";
 import { virtualMachineService } from "../services/virtualMachineService";
-import { userService } from "../services/userService";
 import { inputValidationService } from '../services/inputValidationService';
-import { packageService } from "../services/packageService";
-import { imageService } from "../services/imageService";
-import { history } from '../store/history';
 import { change, submit, formValueSelector } from 'redux-form';
 import { store } from "../store/store";
 import nic from '../models/nicModel';

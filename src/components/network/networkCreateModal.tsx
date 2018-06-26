@@ -1,9 +1,7 @@
 import React from 'react'
-import { Field, reduxForm, formValueSelector, FieldArray } from 'redux-form'
-import { FormGroup, Button } from "react-bootstrap";
-import { DropdownList } from 'react-widgets'
+import { Field, reduxForm, FieldArray } from 'redux-form'
+import { FormGroup } from "react-bootstrap";
 import Error from '../../components/misc/error';
-import 'react-widgets/dist/css/react-widgets.css';
 
 const fieldArrayComponent = (props: any) => (
     <div>

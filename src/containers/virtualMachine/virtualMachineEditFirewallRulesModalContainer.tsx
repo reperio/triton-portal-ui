@@ -5,7 +5,6 @@ import { bindActionCreators } from "redux";
 import { formValueSelector } from 'redux-form';
 import { toggleLoadingBar } from "../../actions/navActions";
 import VirtualMachineEditFirewallRulesModal from '../../components/virtualMachine/virtualMachineEditFirewallRulesModal';
-import FirewallRuleFormattedModel from '../../models/firewallRuleFormattedModel';
 import { State } from '../../store/initialState';
 
 class VirtualMachineEditFirewallRulesModalContainer extends React.Component {

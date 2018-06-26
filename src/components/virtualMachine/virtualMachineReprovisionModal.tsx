@@ -1,7 +1,6 @@
 import React from 'react';
 import { Field, reduxForm } from 'redux-form'
 import { FormGroup} from "react-bootstrap";
-import { DropdownList } from 'react-widgets'
 import Error from '../misc/error';
 
 const VirtualMachineReprovisionModal = (props: any) => (
