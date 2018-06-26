@@ -4,7 +4,6 @@ import { bindActionCreators } from "redux";
 import { getAllFabricNetworksByOwnerId, deleteFabricNetwork, showDeleteModal, hideDeleteModal, hideCreateModal, showCreateModal, remoteFormSubmit } from "../../actions/networkActions";
 import ReactTable, { RowInfo } from 'react-table';
 import { FormGroup } from "react-bootstrap";
-import { LinkContainer } from "react-router-bootstrap";
 import NetworkForm from '../../components/network/networkForm';
 import { formValueSelector } from 'redux-form';
 import 'react-table/react-table.css';
@@ -16,20 +15,58 @@ import { expandRow, clearExpandedRows } from '../../actions/reactTableActions';
 import { toggleLoadingBar } from "../../actions/navActions";
 import ModalWindow from '../../components/misc/modalWindow';
 import { State } from '../../store/initialState';
+const matchSorter = require('match-sorter');
 
 class NetworkContainer extends React.Component {
     props: any;
 
     columns: any[] = [
-        { Header: 'Name', accessor: 'name' },
-        { Header: 'Vlan ID', accessor: 'vlan_id' },
-        { Header: 'Gateway', accessor: 'gateway' },
-        { Header: 'Range', Cell: (row: RowInfo) => (<div>{row.original.provision_start_ip} - {row.original.provision_end_ip}</div>) },
-        { Header: 'Resolvers', Cell: (row: RowInfo) => (<div>{row.original.resolvers.map((resolver:string) => resolver).toString().replace(/,/g, ', ')}</div>) },
-        { Header: 'Actions', Cell: (row: RowInfo) => (
-            <NetworkActionsButton   row={row} 
-                                    deleteNetwork={this.deleteNetwork.bind(this)} />
-        ) }
+        { 
+            Header: 'Name',
+            accessor: 'name',
+            filterMethod: (filter:any, rows:any) =>
+                matchSorter(rows, filter.value, { keys: ["name"] }),
+            filterAll: true
+        },
+        {
+            Header: 'Vlan ID',
+            accessor: 'vlan_id',
+            filterMethod: (filter:any, rows:any) =>
+                matchSorter(rows, filter.value, { keys: ["vlan_id"] }),
+            filterAll: true
+        },
+        {
+            Header: 'Gateway',
+            accessor: 'gateway',
+            filterMethod: (filter:any, rows:any) =>
+                matchSorter(rows, filter.value, { keys: ["gateway"] }),
+            filterAll: true
+        },
+        {
+            Header: 'Range',
+            sortable: false,
+            Cell: (row: RowInfo) => (
+                <div>{row.original.provision_start_ip} - {row.original.provision_end_ip}</div>
+            ),
+            filterable: false
+        },
+        {
+            Header: 'Resolvers',
+            sortable: false,
+            Cell: (row: RowInfo) => (
+                <div>{row.original.resolvers.map((resolver:string) => resolver).toString().replace(/,/g, ', ')}</div>
+            ),
+            filterable: false
+        },
+        {
+            Header: 'Actions',
+            sortable: false,
+            filterable: false,
+            Cell: (row: RowInfo) => (
+                <NetworkActionsButton   row={row} 
+                                        deleteNetwork={this.deleteNetwork.bind(this)} />
+            ) 
+        }
     ];
 
     async componentDidMount() {
@@ -120,6 +157,7 @@ class NetworkContainer extends React.Component {
                             className="-striped -highlight"
                             defaultPageSize={20}
                             expanded={this.props.expandedRows}
+                            filterable
                             defaultSorted={[
                                 {
                                   id: "name",

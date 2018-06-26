@@ -1,5 +1,5 @@
 import React from 'react'
-import {connect, Dispatch, ReactNode} from "react-redux";
+import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { getVmsByOwner, 
         startVm, 
@@ -27,17 +27,13 @@ import { getVmsByOwner,
 import { showImageInformation, hideImageInformation } from '../../actions/imageActions';
 import { hidePackageInformation, showPackageInformationModal } from '../../actions/packagesActions';
 import ReactTable, { RowInfo } from 'react-table';
-import { LinkContainer } from "react-router-bootstrap";
-import { FormGroup, NavItem, Button, Label } from "react-bootstrap";
-import Error from '../../components/misc/error';
+import { FormGroup, Label } from "react-bootstrap";
 import VirtualMachineForm from '../../components/virtualMachine/virtualMachineForm';
-import { formValueSelector, Field, submit } from 'redux-form';
-import VirtualMachineRenameModal from '../../components/virtualMachine/virtualMachineRenameModal';
+import { formValueSelector } from 'redux-form';
 import VirtualMachineEditNicsModalContainer from './virtualMachineEditNicsModalContainer';
 import VirtualMachineReprovisionModalContainer from './virtualMachineReprovisionModalContainer';
 import VirtualMachineResizeModalContainer from './virtualMachineResizeModalContainer';
 import 'react-table/react-table.css';
-import VirtualMachineDeleteModal from '../../components/virtualMachine/virtualMachineDeleteModal';
 import VirtualMachineDeleteModalContainer from './virtualMachineDeleteModalContainer';
 import VirtualMachineRenameModalContainer from './virtualMachineRenameModalContainer';
 import VirtualMachineExtendedDetails from '../../components/virtualMachine/virtualMachineExtendedDetails';
@@ -53,43 +49,76 @@ import ModalWindow from '../../components/misc/modalWindow';
 import VirtualMachineEditFirewallRulesModalContainer from './virtualMachineEditFirewallRulesModalContainer';
 import { showFirewallRulesModal, hideFirewallRulesModal } from '../../actions/firewallActions';
 import VirtualMachineEditTagsModalContainer from './virtualMachineEditTagsModalContainer';
+const matchSorter = require('match-sorter');
 
 class VirtualMachineContainer extends React.Component {
     props: any;
 
     columns: any[] = [
-        { maxWidth: 50, Cell: (row:RowInfo) => (
-            <FormGroup>
-                <label className="reperio-checkbox-container">
-                    <input type='checkbox'
-                            name={`${row.original.uuid}.select`}
-                            id={`${row.original.uuid}`}
-                            checked={this.props.selectedVirtualMachines != null ? this.props.selectedVirtualMachines.includes(row.original.uuid) : false}
-                            onClick={()=> this.selectVirtualMachine(row.original.uuid)}/>
-                    <span className="reperio-checkbox"></span>
-                </label>
-            </FormGroup>
-        )},
-        { Header: 'State', accessor: 'state', maxWidth: 100, Cell: (row:RowInfo) => (
-            <div className="vm-state-label">
-                <Label bsStyle={this.stateCellColor(row.original)}>{row.original.state}</Label>
-            </div>
-        )},
-        { Header: 'Name', accessor: 'alias' },
-        { Header: 'Ram', accessor: 'ram', maxWidth: 150 },
-        { Header: 'Actions', maxWidth: 150, Cell: (row:RowInfo) => (
-            <VirtualMachineActionsButton    row={row} 
-                                            editNics={this.editNics.bind(this)} 
-                                            startVirtualMachine={this.startVirtualMachine.bind(this)}
-                                            endVirtualMachine={this.endVirtualMachine.bind(this)}
-                                            restartVirtualMachine={this.restartVirtualMachine.bind(this)}
-                                            renameVirtualMachine={this.renameVirtualMachine.bind(this)}
-                                            reprovisionVirtualMachine={this.reprovisionVirtualMachine.bind(this)}
-                                            resizeVirtualMachine={this.resizeVirtualMachine.bind(this)}
-                                            deleteVirtualMachine={this.deleteVirtualMachine.bind(this)}
-                                            editFirewallRules={this.editFirewallRules.bind(this)}
-                                            editTags={this.editTags.bind(this)} />
-        ) }
+        { 
+            maxWidth: 50, 
+            filterable: false,
+            sortable: false,
+            Cell: (row:RowInfo) => (
+                <FormGroup>
+                    <label className="reperio-checkbox-container">
+                        <input type='checkbox'
+                                name={`${row.original.uuid}.select`}
+                                id={`${row.original.uuid}`}
+                                checked={this.props.selectedVirtualMachines != null ? this.props.selectedVirtualMachines.includes(row.original.uuid) : false}
+                                onClick={()=> this.selectVirtualMachine(row.original.uuid)}/>
+                        <span className="reperio-checkbox"></span>
+                    </label>
+                </FormGroup>
+            )
+        },
+        { 
+            Header: 'State', 
+            accessor: 'state', 
+            maxWidth: 100, 
+            Cell: (row:RowInfo) => (
+                <div className="vm-state-label">
+                    <Label bsStyle={this.stateCellColor(row.original)}>{row.original.state}</Label>
+                </div>
+            ),
+            filterMethod: (filter:any, rows:any) =>
+                matchSorter(rows, filter.value, { keys: ["state"] }),
+            filterAll: true
+        },
+        { 
+            Header: 'Name', 
+            accessor: 'alias',
+            filterMethod: (filter:any, rows:any) =>
+                matchSorter(rows, filter.value, { keys: ["alias"] }),
+            filterAll: true
+        },
+        { 
+            Header: 'Ram', 
+            accessor: 'ram', 
+            maxWidth: 150,
+            filterMethod: (filter:any, rows:any) =>
+                matchSorter(rows, filter.value, { keys: ["ram"] }),
+            filterAll: true
+        },
+        { 
+            Header: 'Actions', 
+            maxWidth: 150,
+            sortable: false,
+            filterable: false,
+            Cell: (row:RowInfo) => (
+                <VirtualMachineActionsButton    row={row} 
+                                                editNics={this.editNics.bind(this)} 
+                                                startVirtualMachine={this.startVirtualMachine.bind(this)}
+                                                endVirtualMachine={this.endVirtualMachine.bind(this)}
+                                                restartVirtualMachine={this.restartVirtualMachine.bind(this)}
+                                                renameVirtualMachine={this.renameVirtualMachine.bind(this)}
+                                                reprovisionVirtualMachine={this.reprovisionVirtualMachine.bind(this)}
+                                                resizeVirtualMachine={this.resizeVirtualMachine.bind(this)}
+                                                deleteVirtualMachine={this.deleteVirtualMachine.bind(this)}
+                                                editFirewallRules={this.editFirewallRules.bind(this)}
+                                                editTags={this.editTags.bind(this)} />
+            )
+        }
     ];
 
     stateCellColor(vm: VirtualMachineModel) {
@@ -386,12 +415,13 @@ class VirtualMachineContainer extends React.Component {
                                 className="-striped -highlight"
                                 // pages={this.props.virtualMachines.pages}
                                 // onFetchData={this.fetchData.bind(this)}
+                                filterable
                                 defaultPageSize={20}
                                 expanded={this.props.expandedRows}                      
                                 defaultSorted={[
                                     {
-                                    id: "alias",
-                                    asc: true
+                                        id: "alias",
+                                        asc: true
                                     }
                                 ]}
                                 onPageChange={() => {

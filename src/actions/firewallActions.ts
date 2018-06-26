@@ -1,7 +1,5 @@
 import { Dispatch } from "react-redux";
-import { packageService } from "../services/packageService";
 import { change } from 'redux-form';
-import PackageModel from "../models/packageModel";
 import { firewallService } from "../services/firewallService";
 import { inputValidationService } from '../services/inputValidationService';
 import FirewallRuleModel from "../models/firewallRuleModel";
@@ -90,17 +88,6 @@ export const editFirewallRules = (rules: FirewallRuleFormattedModel[], owner_uui
         
         return schemaRule;
     });
-    const newRules: any[] = rules
-        .map((rule: FirewallRuleFormattedModel) => {
-            const newRule : any = {
-                enabled: rule.enabled != null ? rule.enabled : false,
-                rule: `FROM ${rule.from.trim().toLowerCase()} TO ${rule.to.trim().toLowerCase()} ${rule.allow} ${rule.actionPredicate.trim().toLowerCase()}`,
-                uuid: rule.uuid != null ? rule.uuid : '',
-                owner_uuid
-            }
-            
-            return newRule;
-        });
 
     const schema = Joi.object().keys({
         schemaRules: Joi.array().items(
@@ -121,6 +108,19 @@ export const editFirewallRules = (rules: FirewallRuleFormattedModel[], owner_uui
     dispatch(change('virtualMachineEditFirewallRulesModal', 'errorMessages', errors));
 
     if (errors.length == 0) {
+
+        const newRules: any[] = rules
+        .map((rule: FirewallRuleFormattedModel) => {
+            const newRule : any = {
+                enabled: rule.enabled != null ? rule.enabled : false,
+                rule: `FROM ${rule.from.trim().toLowerCase()} TO ${rule.to.trim().toLowerCase()} ${rule.allow} ${rule.actionPredicate.trim().toLowerCase()}`,
+                uuid: rule.uuid != null ? rule.uuid : '',
+                owner_uuid
+            }
+            
+            return newRule;
+        });
+
         try {
             dispatch({ type: firewallActionTypes.FIREWALL_EDIT_RULES_START });
 
